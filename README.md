@@ -1,7 +1,7 @@
 # ltl-explainability
 
-#What's in a Name? Linear Temporal Logic Literally Represents Time Lines
-(becasue Shakespeare...)
+# What's in a Name? Linear Temporal Logic Literally Represents Time Lines
+(because Shakespeare...)
 
 Algorithm Outline:
 LTL -> minimized GBA (using SPOT) -> regular expression (new algorithm) -> minimized RegEx  (via TBD tool) -> timeline (new algorithm)
