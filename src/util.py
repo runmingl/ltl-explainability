@@ -67,7 +67,12 @@ def regex_simplifier(r: Regex) -> Regex:
 def omega_regex_simplifier(r: OmegaRegex) -> OmegaRegex:
     match r:
         case Repeat(r):
-            return Repeat(regex_simplifier(r))
+            r_new = Repeat(regex_simplifier(r))
+            match r_new.regex:
+                # (r*)w = rw
+                case Star(r_neww):
+                    return Repeat(r_neww)
+            return r_new
         case ConcatOmega(r1, r2):
             r_new = ConcatOmega(regex_simplifier(r1), omega_regex_simplifier(r2))
             match (r_new.left, r_new.right):
@@ -75,7 +80,10 @@ def omega_regex_simplifier(r: OmegaRegex) -> OmegaRegex:
                 case (Concat(r1_new, Star(r2_new)), Repeat(r2_neww)):
                     if r2_new == r2_neww:
                         return ConcatOmega(r1_new, Repeat(r2_new))
-
+                # r1*r1w = r1w
+                case (Star(r1_new), Repeat(r1_neww)):
+                    if r1_new == r1_neww:
+                        return Repeat(r1_new)
                 # r1r1w = r1w
                 case (r1_new, Repeat(r1_neww)):
                     if r1_new == r1_neww:
