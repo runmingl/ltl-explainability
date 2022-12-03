@@ -10,6 +10,10 @@ class Epsilon(Regex):
     pass
 
 @dataclass(eq=True)
+class Empty(Regex):
+    pass
+
+@dataclass(eq=True)
 class Symbol(Regex):
     symbol: str
 
@@ -31,6 +35,8 @@ def regex_to_string(regex: Regex) -> str:
     match regex:
         case Epsilon():
             return 'ε'
+        case Empty():
+            return '∅'
         case Symbol(s):
             return f'({s})'
         case Concat(r1, r2):

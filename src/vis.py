@@ -64,6 +64,8 @@ def make_graph(regex: OmegaRegex, filename: str, format: str):
                     g.edge(tail, node_name)
                 node2_tail, node2_head = make_regex_graph(g, r, [node_name], connect_parent=True)
                 return node2_tail, node2_head
+            case _:
+                raise TypeError(f'Unsupported regex type: {r}')
 
     g.node('start', 'start')
     make_omega_regex_graph(regex, ['start'])

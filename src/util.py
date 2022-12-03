@@ -63,6 +63,8 @@ def regex_simplifier(r: Regex) -> Regex:
                 case Union(r2_new, Epsilon()):
                     return Star(r2_new)
             return r_new
+        case _:
+            raise TypeError(f'Unsupported regex type: {type(r)}')
 
 def omega_regex_simplifier(r: OmegaRegex) -> OmegaRegex:
     match r:
