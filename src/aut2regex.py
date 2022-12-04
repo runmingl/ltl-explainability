@@ -5,6 +5,7 @@ from ltl_regex import *
 from ltl2aut import *
 from util import simplify
 
+
 def find_path(g: Graph, v_start: int, v_end: int) -> Optional[Regex]:
     g = copy.deepcopy(g)
     v_rip = find_rip_vertex(g, v_start, v_end)
@@ -31,8 +32,9 @@ def find_path(g: Graph, v_start: int, v_end: int) -> Optional[Regex]:
 
     return combine_final(r1, r2, r3, r4)
 
-def combine_final(r1: Regex, r2: Regex, r3: Regex, r4: Regex) -> Regex:
-    if r1 is None and r2 is not None and r3 is not None and r4 is not None:
+
+def combine_final(r1: Optional[Regex], r2: Regex, r3: Optional[Regex], r4: Optional[Regex]) -> Regex:
+    if r1 is not None and r2 is not None and r3 is not None and r4 is not None:
         return Concat(Star(Union(r1, Concat(r2, Concat(Star(r4), r3)))), Concat(r2, Star(r4)))
     elif r1 is not None and r2 is not None and r3 is not None and r4 is None:
         return Star(Union(r1, Concat(r2, r3)))
@@ -49,17 +51,20 @@ def combine_final(r1: Regex, r2: Regex, r3: Regex, r4: Regex) -> Regex:
     else:
         return r2
 
+
 def find_rip_vertex(g: Graph, v_start: int, v_end: int) -> Optional[int]:
     for v in g.vertices.keys():
         if v != v_start and v != v_end:
             return v
     return None
 
+
 def contain_self_loop(g: Graph, v: int) -> Optional[Edge]:
     for e in g.vertices[v].out_edges:
         if e.src == e.dst:
             return e
     return None
+
 
 def rip(g: Graph, v_rip: int):
     loop = contain_self_loop(g, v_rip)
@@ -71,7 +76,8 @@ def rip(g: Graph, v_rip: int):
                 continue
             r_in = e_in.label
             r_out = e_out.label
-            r = Concat(r_in, r_out) if r_rip is None else Concat(r_in, Concat(Star(r_rip), r_out))
+            r = Concat(r_in, r_out) if r_rip is None else Concat(
+                r_in, Concat(Star(r_rip), r_out))
             added_edges.append((e_in.src, e_out.dst, r))
     for e_in in g.vertices[v_rip].in_edges:
         g.vertices[e_in.src].out_edges.remove(e_in)
@@ -81,6 +87,7 @@ def rip(g: Graph, v_rip: int):
         g.add_edge(s, t, r)
     del g.vertices[v_rip]
     g.num_states -= 1
+
 
 @simplify
 def aut_to_regex(g: Graph) -> Optional[OmegaRegex]:
@@ -99,6 +106,7 @@ def aut_to_regex(g: Graph) -> Optional[OmegaRegex]:
         p = UnionOmega(p, all_paths[i])
     return p
 
+
 def combine_duplicate_edge(g: Graph) -> Graph:
     def combine_one_duplicate_edge(g: Graph) -> bool:
         for v in g.vertices.values():
@@ -116,6 +124,7 @@ def combine_duplicate_edge(g: Graph) -> Graph:
     while combine_one_duplicate_edge(g):
         pass
     return g
+
 
 def add_episilon_final_state(g: Graph) -> Graph:
     g.num_states += 1

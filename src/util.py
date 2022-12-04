@@ -1,5 +1,6 @@
 from ltl_regex import *
 
+
 def regex_simplifier(r: Regex) -> Regex:
     match r:
         case Epsilon():
@@ -66,17 +67,19 @@ def regex_simplifier(r: Regex) -> Regex:
         case _:
             raise TypeError(f'Unsupported regex type: {type(r)}')
 
+
 def omega_regex_simplifier(r: OmegaRegex) -> OmegaRegex:
     match r:
-        case Repeat(r):
-            r_new = Repeat(regex_simplifier(r))
+        case Repeat(rp):
+            r_new = Repeat(regex_simplifier(rp))
             match r_new.regex:
                 # (r*)w = rw
                 case Star(r_neww):
                     return Repeat(r_neww)
             return r_new
         case ConcatOmega(r1, r2):
-            r_new = ConcatOmega(regex_simplifier(r1), omega_regex_simplifier(r2))
+            r_new = ConcatOmega(regex_simplifier(
+                r1), omega_regex_simplifier(r2))
             match (r_new.left, r_new.right):
                 # (r1r2*)r2w = r1r2w
                 case (Concat(r1_new, Star(r2_new)), Repeat(r2_neww)):
@@ -93,6 +96,7 @@ def omega_regex_simplifier(r: OmegaRegex) -> OmegaRegex:
             return r_new
         case UnionOmega(r1, r2):
             return UnionOmega(omega_regex_simplifier(r1), omega_regex_simplifier(r2))
+
 
 def simplify(func):
     def inner(*args, **kwargs):

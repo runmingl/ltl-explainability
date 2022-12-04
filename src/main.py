@@ -5,17 +5,19 @@ from ltl2aut import ltl_to_aut, aut_to_graph
 from aut2regex import aut_to_regex
 from vis import make_graph
 
+
 class Ltl2Regex(object):
     def ltl2regex(self, formula: str):
         return aut_to_regex(aut_to_graph(ltl_to_aut(formula)))
 
     def ltl2timeline(self, formula: str, filename: str = "ltl", output_format: str = "pdf"):
-        g = make_graph(aut_to_regex(aut_to_graph(ltl_to_aut(formula))), filename, output_format)
+        g = make_graph(aut_to_regex(aut_to_graph(
+            ltl_to_aut(formula))), filename, output_format)
         g.view()
+
 
 if __name__ == '__main__':
     fire.Fire(Ltl2Regex)
-
 
 
 # print(Ltl2Regex.ltl2regex('G(a & b)'))

@@ -4,17 +4,20 @@ from dataclasses import dataclass, field
 from typing import List, Dict, Set
 from ltl_regex import *
 
+
 @dataclass(eq=True)
 class Edge:
     src: int
     dst: int
     label: Regex
 
+
 @dataclass(eq=True)
 class Vertex:
     number: int
     out_edges: List[Edge] = field(default_factory=list)
     in_edges: List[Edge] = field(default_factory=list)
+
 
 @dataclass
 class Graph:
@@ -43,8 +46,10 @@ class Graph:
         self.vertices[src].out_edges.append(e)
         self.vertices[dst].in_edges.append(e)
 
+
 def ltl_to_aut(ltl_formula: str):
     return spot.automaton(spot.translate(ltl_formula, 'buchi', 'sbacc').to_str('spin'))
+
 
 def aut_to_graph(aut):
     assert aut.num_sets() == 1
@@ -52,7 +57,8 @@ def aut_to_graph(aut):
     graph = Graph(aut.num_states(), aut.get_init_state_number())
     for s in range(graph.num_states):
         for t in aut.out(s):
-            graph.add_edge(t.src, t.dst, Symbol(spot.bdd_format_formula(bdict, t.cond)))
+            graph.add_edge(t.src, t.dst, Symbol(
+                spot.bdd_format_formula(bdict, t.cond)))
             if t.acc.is_singleton():
                 graph.final_states.add(t.src)
 
