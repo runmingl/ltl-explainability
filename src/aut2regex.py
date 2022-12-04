@@ -29,7 +29,8 @@ def find_path(g: Graph, v_start: int, v_end: int) -> Optional[Regex]:
             r4 = e.label
     if r2 is None:
         return None
-
+    if v_start == v_end:
+        return r2
     return combine_final(r1, r2, r3, r4)
 
 
