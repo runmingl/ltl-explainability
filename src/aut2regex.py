@@ -35,22 +35,9 @@ def find_path(g: Graph, v_start: int, v_end: int) -> Optional[Regex]:
 
 
 def combine_final(r1: Optional[Regex], r2: Regex, r3: Optional[Regex], r4: Optional[Regex]) -> Regex:
-    if r1 is not None and r2 is not None and r3 is not None and r4 is not None:
-        return Concat(Star(Union(r1, Concat(r2, Concat(Star(r4), r3)))), Concat(r2, Star(r4)))
-    elif r1 is not None and r2 is not None and r3 is not None and r4 is None:
-        return Star(Union(r1, Concat(r2, r3)))
-    elif r1 is not None and r2 is not None and r3 is None and r4 is not None:
-        return Concat(Star(r1), Concat(r2, Star(r4)))
-    elif r1 is None and r2 is not None and r3 is not None and r4 is not None:
-        return Concat(Concat(r2, Concat(Star(r4), r3)), Star(r4))
-    elif r1 is None and r2 is not None and r3 is None and r4 is not None:
-        return Concat(r2, Star(r4))
-    elif r1 is None and r2 is not None and r3 is not None and r4 is None:
-        return Star(Concat(r2, r3))
-    elif r1 is not None and r2 is not None and r3 is None and r4 is None:
-        return Concat(Star(r1), r2)
-    else:
+    if r1 is None:
         return r2
+    return Concat(Star(r1), r2)
 
 
 def find_rip_vertex(g: Graph, v_start: int, v_end: int) -> Optional[int]:

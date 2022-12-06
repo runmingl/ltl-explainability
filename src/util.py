@@ -24,11 +24,6 @@ def regex_simplifier(r: Regex) -> Regex:
                     if r1_new == r2_new:
                         return Star(r1_new)
 
-                # (r1+r2)r2* = r1r2*
-                case (Union(r1_new, r2_neww), Star(r2_new)):
-                    if r2_neww == r2_new:
-                        return Concat(r1_new, Star(r2_new))
-
                 # r1(r2r3) = (r1r2)r3
                 case (r1_new, Concat(r2_new, r3_new)):
                     return Concat(Concat(r1_new, r2_new), r3_new)
@@ -36,15 +31,15 @@ def regex_simplifier(r: Regex) -> Regex:
         case Union(r1, r2):
             r_new = Union(regex_simplifier(r1), regex_simplifier(r2))
             match (r_new.left, r_new.right):
-                # r1 + (r1r2)* = r1r2*
-                case (r1_new, Star(Concat(r1_neww, r2_new))):
+                # r1 + r1r2* = r1r2*
+                case (r1_new, Concat(r1_neww, Star(r2_new))):
                     if r1_new == r1_neww:
                         return Concat(r1_new, Star(r2_new))
 
-                # r1 + (r2r1)* = r2r1*
-                case (r1_new, Star(Concat(r2_new, r1_neww))):
+                # r1 + r2*r1 = r2*r1
+                case (r1_new, Concat(Star(r2_new), r1_neww)):
                     if r1_new == r1_neww:
-                        return Concat(r2_new, Star(r1_new))
+                        return Concat(Star(r2_new), r1_new)
 
                 # r1 + r1 = r1
                 case (r1_new, r1_neww):

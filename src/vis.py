@@ -6,11 +6,11 @@ node_counter = 0
 cluster_counter = 0
 
 
-def make_graph(regex: OmegaRegex, filename: str, format: str):
+def make_graph(regex: OmegaRegex, filename: str, format: str) -> Digraph:
     g = Digraph('G', filename=f'{filename}.gv', format=format)
     g.attr(rankdir='LR')
 
-    def make_omega_regex_graph(r: OmegaRegex, parents: List[str]) -> Digraph:
+    def make_omega_regex_graph(r: OmegaRegex, parents: List[str]):
         global cluster_counter
         match r:
             case Repeat(re):
