@@ -1,0 +1,10 @@
+digraph G {
+	rankdir=LR
+	start [label=start]
+	subgraph cluster_0 {
+		node [color=white style=filled]
+		0 [label="a & b"]
+		color=lightgrey style=filled
+	}
+	start -> 0
+}

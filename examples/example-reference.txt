@@ -1,0 +1,10 @@
+ex1: G(a & b)
+ex2: G((p & X(!p)) | (!p & Xp))
+ex3: G((p & X(!p)) & (!p & Xp))
+ex4: G(a -> Xb)
+ex5: GFa
+ex6: GFa -> GFb
+ex7: G((a & Xb) -> Xa)
+ex8: a -> b
+ex9: G(a -> F(!a))
+ex10: G(a & !b -> (!b U c))
