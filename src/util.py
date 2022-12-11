@@ -36,20 +36,30 @@ def regex_simplifier(r: Regex) -> Regex:
                 case (r1_new, Concat(r1_neww, Star(r2_new))):
                     if r1_new == r1_neww:
                         return Concat(r1_new, Star(r2_new))
+                    match (r_new.left, r_new.right):
+                        # r1 + r1 = r1
+                        case (r1_new, r1_neww):
+                            if r1_new == r1_neww:
+                                return r1_new
 
                 # r1 + r2*r1 = r2*r1
                 case (r1_new, Concat(Star(r2_new), r1_neww)):
                     if r1_new == r1_neww:
                         return Concat(Star(r2_new), r1_new)
+                    match (r_new.left, r_new.right):
+                        # r1 + r1 = r1
+                        case (r1_new, r1_neww):
+                            if r1_new == r1_neww:
+                                return r1_new
+
+                # r1 + (r2 + r3) = (r1 + r2) + r3
+                case (r1_new, Union(r2_new, r3_new)):
+                    return Union(Union(r1_new, r2_new), r3_new)
 
                 # r1 + r1 = r1
                 case (r1_new, r1_neww):
                     if r1_new == r1_neww:
                         return r1_new
-
-                # r1 + (r2 + r3) = (r1 + r2) + r3
-                case (r1_new, Union(r2_new, r3_new)):
-                    return Union(Union(r1_new, r2_new), r3_new)
             return r_new
         case Star(r):
             r_new = Star(regex_simplifier(r))
@@ -85,6 +95,14 @@ def omega_regex_simplifier(r: OmegaRegex) -> OmegaRegex:
                 case (Star(r1_new), Repeat(r1_neww)):
                     if r1_new == r1_neww:
                         return Repeat(r1_new)
+                # (r1r2)r2w = r1r2w
+                case (Concat(r1_new, r2_new), Repeat(r2_neww)):
+                    if r2_new == r2_neww:
+                        return ConcatOmega(r1_new, Repeat(r2_new))
+                    match (r_new.left, r_new.right):
+                        case (r1_new, Repeat(r1_neww)):
+                            if r1_new == r1_neww:
+                                return Repeat(r1_new)
                 # r1r1w = r1w
                 case (r1_new, Repeat(r1_neww)):
                     if r1_new == r1_neww:

@@ -8,3 +8,5 @@ ex7: G((a & Xb) -> Xa)
 ex8: a -> b
 ex9: G(a -> F(!a))
 ex10: G(a & !b -> (!b U c))
+ex11: FGa
+ex12: F(XG(F!p1 M Fp1) W (p1 R p0))
