@@ -259,7 +259,7 @@ On a high level, our algorithm of converting \ltl\ formula into timeline visuali
 \end{enumerate}
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.5]{img/algo-flowchart.png}
+    \includegraphics[width=\textwidth, trim=1cm 3cm 1cm 3cm, clip]{img/algorithm_outline.gv.pdf}
     \caption{Algorithm outline}
     \label{fig:algo}
 \end{figure}
@@ -383,7 +383,7 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
     Let $G'$ be the graph of $G$ post reduction by the application of \textbf{reduce\_dfa}$(G, v)$. We show that the trace of every path accepted by $G$ is also accepted by $G'$. Suppose a path accepted by $G$ does not pass through $v$, clearly this is true. Else, suppose it passes through $v$, since $v$ is an interior node, $v$ cannot be the first or last in the path. Thus, for every pass through $v$, let $u\neq v$ be the last node passed before entering $v$, and likewise $w$ be the first node after exiting $v$. We show that the regular language of sub-traces from $u$ to $w$ in $G$ (shown in \cref{fig:uvw-dfa}) is identical to that in $G'$. 
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.5]{img/uvw-dfa.png}
+        \includegraphics[scale=0.75]{img/uvw_dfa.gv.pdf}
         \caption{$u$ to $w$ path in $G$}
         \label{fig:uvw-dfa}
     \end{figure}
