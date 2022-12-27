@@ -1,0 +1,43 @@
+digraph G {
+	rankdir=LR
+	start [label=start]
+	0 [label=p2]
+	start -> 0
+	1 [label="p0 & p1"]
+	0 -> 1
+	2 [label=p2]
+	start -> 2
+	3 [label="!p0 & p1"]
+	2 -> 3
+	4 [label="!p0 & p1"]
+	3 -> 4
+	5 [label="..."]
+	4 -> 5
+	6 [label="!p0 & p1"]
+	5 -> 6
+	7 [label="p0 & p1"]
+	6 -> 7
+	subgraph cluster_0 {
+		node [color=white style=filled]
+		8 [label=p1]
+		color=lightgrey style=filled
+	}
+	1 -> 8
+	7 -> 8
+	9 [label=p2]
+	start -> 9
+	10 [label=1]
+	9 -> 10
+	11 [label=1]
+	10 -> 11
+	12 [label="..."]
+	11 -> 12
+	13 [label=1]
+	12 -> 13
+	subgraph cluster_1 {
+		node [color=white style=filled]
+		14 [label="p0 & p1"]
+		color=lightgrey style=filled
+	}
+	13 -> 14
+}
