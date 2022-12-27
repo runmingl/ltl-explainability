@@ -1,0 +1,220 @@
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+%%%%% Papers on LTL %%%%%
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+
+@article {Roz11,
+     author      =   "K.Y. Rozier",
+     title       =   "{L}inear {T}emporal {L}ogic {S}ymbolic {M}odel {C}hecking",
+     journal     =   "Computer Science Review Journal",
+     volume      =   "5",
+     number      =   "2",
+     publisher   =   "Elsevier",
+     pages       =   "163--203",
+     month       =   "May",
+     year        =   "2011",
+     doi         =   "doi:10.1016/j.cosrev.2010.06.002",
+     url         =   "http://dx.doi.org/10.1016/j.cosrev.2010.06.002"
+}
+
+
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+%%%%% Papers with examples of the problem %%%%%
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+
+@article{ZR14,
+    author      =   "Yang Zhao and Kristin Yvonne Rozier",
+    title       =   "Formal Specification and Verification of a Coordination Protocol for an Automated Air Traffic Control System",
+    journal   = {{Science of Computer Programming Journal}},
+    publisher = {Elsevier},
+    volume = "96",
+    number = "3",
+    month = "December",
+    pages       =   "337-353",
+    year        =   "2014"
+}
+
+
+@inproceedings{Roz16,
+    author = {Kristin Yvonne Rozier},
+    title = {Specification: The Biggest Bottleneck in Formal Methods and Autonomy},
+    booktitle = {{Proceedings of 8th Working Conference on Verified Software: Theories, Tools, and Experiments (VSTTE 2016)}},
+    publisher = {Springer-Verlag},
+    series = {{LNCS}},
+    volume = {9971},
+    address = {Toronto, ON, Canada},
+    editors = {Marsha Chechik and Sandrine Blazy},
+    pages = {1--19},
+    doi = {10.1007/978-3-319-48869-1\_2},
+    month = {July},
+    year = {2016},
+}
+
+
+
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+%%%%% Papers with (Real-life) LTL Benchmarks %%%%%
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+
+%Collects real LTL formulas from NASA (GCMTR16) and Boeing (BCFJKPRT15)
+@inproceedings{DR18,
+    author    = {Rohit Dureja and Kristin Yvonne Rozier},
+    title     = {More Scalable LTL Model Checking via Discovering Design-Space Dependencies (\textsc{$D^3$})},
+    editors   =   "Dirk Beyer and Marieke Huisman",
+    booktitle = "Proceedings of the 20th International Conference on Tools and Algorithms for the Construction and Analysis of Systems (TACAS)",
+    series    =   "Lecture Notes in Computer Science (LNCS)",
+    volume    =   "part I, 10805",
+    publisher =   "Springer-Verlag",
+    pages     =   "309--327",
+    month     = "April",
+    year      = "2018",
+}
+
+%Large set of NASA LTL formulas
+@inproceedings{GCMTR16,
+    author = {Marco Gario and Alessandro Cimatti and Cristian Mattarei and Stefano Tonetta and Kristin Y.~ Rozier},
+    title = {Model Checking at Scale: Automated Air Traffic Control Design Space Exploration},
+    booktitle = {{Proceedings of 28th International Conference on Computer Aided Verification (CAV 2016)}},
+    publisher = {Springer},
+    series = {{LNCS}},
+    volume = {9780},
+    address = {Toronto, ON, Canada},
+    editors = {Swarat Chaudhuri and Azadeh Farzan},
+    pages = {3--22},
+    doi = {10.1007/978-3-319-41540-6_1},
+    month = {July},
+    year = {2016},
+}
+
+%Boeing LTL formulas
+@inproceedings{BCFJKPRT15,
+  title={Formal design and safety analysis of AIR6110 wheel brake system},
+  author={Bozzano, Marco and Cimatti, Alessandro and Fernandes Pires, Anthony and Jones, David and Kimberly, Greg and Petri, T and Robinson, R and Tonetta, Stefano},
+  booktitle={International Conference on Computer Aided Verification},
+  pages={518--535},
+  year={2015},
+  organization={Springer}
+}
+
+
+%Collects formulas: binary counters plus (small) industrial formulas from ~7 other papers
+@inproceedings{RV11,
+    author      =   "K.Y. Rozier and M.Y. Vardi",
+    title       =   "A Multi-Encoding Approach for {LTL} Symbolic Satisfiability Checking",
+    editors     =   "Michael Butler and Wolfram Schulte",
+    booktitle   =   "17th International Symposium on Formal Methods (FM2011)",
+    series      =   "Lecture Notes in Computer Science (LNCS)",
+    volume      =   "6664",
+    publisher   =   "Springer-Verlag",
+    pages       =   "417--431",
+    year        =   "2011"
+}
+
+
+
+
+
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+%%%%% Papers on other tools that don't do what we want but are the closest existing work so we should cite them %%%%%
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+
+%spot paper
+@inproceedings{Dur22,
+  author = {Alexandre~Duret-Lutz and Etienne Renault and Maximilien
+		  Colange and Florian Renkin and Alexandre Gbaguidi~Aisse and
+		  Philipp Schlehuber-Caissier and Thomas Medioni and Antoine
+		  Martin and J{\'e}r{\^o}me Dubois and Cl{\'e}ment Gillard
+		  and Henrich Lauko},
+  title = {From {S}pot 2.0 to {S}pot 2.10: What's New?},
+  booktitle = {Proceedings of the 34th International Conference on
+		  Computer Aided Verification (CAV'22)},
+  year = 2022,
+  volume = {13372},
+  series = {Lecture Notes in Computer Science},
+  pages = {174--187},
+  month = aug,
+  publisher = {Springer},
+  abstract = {Spot is a C++17 library for LTL and $\omega$-automata
+		  manipulation, with command-line utilities, and Python
+		  bindings. This paper summarizes its evolution over the past
+		  six years, since the release of Spot 2.0, which was the
+		  first version to support $\omega$-automata with arbitrary
+		  acceptance conditions, and the last version presented at a
+		  conference. Since then, Spot has been extended with several
+		  features such as acceptance transformations, alternating
+		  automata, games, LTL synthesis, and more. We also shed some
+		  lights on the data-structure used to store automata. },
+  pdf = {adl/duret.22.cav.pdf},
+  slides = {adl/duret.22.cav.slides.pdf},
+  doi = {10.1007/978-3-031-13188-2_9}
+}
+
+% spot tool (online)
+@misc{SPOT-online,
+title = {Spot: a platform for {LTL} and omega-automata manipulation},
+author = {Alexandre~Duret-Lutz and Etienne Renault and Maximilien
+		  Colange and Florian Renkin and Alexandre Gbaguidi~Aisse and
+		  Philipp Schlehuber-Caissier and Thomas Medioni and Antoine
+		  Martin and J{\'e}r{\^o}me Dubois and Cl{\'e}ment Gillard
+		  and Henrich Lauko},
+howpublished = {Online: \url{https://spot.lre.epita.fr/}},
+year = {2023},
+}
+
+@inproceedings{duret.13.atva,
+  author = {Alexandre Duret-Lutz},
+  title = {Manipulating {LTL} formulas using {Spot} 1.0},
+  booktitle = {Proceedings of the 11th International Symposium on
+		  Automated Technology for Verification and Analysis
+		  (ATVA'13)},
+  year = 2013,
+  series = {Lecture Notes in Computer Science},
+  volume = {8172},
+  pages = {442--445},
+  address = {Hanoi, Vietnam},
+  month = oct,
+  publisher = {Springer},
+  abstract = {We present a collection of command-line tools designed to
+		  generate, filter, convert, simplify, lists of Linear-time
+		  Temporal Logic formulas. These tools were introduced in the
+		  release 1.0 of Spot, and we believe they should be of
+		  interest to anybody who has to manipulate LTL formulas. We
+		  focus on two tools in particular: ltlfilt, to filter and
+		  transform formulas, and ltlcross to cross-check
+		  LTL-to-B{\"u}chi-Automata translators.},
+  pdf = {adl/duret.13.atva.pdf},
+  slides = {adl/duret.13.atva.slides.pdf},
+  doi = {10.1007/978-3-319-02444-8_31}
+}
+
+
+%FRET tool (requirements elicitation in MLTL)
+@inproceedings{GPMS20,
+  title={Generation of formal requirements from structured natural language},
+  author={Giannakopoulou, Dimitra and Pressburger, Thomas and Mavridou, Anastasia and Schumann, Johann},
+  booktitle={International working conference on requirements engineering: Foundation for software quality},
+  pages={19--35},
+  year={2020},
+  organization={Springer}
+}
+
+
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+%%%%% Papers that support this being a problem %%%%%
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+
+%https://link.springer.com/article/10.1007/s10270-022-01063-4
+@article{VMDMSC22,
+  title={The ForeMoSt approach to building valid model-based safety arguments},
+  author={Viger, Torin and Murphy, Logan and Di Sandro, Alessio and Menghi, Claudio and Shahin, Ramy and Chechik, Marsha},
+  journal={Software and Systems Modeling},
+  pages={1--22},
+  year={2022},
+  publisher={Springer}
+}
+
+@inproceedings{Ellson2001GraphvizO,
+  title={Graphviz - Open Source Graph Drawing Tools},
+  author={John Ellson and Emden R. Gansner and Eleftherios Koutsofios and Stephen C. North and Gordon Woodhull},
+  booktitle={International Symposium Graph Drawing and Network Visualization},
+  year={2001}
+}
