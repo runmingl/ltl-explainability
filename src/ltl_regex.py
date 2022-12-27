@@ -1,40 +1,40 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(eq=True, frozen=True)
 class Regex:
     def __str__(self) -> str:
         return regex_to_string(self)
 
 
-@dataclass(eq=True)
+@dataclass(eq=True, frozen=True)
 class Epsilon(Regex):
     pass
 
 
-@dataclass(eq=True)
+@dataclass(eq=True, frozen=True)
 class Empty(Regex):
     pass
 
 
-@dataclass(eq=True)
+@dataclass(eq=True, frozen=True)
 class Symbol(Regex):
     symbol: str
 
 
-@dataclass(eq=True)
+@dataclass(eq=True, frozen=True)
 class Concat(Regex):
     left: Regex
     right: Regex
 
 
-@dataclass(eq=True)
+@dataclass(eq=True, frozen=True)
 class Union(Regex):
     left: Regex
     right: Regex
 
 
-@dataclass(eq=True)
+@dataclass(eq=True, frozen=True)
 class Star(Regex):
     regex: Regex
 
@@ -57,24 +57,24 @@ def regex_to_string(regex: Regex) -> str:
             raise TypeError(f'Unknown regex type: {type(regex)}')
 
 
-@dataclass
+@dataclass(eq=True, frozen=True)
 class OmegaRegex:
     def __str__(self) -> str:
         return omega_regex_to_string(self)
 
 
-@dataclass(eq=True)
+@dataclass(eq=True, frozen=True)
 class Repeat(OmegaRegex):
     regex: Regex
 
 
-@dataclass(eq=True)
+@dataclass(eq=True, frozen=True)
 class ConcatOmega(OmegaRegex):
     left: Regex
     right: OmegaRegex
 
 
-@dataclass(eq=True)
+@dataclass(eq=True, frozen=True)
 class UnionOmega(OmegaRegex):
     left: OmegaRegex
     right: OmegaRegex
