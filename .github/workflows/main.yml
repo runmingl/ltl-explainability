@@ -16,7 +16,7 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v3
       - name: cd
-        uses: cd "./paper"
+        run: cd "./paper"
       - name: pdflatex main
         uses: dante-ev/latex-action@latest
         with:
