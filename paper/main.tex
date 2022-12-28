@@ -193,7 +193,7 @@ We present timelines as graphic visualizations. It contains the following featur
     In \cref{fig:ex2}, one can reason about two timelines: the upper timeline starts with $p$ at the first time step, followed by entering the grey box with one step of $!p$ and one step of $p$. Then at the end of the grey box, we reenter the box, with the next time step being $!p$, and so on. The lower timeline starts with one step of $!p$ and one step of $p$ outside the grey box, and then enter the infinite run of $!p$ and $p$ repeating.
     \begin{figure}[!h]
         \centering
-        \includegraphics[scale=0.4]{examples/ex2/ex2.gv.png}
+        \includegraphics[scale=0.4]{examples/ex2/ex2.png}
         \caption{Example timeline for specification ``$p$ oscillates every time step''}
         \label{fig:ex2}
     \end{figure}
@@ -209,7 +209,7 @@ On a high level, our algorithm of converting \ltl\ formulas into timeline visual
 \end{enumerate}
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth, trim=1cm 3cm 1cm 3cm, clip]{img/algorithm_outline.gv.pdf}
+    \includegraphics[width=\textwidth, trim=1cm 3cm 1cm 3cm, clip]{img/algorithm_outline.pdf}
     \caption{Algorithm outline}
     \label{fig:algo}
 \end{figure}
@@ -300,13 +300,13 @@ Those simplification rules lead to more intuitive representation of timelines. H
     The formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates un-simplified $\omega$-regular expression $((!a) | (aa^*(!a)))((!a) | (aa^*(!a)))^{\omega}$, and simplified version $((!a) | (aa^*(!a)))^{\omega}$, which corresponds to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.3]{examples/ex9/ex9-unsimplified.gv.png}
+        \includegraphics[scale=0.3]{examples/ex9/ex9-unsimplified.png}
         \caption{Timeline for un-simplified $\omega$-regular expression $((!a) | (aa^*(!a)))((!a) | (aa^*(!a)))^{\omega}$}
         \label{fig:unsimplified}
     \end{figure}
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.3]{examples/ex9/ex9.gv.png}
+        \includegraphics[scale=0.3]{examples/ex9/ex9.png}
         \caption{Timeline for simplified $\omega$-regular expression $((!a) | (aa^*(!a)))^{\omega}$}
         \label{fig:simplified}
     \end{figure}
@@ -339,7 +339,7 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
     Let $G'$ be the graph of $G$ post reduction by the application of \textbf{reduce\_dfa}$(G, v)$. We show that the trace of every path accepted by $G$ is also accepted by $G'$. Suppose a path accepted by $G$ does not pass through $v$, clearly this is true. Else, suppose it passes through $v$, since $v$ is an interior node, $v$ cannot be the first or last in the path. Thus, for every pass through $v$, let $u\neq v$ be the last node passed before entering $v$, and likewise $w$ be the first node after exiting $v$. We show that the regular language of sub-traces from $u$ to $w$ in $G$ (shown in \cref{fig:uvw-dfa}) is identical to that in $G'$.
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.75]{img/uvw_dfa.gv.pdf}
+        \includegraphics[scale=0.75]{img/uvw_dfa.pdf}
         \caption{$u$ to $w$ path in $G$}
         \label{fig:uvw-dfa}
     \end{figure}
@@ -408,7 +408,7 @@ To demonstrate the result of our tool, we present two examples, one from a real-
     For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex14}.
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.3]{examples/ex14/ex14.gv.png}
+        \includegraphics[scale=0.3]{examples/ex14/ex14.png}
         \caption{Timeline for $\always (a \land b \limplies \nextt (\neg b))$}
         \label{fig:ex14}
     \end{figure}
@@ -422,7 +422,7 @@ To demonstrate the result of our tool, we present two examples, one from a real-
     This formula is reasonably complicated, and hard for human to reason about directly. For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex13}.
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.3]{examples/ex13/ex13.gv.png}
+        \includegraphics[scale=0.3]{examples/ex13/ex13.png}
         \caption{Timeline for $p_2 \land (\eventually (\always p_0 \strongrelease  1) \weakrelease \nextt(\always p_1 \land ((p_0 \liff p_2) \stronguntil \eventually p_0)))$}
         \label{fig:ex13}
     \end{figure}
