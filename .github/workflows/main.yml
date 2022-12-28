@@ -15,28 +15,10 @@ jobs:
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v3
-      - name: cd
-        run: cd "./paper"
-      - name: pdflatex main
-        uses: dante-ev/latex-action@latest
-        with:
-          root_file: ./paper/main.tex
-          compiler: pdflatex
-      - name: bibtex main
-        uses: dante-ev/latex-action@latest
-        with:
-          root_file: ./paper/main.aux
-          compiler: bibtex
-      - name: pdflatex main
-        uses: dante-ev/latex-action@latest
-        with:
-          root_file: ./paper/main.tex
-          compiler: pdflatex
-      - name: pdflatex main
-        uses: dante-ev/latex-action@latest
-        with:
-          root_file: ./paper/main.tex
-          compiler: pdflatex
+      - name: Install TeX Live
+        run: sudo apt-get update && sudo apt-get install latexmk texlive-latex-extra texlive-science texlive-fonts-extra
+      - name: Compile
+        run: cd "./paper" && pdflatex main.tex && bibtex main.aux && pdflatex main.tex && pdflatex main.tex
       - uses: actions/upload-artifact@v3
         with:
           name: main
