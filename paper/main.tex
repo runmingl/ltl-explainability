@@ -20,6 +20,8 @@
 
 \usepackage[strings]{underscore} % fixes doi underscores
 
+\usepackage{graphicx} 
+
 \usepackage{hyperref} % brings up so many errors
 \usepackage[capitalise, noabbrev]{cleveref}
 
@@ -207,7 +209,7 @@ On a high level, our algorithm of converting \ltl\ formulas into timeline visual
     \item Simplify the derived $\omega$-regular expression % (in \cref{regex-simplify})
     \item Visualize the $\omega$-regular expression according to its structure %(in \cref{regex2timeline})
 \end{enumerate}
-\begin{figure}[h!]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth, trim=1cm 3cm 1cm 3cm, clip]{img/algorithm_outline.pdf}
     \caption{Algorithm outline}
