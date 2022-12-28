@@ -44,16 +44,16 @@
 \begin{frontmatter}
     \title{What's in a Name? Linear Temporal Logic Literally Represents Time Lines}
 
-    \author[inst1]{Runming Li}
+	\author[inst1]{Runming Li\corref{cor1}}
     \ead{runmingl@andrew.cmu.edu}
 
-    \author[inst1]{Keerthana Gurushankar}
+	\author[inst1]{Keerthana Gurushankar\corref{cor1}}
     \ead{kgurusha@andrew.cmu.edu}
 
     \author[inst2]{Kristin Y. Rozier}
     \ead{kyrozier@iastate.edu}
 
-    \author[inst1]{Marijn Heule\corref{cor1}}
+    \author[inst1]{Marijn Heule\corref{cor2}}
     \ead{marijn@cmu.edu}
 
     \affiliation[inst1]{organization={Carnegie Mellon University},%Department and Organization
@@ -70,7 +70,8 @@
                 state={IA},
                 country={USA}}
 
-    \cortext[cor1]{Corresponding author}
+	\cortext[cor1]{These authors contributed equally to this work}
+    \cortext[cor2]{Corresponding author}
 
     \begin{abstract}
         Linear Temporal Logic (\ltl) is widely used to specify requirements in safety-critical systems.
@@ -80,7 +81,7 @@
         We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
     \end{abstract}
 
-    \begin{highlights} %TODO
+    \begin{highlights} %TODO ~ Highly encouraged but not mandatory
         \item Research highlight 1
         \item Research highlight 2
     \end{highlights}
@@ -220,7 +221,7 @@ On a high level, our algorithm of converting \ltl\ formulas into timeline visual
 The translation from LTL formulas to \Buchi automata is provided by SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.}.
 
 \subsection{BA to $\omega$-regex} \label{aut2regex}
-We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_{sf}$), and for those for paths for looping from the final state back to itself (say $r_{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_{sf}r_{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in digraph of the automaton.
+We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths for looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in digraph of the automaton.
 
 The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 
@@ -229,11 +230,11 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
     \begin{algorithmic}
         \Require ($G, v$), a DFA with state $v$ that is not initial or final
         \Ensure Deletes state $v$ from $G$ while ensuring the same language is recognized
-        \For{ every $u\xrightarrow{r_{in}} v, v \xrightarrow{r_{out}} w$ }
-            \If {$v$ has a self-edge  $v\xrightarrow{r_{loop}}v$}
-                \State replace edges $u\xrightarrow{r_{in}} v, v \xrightarrow{r_{out}} w$ with $u \xrightarrow{r_{in} r_{loop}* r_{out}} w$
+        \For{ every $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ }
+            \If {$v$ has a self-edge  $v\xrightarrow{r_\mathrm{loop}}v$}
+                \State replace edges $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ with $u \xrightarrow{r_\mathrm{in} r_\mathrm{loop}* r_\mathrm{out}} w$
             \Else
-                \State replace edges $u\xrightarrow{r_{in}} v, v \xrightarrow{r_{out}} w$ with $u \xrightarrow{r_{in}  r_{out}} w$
+                \State replace edges $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ with $u \xrightarrow{r_\mathrm{in}  r_\mathrm{out}} w$
             \EndIf
         \EndFor
         %\State \Return the reduced graph $G$
@@ -250,9 +251,9 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
             \State reduce\_dfa($G, v$)
             \State combine multiedges, i.e. $r1 : u \to w, r2 : u \to w$  to $r1 | r2 : u \to w$
         \EndWhile
-        \State \Return $(r_{ss}| r_{sf} r_{ff}^* r_{fs})^* r_{sf} r_{ff}$
-        % if called by first visit, this is r_{ss}* r_{sf}
-        % if called by ba2wregex, s=f, this is r_{ff}
+        \State \Return $(r_\mathrm{ss}| r_\mathrm{sf} r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$
+        % if called by first visit, this is r_\mathrm{ss}* r_\mathrm{sf}
+        % if called by ba2wregex, s=f, this is r_\mathrm{ff}
         % consider modularizing fns differently
         % \State \Return regexp labelling the edge $s\to f$
     \end{algorithmic}
@@ -345,14 +346,14 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
         \caption{$u$ to $w$ path in $G$}
         \label{fig:uvw-dfa}
     \end{figure}
-    Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_{uv}}v\xrightarrow{r_{vw}}w$, with the trace $r=r_{uv}r_{vw}$. If there is a loop edge $r_{vv}$, this edge can be travelled any number of times before exiting $v$, thus the regular expression is $r=r_{uv}r_{vv}^*r_{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
+    Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_\mathrm{uv}}v\xrightarrow{r_\mathrm{vw}}w$, with the trace $r=r_\mathrm{uv}r_\mathrm{vw}$. If there is a loop edge $r_\mathrm{vv}$, this edge can be travelled any number of times before exiting $v$, thus the regular expression is $r=r_\mathrm{uv}r_\mathrm{vv}^*r_\mathrm{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
 \end{proof}
 
 \begin{lemma}
     For any DFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{dfa2regex}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$ (i.e., the language accepted by $G$)
 \end{lemma}
 \begin{proof}
-    The while loop clearly terminates since the number of interior nodes is strictly decreasing, and upon termination, $G$ is a DFA containing only the nodes $s$ and $f$. Now, every non-terminal visit from $s$ to $f$ and back to $s$, can be replaced by an edge $s\xrightarrow{r_{sf}r_{ff}^* r_{fs}} s$, instead of the edge $f\to s$. This DFA yields the regular language $(r_{ss}|r_{sf}r_{ff}^* r_{fs})^* r_{sf} r_{ff}$, as outputted by the algorithm.
+    The while loop clearly terminates since the number of interior nodes is strictly decreasing, and upon termination, $G$ is a DFA containing only the nodes $s$ and $f$. Now, every non-terminal visit from $s$ to $f$ and back to $s$, can be replaced by an edge $s\xrightarrow{r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs}} s$, instead of the edge $f\to s$. This DFA yields the regular language $(r_\mathrm{ss}|r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$, as outputted by the algorithm.
 \end{proof}
 
 \begin{lemma}
@@ -396,10 +397,10 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
 The soundness of each of these translations can be proven by reasoning about the  semantics detailed in \cref{def:omega-semantics}. A full proof is not provided at this time.
 
 \section{Tool showcase}
-To demonstrate the result of our tool, we present two examples, one from a real-world model checking example in \cite{ZR14} and one from a randomly generated \ltl\ formula.
+To demonstrate the result of our tool, we present two examples, one from a real-world model checking example from Zhao and Rozier~\cite{ZR14} and one from a randomly generated \ltl\ formula.
 
 \begin{example}
-    \cite{ZR14} presents a model verification specification says ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft'' which corresponds to \ltl\ formula
+    Zhao and Rozier~\cite{ZR14} presents a model verification specification says ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft'' which corresponds to \ltl\ formula
     \[
         \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \limplies \nextt (\neg \texttt{controller.CTR\_control\_1}))
     \]
