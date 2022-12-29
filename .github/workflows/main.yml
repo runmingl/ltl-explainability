@@ -1,0 +1,27 @@
+name: Build LaTeX document
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+      - name: Install TeX Live
+        run: sudo apt-get update && sudo apt-get install latexmk texlive-latex-extra texlive-science texlive-fonts-extra
+      - name: Compile
+        run: cd "./paper" && pdflatex main.tex && bibtex main.aux && pdflatex main.tex && pdflatex main.tex
+      - uses: actions/upload-artifact@v3
+        with:
+          name: main
+          path: ${{ github.workspace }}/paper/main.pdf
+          if-no-files-found: error
+          retention-days: 7
