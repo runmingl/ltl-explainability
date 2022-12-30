@@ -109,19 +109,20 @@ However, \ltl\ is literally a language of timelines, so timeline visualizations 
     % cite Kristin's survey paper
     The syntax of an LTL formula over a set of atomic propositions $\AP$, where $p\in\AP$ is a propositional variable, is given by the following grammar:
     \begin{align*}
-        \Phi ::= p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi
+        \Phi ::= p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
     \end{align*}\label{ltl-defn}
 \end{definition}
-Intuitively, $\always \Phi$ says that formula $\Phi$ is true at every time step; $\eventually \Phi$ says that formula $\Phi$ is true either now or at sometime in the future time step; and $\nextt \Phi$ says formula $\Phi$ is true at the next time step immediately after the current one.
+
 \begin{remark}
-    The definition of \ltl\ can be extended to allow release and until as shown below, but they are definable using connectives in \cref{ltl-defn}, hence they are omitted in the definition. The tool we present in this paper, however, does support those operators.
-    \begin{align*}
-        \Phi ::= \cdots \mid \Phi \strongrelease \Phi \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi \mid \Phi \weakuntil \Phi
-    \end{align*}
+    Intuitively, $\always \Phi$ says that formula $\Phi$ is true at every time step; $\eventually \Phi$ says that formula $\Phi$ is true either now or at sometime in the future time step; and $\nextt \Phi$ says formula $\Phi$ is true at the next time step immediately after the current one; $\Phi \stronguntil \Psi$ says that formula $\Phi$ is true \textit{until} such time formula $\Psi$ becomes true; $\Phi \weakrelease \Psi$ says that formula $\Psi$ must be true now and remain true until formula $\Phi$ becomes true, after which point \textit{release} $\Psi$ (if formula $\Phi$ is never true, then formula $\Psi$ must remain true at all time).
+\end{remark}
+
+\begin{remark}
+    The tool we provide in this paper uses a set of concrete syntax to represent those logical connectives, in order to avoid the difficulty of typesetting connectives such as $\always$ and $\eventually$. The concrete syntax is defined in \ref{sec:concrete-syntax}.
 \end{remark}
 
 \begin{definition}[Semantics of \ltl\ formula]
-    The semantics of \ltl\ formula is defined via judgement $\pi, i \models \Phi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from \cite{Roz11}.
+    The semantics of \ltl\ formula is defined via judgement $\pi, i \models \Phi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from Rozier~\cite{Roz11}.
 \end{definition}
 
 \subsection{State-based \Buchi automata (BA)}
@@ -430,13 +431,13 @@ To demonstrate the result of our tool, we present two examples, one from a real-
 \begin{example}
     Spot~\cite{SPOT-online} presents command-line tool for random \ltl\ formula generator \texttt{randltl}~\cite{duret.13.atva}. The following \ltl\ formula is generated from this tool.
     \[
-    p_2 \land (\eventually (\always p_0 \strongrelease  1) \weakrelease \nextt(\always p_1 \land ((p_0 \liff p_2) \stronguntil \eventually p_0)))
+    p_2 \land (\eventually \always p_0 \weakrelease \nextt(\always p_1 \land ((p_0 \limplies p_2 \land p_2 \limplies p_0) \stronguntil \eventually p_0)))
     \]
     This formula is reasonably complicated, and hard for human to reason about directly. For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex13}.
     \begin{figure}[h!]
         \centering
         \includegraphics[scale=0.3]{examples/ex13/ex13.png}
-        \caption{Timeline for $p_2 \land (\eventually (\always p_0 \strongrelease  1) \weakrelease \nextt(\always p_1 \land ((p_0 \liff p_2) \stronguntil \eventually p_0)))$}
+        \caption{Timeline for $p_2 \land (\eventually \always p_0 \weakrelease \nextt(\always p_1 \land ((p_0 \limplies p_2 \land p_2 \limplies p_0) \stronguntil \eventually p_0)))$}
         \label{fig:ex13}
     \end{figure}
 \end{example}
@@ -451,8 +452,8 @@ The tool we present in this paper is available at
 \]
 which comes with two command-line tools, \texttt{ltl2regex} and \texttt{ltl2timeline}. The specific usage of the tool can be found  \href{https://github.com/EULIR/ltl-explainability#usage}{here}.
 
-\section{Future work}
-Based on our results, we raise the following questions as future works:
+\section{Discussion}
+Based on our results, we propose the following questions for discussions and future works:
 \begin{itemize}
     \item Can there be more simplifications methods as described in Section \ref{regex-simplify}? The answer is definitely positive. On one hand, more rule-based simplifications can be discovered by finding more patterns in the generated $\omega$-regular expressions. On the other hand, other simplification are possible: for example, if the generated $\omega$-regular expression is $r_1 + r_2$ where $r_1, r_2$ are not syntactically equivalent (or equivalent up to algebraic rules) $\omega$-regular expressions, but they accepts the same set of infinite-length strings, then we can simplify this down to just $r_1$. This reduce the problem to equivalence test on $\omega$-regular expressions, which is decidable. In the similar vein, many more simplifications can be used, but the question is how efficient are they? In the end, one have to balance trade-off between the efficiency of the tool and the simplicity of the result.
     %\item Our tool is effective at translating a wide range of LTL formulas. Even with LTL formulae with complex nesting structure are represented by relatively readable timeline visualizations.
@@ -461,6 +462,29 @@ Based on our results, we raise the following questions as future works:
 
 \section{Conclusion}
 To add. % Journal also asks for a Discussion section
+
+\appendix
+\section{Concrete Syntax of \texttt{ltl2timeline}} \label{sec:concrete-syntax}
+Recall from \ref{ltl-defn} that we define \ltl\ formula as
+\begin{align*}
+    \Phi ::= p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
+\end{align*}
+where $p \in \AP$. In our tool \texttt{ltl2timeline}, we use the following concrete syntax to represent \ltl\ formulae.
+\[
+    \begin{array}{c r l l l@{\qquad} l}
+         &      & \textit{abstract syntax}              & \textit{concrete syntax}                       & \textit{description} \\
+    \Phi & ::=  & p                                     & \texttt{p}                                     & \text{atomic proposition} \\
+         & \mid & \neg \Phi                             & \texttt{!} \Phi                                & \text{negation} \\
+         & \mid & \Phi \land \Phi                       & \Phi \texttt{ \& } \Phi                        & \text{conjunction} \\
+         & \mid & \Phi \lor \Phi                        & \Phi \texttt{ | } \Phi                         & \text{disjunction} \\
+         & \mid & \Phi \limplies \Phi                   & \Phi \texttt{ -> } \Phi                        & \text{implication} \\
+         & \mid & \always \Phi                          & \texttt{G} \Phi                                & \text{globally} \\
+         & \mid & \eventually \Phi                      & \texttt{F} \Phi                                & \text{finally} \\
+         & \mid & \nextt \Phi                           & \texttt{X} \Phi                                & \text{next} \\
+         & \mid & \Phi \stronguntil \Phi                & \Phi \texttt{ U } \Phi                         & \text{until} \\
+         & \mid & \Phi \weakrelease \Phi                & \Phi \texttt{ R } \Phi                         & \text{release} \\
+    \end{array}
+\]
 
 \bibliographystyle{elsarticle-num}
 \bibliography{RelatedWork}
