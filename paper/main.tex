@@ -20,7 +20,7 @@
 
 \usepackage[strings]{underscore} % fixes doi underscores
 
-\usepackage{graphicx} 
+\usepackage{graphicx}
 
 \usepackage{hyperref} % brings up so many errors
 \usepackage[capitalise, noabbrev]{cleveref}
@@ -193,12 +193,22 @@ We present timelines as graphic visualizations. It contains the following featur
 \end{itemize}
 
 \begin{example}
-    In \cref{fig:ex2}, one can reason about two timelines: the upper timeline starts with $p$ at the first time step, followed by entering the grey box with one step of $!p$ and one step of $p$. Then at the end of the grey box, we reenter the box, with the next time step being $!p$, and so on. The lower timeline starts with one step of $!p$ and one step of $p$ outside the grey box, and then enter the infinite run of $!p$ and $p$ repeating.
+    In \cref{fig:ex2}, one can reason about two parallel timelines: the upper timeline starts with $p$ at the first time step, followed by entering the grey box with one step of $!p$ and one step of $p$. Then at the end of the grey box, we reenter the box, with the next time step being $!p$, and so on. The lower timeline starts with one step of $!p$ and one step of $p$ outside the grey box, and then enter the infinite run of $!p$ and $p$ repeating.
     \begin{figure}[!h]
         \centering
         \includegraphics[scale=0.4]{examples/ex2/ex2.png}
         \caption{Example timeline for specification ``$p$ oscillates every time step''}
         \label{fig:ex2}
+    \end{figure}
+\end{example}
+
+\begin{example}
+    In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by two nodes with $!a$ separated by $\cdots$ (could also be zero time step); followed by one node with $a$ which substantiates the specification of ``$a$ eventually true''; once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $1$ (true) in the grey box.
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.4]{examples/ex15/ex15.gv.png}
+        \caption{Example timeline for specification ``$a$ is eventually true''}
+        \label{fig:ex15}
     \end{figure}
 \end{example}
 

@@ -12,3 +12,4 @@ ex11: FGa
 ex12: F(XG(F!p1 M Fp1) W (p1 R p0))
 ex13: p2 & (F(Gp0 M 1) U X(Gp1 & ((p0 <-> p2) U Fp0)))
 ex14: G(a & b -> X(!b))
+ex15: Fa
