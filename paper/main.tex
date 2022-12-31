@@ -39,7 +39,7 @@
 \newcommand{\weakrelease}{\hspace{0.1cm} \mathcal{R} \hspace{0.1cm}}
 \newcommand{\liff}{\leftrightarrow}
 
-\newcommand{\tool}{\texttt{ltl2timeline}}
+\newcommand{\tool}{\hspace{0.1cm}\texttt{ltl2timeline}\hspace{0.1cm}}
 
 \begin{document}
 
@@ -457,9 +457,20 @@ We collect the LTL formulas from a covering set of publicly-available case studi
 
 Given the tremendous popularity of LTL as a specification language for industrial analysis, surprisingly few real-life system analysis case studies publicly release their LTL formula specifications, largely to protect proprietary system information. We purposely avoid using the random or machine-generated formulas from published benchmarks because the purpose of \tool is helping humans understand and validate LTL formulas. Thus, we gather an extensive, representative set of formulas humans have written or needed to understand. Our LTL formula collection is as follows.
 
-
-%Purpose & \# formulas & source
-
+\noindent
+\begin{tabular}{p{3.6in}|c|c}
+  \hline
+  Purpose & \# formulas & Source \\
+  \hline
+  Design space for NASA's AAC (Automated Airspace Concept) & 20,250 & \cite{GCMTR16} \\
+  \hline
+  Safety specificatons for Boeing's AIR6110 wheel brake system & & \cite{BCFJKPRT15} \\
+  \hline
+  Requirements for model checking NASA's AAC high-level architecture & 6 & \cite{ZR14} \\
+  \hline
+  Real formulas collected from all publicly-available, pre-2011 case studies &  & \cite{RV11} \\
+  \hline
+\end{tabular}
 
 
 \subsection{Timeline Metrics}
