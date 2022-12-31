@@ -52,11 +52,11 @@
 	\author[inst1]{Keerthana Gurushankar\corref{cor1}}
     \ead{kgurusha@andrew.cmu.edu}
 
-    \author[inst2]{Kristin Y. Rozier}
-    \ead{kyrozier@iastate.edu}
-
     \author[inst1]{Marijn~J.H.~Heule\corref{cor2}}
     \ead{marijn@cmu.edu}
+    
+    \author[inst2]{Kristin Y. Rozier}
+    \ead{kyrozier@iastate.edu}
 
     \affiliation[inst1]{organization={Carnegie Mellon University},%Department and Organization
                 addressline={5000 Forbes Ave},
@@ -124,7 +124,7 @@ However, \ltl\ is literally a language of timelines, so timeline visualizations 
 \end{remark}
 
 \begin{definition}[Semantics of \ltl\ formula]
-    The semantics of \ltl\ formula is defined via judgement $\pi, i \models \Phi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from Rozier~\cite{Roz11}.
+    The semantics of \ltl\ formula is defined via judgment $\pi, i \models \Phi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from Rozier~\cite{Roz11}.
 \end{definition}
 
 \subsection{State-based \Buchi automata (BA)}
@@ -359,7 +359,7 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
         \caption{$u$ to $w$ path in $G$}
         \label{fig:uvw-dfa}
     \end{figure}
-    Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_\mathrm{uv}}v\xrightarrow{r_\mathrm{vw}}w$, with the trace $r=r_\mathrm{uv}r_\mathrm{vw}$. If there is a loop edge $r_\mathrm{vv}$, this edge can be travelled any number of times before exiting $v$, thus the regular expression is $r=r_\mathrm{uv}r_\mathrm{vv}^*r_\mathrm{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
+    Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_\mathrm{uv}}v\xrightarrow{r_\mathrm{vw}}w$, with the trace $r=r_\mathrm{uv}r_\mathrm{vw}$. If there is a loop edge $r_\mathrm{vv}$, this edge can be traveled any number of times before exiting $v$, thus the regular expression is $r=r_\mathrm{uv}r_\mathrm{vv}^*r_\mathrm{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
 \end{proof}
 
 \begin{lemma}
@@ -449,24 +449,38 @@ To demonstrate the result of our tool, we present two examples, one from a real-
 
 \section{Playing it out} %KYR: may swap order with the next section on artifact availability?
 
-We quantify the useability and performance of \tool by compiling an extensive set of LTL formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of all real-life LTL formulas over those metrics. We release the set of real-life LTL formulas as a benchmark set for the research community. Our experimental evaluation conclusively demonstrates that \tool scales to provide helpful visualizations of LTL formulas written by humans.
+We quantify the usability and performance of \tool by compiling an extensive set of LTL formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of all real-life LTL formulas over those metrics. We release the set of real-life LTL formulas as a benchmark set for the research community. Our experimental evaluation conclusively demonstrates that \tool scales to provide helpful visualizations of LTL formulas written by humans.
 
 \subsection{Set of Real LTL Formulas}
 
 We collect the LTL formulas from a covering set of publicly-available case studies that use LTL in the analysis of real-life safety-critical systems. As some formulas are redundant (i.e., common properties occur in many different case studies), it is not necessary to include every paper that has ever used LTL in a real setting; we instead opt for the largest and most unique formulas to cover the space of realistic use of LTL.
 
+Given the tremendous popularity of LTL as a specification language for industrial analysis, surprisingly few real-life system analysis case studies publicly release their LTL formula specifications, largely to protect proprietary system information. We purposely avoid using the random or machine-generated formulas from published benchmarks because the purpose of \tool is helping humans understand and validate LTL formulas. Thus, we gather an extensive, representative set of formulas humans have written or needed to understand. Our LTL formula collection is as follows.
+
+
+%Purpose & \# formulas & source
+
 
 
 \subsection{Timeline Metrics}
+\label{sec:metrics}
 
-Define size, length, height, complexity, etc. here.
+KYR: Define size, length, height, complexity, etc. here.
 
 \subsection{Experimental Analysis} %We could come up with a less-generic name for this, which would be nicer...
 
-Here we nicely summarize (with pictures as much as possible) all of the statistics and results we gathered.
+KYR: Here we nicely show (with pictures as much as possible) all of the individual statistics and results we gathered (note aggregation occurs below).
 
+
+\paragraph{Scalability}
+KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter LTL formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real LTL formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from \cite{RV10}.
+
+
+\paragraph{Denouement}
+KYR: aggregate and summarize all experiments here.
+  
 <image>
-caption: For all of the <large number> of real LTL formulas historically used to analyze real systems, \tool efficiently yields useable, readable timeine visualizations.
+caption: For all of the <large number> of real LTL formulas historically used to analyze real systems, \tool efficiently yields usable, readable timeline visualizations.
 
 
 
