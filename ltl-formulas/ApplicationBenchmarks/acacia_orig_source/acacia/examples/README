@@ -1,0 +1,23 @@
+The README is to describe
+*) the Organization of the examples 
+*) The platform on which we get the data of our test.
+
+--------------------------------------------------------------
+*) the Organization of the examples 
+./example : This folder contains the samples available from Lily's website.
+            The README of this folder gives the performance comparison with Lily 
+            on test cases from demo-v1 to demo-v23. 
+
+./demo-v3 : This folder contains a scalability test of demo-v3. It's README 
+            summarizes the performance comparison with Lily.
+
+./demo-v22: This folder contains the tests on dropping assumptions of demo-v22.
+            It's README summarizes the performance comparison with Lily.
+
+
+--------------------------------------------------------------
+*) Platform:
+CPU: Intel Core-Duo, 2.1GHZ
+Memory: 2GB
+OS: Fedora 9, Kernel 2.6.25-14
+perl: 5.10.0

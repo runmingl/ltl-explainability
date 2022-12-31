@@ -1,0 +1,19 @@
+MODULE main
+
+VAR 
+aPc0 : boolean;
+aPc1 : boolean;
+aPc7 : boolean;
+bPc1 : boolean;
+bPc7 : boolean;
+taken01 : boolean;
+taken12 : boolean;
+taken23 : boolean;
+taken34 : boolean;
+taken35 : boolean;
+taken45 : boolean;
+taken56 : boolean;
+taken67 : boolean;
+taken70 : boolean;
+
+LTLSPEC ((((( G ( F (taken12)) & (( G ( F (taken45)) &  G ( F (taken34))) | ((!( G ( F (taken45)))) &  G ( F (taken35)))))) & (( G ( F (taken01)) & (( G ( F (taken45)) &  G ( F (taken34))) | ((!( G ( F (taken45)))) &  G ( F (taken35)))))) & (( G ( F (taken70)) & (( G ( F (taken45)) &  G ( F (taken34))) | ((!( G ( F (taken45)))) &  G ( F (taken35)))))) & (( G ( F (taken67)) & (( G ( F (taken45)) &  G ( F (taken34))) | ((!( G ( F (taken45)))) &  G ( F (taken35)))))) & (( G ( F (taken56)) & (( G ( F (taken45)) &  G ( F (taken34))) | ((!( G ( F (taken45)))) &  G ( F (taken35)))))) & (( G ( F (taken23)) & (( G ( F (taken45)) &  G ( F (taken34))) | ((!( G ( F (taken45)))) &  G ( F (taken35))))))) | (((!( G ( F (taken12))))) & ((!( G ( F (taken01))))) & ((!( G ( F (taken70))))) & ((!( G ( F (taken67))))) & ((!( G ( F (taken56))))) & ((!( G ( F (taken45))))) & ((!( G ( F (taken35))))) & ((!( G ( F (taken34))))) & ((!( G ( F (taken23))))))) ->  G (bPc1 & (aPc0 | aPc1) -> ((!aPc7) U bPc7)))

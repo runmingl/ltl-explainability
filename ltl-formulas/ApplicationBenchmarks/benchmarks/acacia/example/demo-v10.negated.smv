@@ -1,0 +1,7 @@
+MODULE main
+VAR
+  req: boolean;
+  cancel: boolean;
+  grant: boolean;
+  ack: boolean;
+LTLSPEC ((((G(F(req)))|(F(cancel)))->((G(F(grant)))|(G(ack)))))

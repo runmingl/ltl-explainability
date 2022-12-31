@@ -1,0 +1,34 @@
+acacia set
+
+- authors:
+  - Acacia: Emmanuel Filiot, Naiyong Jin, Jean-Francois Raskin
+    (modified from)
+  - Lily: Barbara Jobstmann, Roderick Bloem
+	
+- urls:
+  - Acacia:
+    http://www.antichains.be/acacia/
+  - Lily:
+    http://www.iaik.tugraz.at/content/research/design_verification/lily/
+
+- obtained: (yyyy/mm/dd)
+  2010/01/10
+
+- papers:
+  [1], [2]
+   
+- description:
+  
+  All instances are taken from acacia_0.3.8.3_linux_i386.tar.gz. That
+  contains instances from Lily and adds some variants.
+
+- copyright:
+  Please refer to the original site/authors.
+
+- references:
+
+  [1] E. Filiot, N. Jin, J. Raskin: An Antichain Algorithm for LTL
+      Realizability. In CAV'09.
+
+  [2] B. Jobstmann, R. Bloem: Optimizations for LTL Synthesis. In
+      FMCAD'06.

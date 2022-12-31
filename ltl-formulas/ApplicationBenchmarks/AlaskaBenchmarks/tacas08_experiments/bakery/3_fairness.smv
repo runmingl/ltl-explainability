@@ -1,0 +1,204 @@
+MODULE proc1(index,min,  choosing, number)
+VAR
+loc: 1..10 
+;
+ASSIGN
+init(loc):=1;
+next(loc):=
+	 case
+
+		 loc= 5 & choosing[2]:5;
+		 loc= 6 & number[2]=-1 : 7;
+		 loc= 6 & number[1] < number[2] & number[2]< min : 7;
+		 loc= 6 & min<=number[1] & number[1] < number[2]:7;
+		 loc= 6 & number[2]<min & min <= number[1]:7;
+		 loc= 6 & number[1]=number[2] & 1<2 : 7;
+		 loc= 6 :  6 ; 
+		 loc= 7 & choosing[3]:7;
+		 loc= 8 & number[3]=-1 : 9;
+		 loc= 8 & number[1] < number[3] & number[3]< min : 9;
+		 loc= 8 & min<=number[1] & number[1] < number[3]:9;
+		 loc= 8 & number[3]<min & min <= number[1]:9;
+		 loc= 8 & number[1]=number[3] & 1<3 : 9;
+		 loc= 8 :  8 ; 
+		 loc < 10 : loc+1;
+		 loc = 10 : 1;
+	 esac;
+
+next(choosing[1]):=
+	 case
+		 loc=1 : 1;
+		 loc=4 : 0;
+		 1:choosing[1];
+	 esac;
+
+next(min):=
+	 case
+		 loc=10 : number[1];
+		 1 : min;
+	 esac;
+next(number[1]):=
+	 case
+		 loc=2 : index;
+		 loc=10 :-1;
+		 1 : number[1];
+	 esac;
+next(index):=
+	 case
+		 loc=3 : (index+1) mod (2*3+2);
+		 1 : index;
+	 esac;
+next(number[2]):=number[2];
+
+next(choosing[2]):=choosing[2];
+
+
+MODULE proc2(index,min,  choosing, number)
+VAR
+loc: 1..10 
+;
+ASSIGN
+init(loc):=1;
+next(loc):=
+	 case
+
+		 loc= 5 & choosing[1]:5;
+		 loc= 6 & number[1]=-1 : 7;
+		 loc= 6 & number[2] < number[1] & number[1]< min : 7;
+		 loc= 6 & min<=number[2] & number[2] < number[1]:7;
+		 loc= 6 & number[1]<min & min <= number[2]:7;
+		 loc= 6 & number[2]=number[1] & 2<1 : 7;
+		 loc= 6 :  6 ; 
+		 loc= 7 & choosing[3]:7;
+		 loc= 8 & number[3]=-1 : 9;
+		 loc= 8 & number[2] < number[3] & number[3]< min : 9;
+		 loc= 8 & min<=number[2] & number[2] < number[3]:9;
+		 loc= 8 & number[3]<min & min <= number[2]:9;
+		 loc= 8 & number[2]=number[3] & 2<3 : 9;
+		 loc= 8 :  8 ; 
+		 loc < 10 : loc+1;
+		 loc = 10 : 1;
+	 esac;
+
+next(choosing[2]):=
+	 case
+		 loc=1 : 1;
+		 loc=4 : 0;
+		 1:choosing[2];
+	 esac;
+
+next(min):=
+	 case
+		 loc=10 : number[2];
+		 1 : min;
+	 esac;
+next(number[2]):=
+	 case
+		 loc=2 : index;
+		 loc=10 :-1;
+		 1 : number[2];
+	 esac;
+next(index):=
+	 case
+		 loc=3 : (index+1) mod (2*3+2);
+		 1 : index;
+	 esac;
+next(number[1]):=number[1];
+
+next(choosing[1]):=choosing[1];
+
+
+MODULE proc3(index,min,  choosing, number)
+VAR
+loc: 1..10 
+;
+ASSIGN
+init(loc):=1;
+next(loc):=
+	 case
+
+		 loc= 5 & choosing[1]:5;
+		 loc= 6 & number[1]=-1 : 7;
+		 loc= 6 & number[3] < number[1] & number[1]< min : 7;
+		 loc= 6 & min<=number[3] & number[3] < number[1]:7;
+		 loc= 6 & number[1]<min & min <= number[3]:7;
+		 loc= 6 & number[3]=number[1] & 3<1 : 7;
+		 loc= 6 :  6 ; 
+		 loc= 7 & choosing[2]:7;
+		 loc= 8 & number[2]=-1 : 9;
+		 loc= 8 & number[3] < number[2] & number[2]< min : 9;
+		 loc= 8 & min<=number[3] & number[3] < number[2]:9;
+		 loc= 8 & number[2]<min & min <= number[3]:9;
+		 loc= 8 & number[3]=number[2] & 3<2 : 9;
+		 loc= 8 :  8 ; 
+		 loc < 10 : loc+1;
+		 loc = 10 : 1;
+	 esac;
+
+next(choosing[3]):=
+	 case
+		 loc=1 : 1;
+		 loc=4 : 0;
+		 1:choosing[3];
+	 esac;
+
+next(min):=
+	 case
+		 loc=10 : number[3];
+		 1 : min;
+	 esac;
+next(number[3]):=
+	 case
+		 loc=2 : index;
+		 loc=10 :-1;
+		 1 : number[3];
+	 esac;
+next(index):=
+	 case
+		 loc=3 : (index+1) mod (2*3+2);
+		 1 : index;
+	 esac;
+next(number[1]):=number[1];
+
+next(choosing[1]):=choosing[1];
+
+next(number[2]):=number[2];
+
+next(choosing[2]):=choosing[2];
+
+
+MODULE main
+VAR
+choosing : array 1..3 of boolean;
+number : array 1..3 of -1..7;
+index : 0..7;
+min : -1..7;
+p1 : process proc1(index,min, choosing,number);
+p2 : process proc2(index,min, choosing,number);
+p3 : process proc3(index,min, choosing,number);
+
+ASSIGN
+
+init(choosing[1]):=0;
+init(number[1]):=-1;
+init(choosing[2]):=0;
+init(number[2]):=-1;
+init(choosing[3]):=0;
+init(number[3]):=-1;
+init(min):=0;
+init(index):=1;
+DEFINE
+cs1 := p1.loc=9;
+outofcs1 := p1.loc=3;
+cs2 := p2.loc=9;
+outofcs2 := p2.loc=3;
+cs3 := p3.loc=9;
+outofcs3 := p3.loc=3;
+p1_running := p1.running;
+p2_running := p2.running;
+p3_running := p3.running;
+--LTLSPEC G (!(cs1 & cs2))
+--LTLSPEC G (!(outofcs1 & outofcs2))
+--LTLSPEC (G F p1_running & G F p2_running & G F p3_running ) -> (G  F cs1)
+LTLSPEC (G F p1_running & G F p2_running & G F p3_running ) -> (G  F cs2)
+--LTLSPEC (G F p1_running & G F p2_running & G F p3_running ) -> (G  F cs3)

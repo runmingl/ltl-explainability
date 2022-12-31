@@ -1,0 +1,109 @@
+#!/bin/bash
+
+export PERL5LIB=../:../../lib/
+export PATH=../:../../lib/:${PATH}
+
+#defaults
+verbose=1
+extention="ltl"
+silent="";
+prefix="demo-v22_"
+demos="`seq 1 9`"
+mink=0
+maxk=20
+winner="mod"
+mc=0
+#parse args
+while getopts v:n:e:o:s:p:h:k:K:w:a opt
+do
+case $opt in
+v)
+verbose=$OPTARG
+;;
+n)
+demo=$OPTARG
+d="`echo $demo | grep \-`"
+if [ -n "$d" ]; then
+    demos="`echo $demo | sed s/-/\ /gi`"
+    demos="`seq $demos`"
+else
+    demos=$demo
+fi
+;;
+e)
+extention=$OPTARG
+;;
+o)
+options="-"$OPTARG
+;;
+s)
+silent="1"
+;;
+K)
+maxk=$OPTARG
+;;
+k)
+mink=$OPTARG
+;;
+p)
+prefix=$OPTARG
+;;
+w)
+winner=$OPTARG
+;;
+a)
+aa=$OPTARG
+;;
+h)
+cat << EOF
+usage: demo-call -v [0-3] -n [1-23] -e [psl/ltl] -o options 
+       -s [0/1] -k [0..] -K [0..] -p prefix -h
+-v verb ..... set verbosity level to verb
+-n num  ..... call demo with the number num
+-e ext  ..... use specification file with extension ext (default ltl)
+-o options .. pass the string options to lily.pl as it is 
+-s silent  .. if silent = 1 redirect output to a file 
+-p prefix ... define the prefix of the demo-files (default demo-v)
+-k min_k .... from which the k starts from (min_k >= 0)
+-K max_k .... terminate the process when max_k + 1 is reached (max_k > min_k)
+-w winner ... the winner of the game, env or mod 
+-h .......... display this help message
+
+EOF
+exit 1
+;;
+\?)
+echo arg parse error;
+echo use -h
+exit 1
+esac
+done
+
+echo "running demo" $demos "with verbosity $verbose"
+
+for i in $demos; do
+	echo $prefix$i.$extention
+  if [ -e $prefix$i.$extention ]; then
+		if [ -e result.out ]; then
+	 	  rm result.out
+    fi
+		echo demo $i
+		echo "#############################################################"
+		echo "# $prefix$i.$extention"
+		if [ $silent ]; then
+    	echo "main.pl -syn $prefix$i.part -syndir $prefix$i -ltl
+					$prefix$i.$extention -v $verbose -k $mink -K $maxk -w $winner -mc $mc -$options > $prefix$i/result.out"
+    	if ![ -e $prefix$i ]; then
+				mkdir $prefix$i
+    	fi
+    	main.pl -syn $prefix$i.part -syndir $prefix$i -ltl $prefix$i.$extention -k $mink -K $maxk -w $winner -mc $mc -v $verbose $options > $prefix$i/result.out
+		else
+    	echo "main.pl -syn $prefix$i.part -syndir $prefix$i -ltl
+                 $prefix$i.$extention -k $mink -K $maxk -w $winner -a $aa -mc $mc -v $verbose $options"
+    	main.pl -syn $prefix$i.part -syndir $prefix$i -ltl $prefix$i.$extention -k $mink -K $maxk -w $winner -mc $mc -v $verbose $options
+		fi
+  fi
+done
+
+exit 1
+

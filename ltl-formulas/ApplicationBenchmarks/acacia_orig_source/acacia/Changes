@@ -1,0 +1,15 @@
+Revision history for Perl extension alres.
+
+0.01  Wed Nov 12 01:24:35 2008
+	- original version; created by h2xs 1.23 with options
+		-Xn acacia
+Features:
+1) Based on Jean-Francois' counting function and safety game approach
+2) Based on Emmanuel's algorithm 
+3) Enumerating alphabet explicitly 
+3) Support Both UCT and NBW
+4) The sequence of actions in NBW is module first, and then the environment. 
+5) With synthesis, the winning strategy is coded as a Moore machine in Verliog.
+6) With the test of the realizability of the environment, the winning strategy is coded as a Mealy Machine in Verilog
+7) UCT as default
+8) Always setting the counter of falsenode_x to -1 
