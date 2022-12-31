@@ -1,0 +1,528 @@
+\documentclass[preprint,12pt]{elsarticle}
+\journal{Journal of Computer Languages}
+
+\usepackage{amsmath, amssymb, amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}{Lemma}[section]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+\usepackage{algorithm, algpseudocode}
+\algrenewcommand\algorithmicrequire{\textbf{Input:}}
+\algrenewcommand\algorithmicensure{\textbf{Output:}}
+
+\usepackage{scalerel}
+\DeclareMathOperator*{\bigplus}{\scalerel*{+}{\sum}}
+
+\usepackage[strings]{underscore} % fixes doi underscores
+
+\usepackage{graphicx}
+
+\usepackage{hyperref} % brings up so many errors
+\usepackage[capitalise, noabbrev]{cleveref}
+
+\newcommand{\AP}{\mathcal{AP}}
+\newcommand{\always}{\Box}
+\newcommand{\eventually}{\Diamond}
+\newcommand{\nextt}{\mathcal{X}}
+\newcommand{\limplies}{\rightarrow}
+\newcommand{\ltl}{\textit{LTL}}
+
+\newcommand{\Buchi}{B\"{u}chi }
+\newcommand{\stronguntil}{\hspace{0.1cm} \mathcal{U}  \hspace{0.1cm}}
+\newcommand{\strongrelease}{\hspace{0.1cm} \mathcal{M} \hspace{0.1cm}}
+\newcommand{\weakuntil}{\hspace{0.1cm} \mathcal{W} \hspace{0.1cm}}
+\newcommand{\weakrelease}{\hspace{0.1cm} \mathcal{R} \hspace{0.1cm}}
+\newcommand{\liff}{\leftrightarrow}
+
+\begin{document}
+
+\begin{frontmatter}
+    \title{What's in a Name? Linear Temporal Logic Literally Represents Time Lines}
+
+	\author[inst1]{Runming Li\corref{cor1}}
+    \ead{runmingl@andrew.cmu.edu}
+
+	\author[inst1]{Keerthana Gurushankar\corref{cor1}}
+    \ead{kgurusha@andrew.cmu.edu}
+
+    \author[inst2]{Kristin Y. Rozier}
+    \ead{kyrozier@iastate.edu}
+
+    \author[inst1]{Marijn~J.H.~Heule\corref{cor2}}
+    \ead{marijn@cmu.edu}
+
+    \affiliation[inst1]{organization={Carnegie Mellon University},%Department and Organization
+                addressline={5000 Forbes Ave},
+                city={Pittsburgh},
+                postcode={15213},
+                state={PA},
+                country={USA}}
+
+    \affiliation[inst2]{organization={Iowa State University},%Department and Organization
+                %addressline={Address Two},
+                city={Ames},
+                postcode={50010},
+                state={IA},
+                country={USA}}
+
+	\cortext[cor1]{These authors contributed equally to this work}
+    \cortext[cor2]{Corresponding author}
+
+    \begin{abstract}
+        Linear Temporal Logic (\ltl) is widely used to specify requirements in safety-critical systems.
+        However, like many formal verification techniques, it is known to be unintuitive and error-prone for human practitioners to specify and validate.
+        In this paper, we provide a new timeline tool for visualizing \ltl-based specifications, which is effective at intuitively representing a wide range of formulas.
+        Our tool generates timeline visualizations by translating \ltl\ formulae to intermediate representations as \Buchi automata and then $\omega$-regular expressions, and finally simplifying and visualizing the expressions.
+        We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
+    \end{abstract}
+
+    \begin{highlights} %TODO ~ Highly encouraged but not mandatory
+        \item We transform Linear Temporal Logic (LTL) formulas to timeline visualizations for the set of satisfying traces.
+        \item We translate LTL formulas to \Buchi automata, then to $\omega$-regular expressions, then simplify them and use graph visualization tools to draw timelines.
+        \item Our algorithm is sound and complete. 
+        \item Our tool, \texttt{ltl2timeline}, effectively constructs small timeline visualizations for a range of LTL formulas.
+    \end{highlights}
+
+    \begin{keyword}
+        Modal and Temporal Logics
+        \sep Logic and Verification
+        \sep Regular languages
+    \end{keyword}
+\end{frontmatter}
+
+\section{Introduction}
+
+Requirement specification is a central step in the development of safety-critical systems. As a first step, requirements are typically written in natural language. For example, here is a real-world requirement specification from an air traffic control system ~\cite{ZR14}
+\begin{center}
+    "If a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft"
+\end{center}
+Such natural language requirements are often ambiguous and not amenable to formal analysis, so requirements must often be specified using rigorous formalized semantics for the purpose of verification and validation. The above requirement, when translated to Linear Temporal Logic (detailed in Section 2.1), may be expressed as follows:
+\begin{align*}
+    \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \\
+    \limplies \nextt (\neg \texttt{controller.CTR\_control\_1}))
+\end{align*}
+Several tools have been developed to reason about formal specifications written with such LTL formulas, like R2U2 and FRET \cite{GPMS20}. However, these formalized semantics are unintintuitive and error-prone for human practitioners, and the tools are much less useful when system designers can't validate input specifications.
+Thus, a significant hurdle remains: how can we convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the desired system requirements? % quote MLTL paper?
+
+We take a simple idiomatic approach to address this problem. As Linear Temporal Logic formulas are temporal information, we devise a tool, \texttt{ltl2timeline}, which can draw timelines to depict the satisfying traces of the LTL formula, and thereby represent the specified behaviour in a more natural human-intelligible form. 
+
+Our tool, \texttt{ltl2timeline}, uses a remarkably simple algorithm: transforming an input LTL formula through a sequence of automaton and regular expression-based intermediate representations, and is surprisingly effective at providing small representations for a range of LTL formulas. It would visualize the above air traffic control requirement behaviour with the following timeline:
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{examples/ex10/ex10.gv.png}
+    \caption{[TODO: make fig with variables, explain a, b, c or just use oscillating example if that's easier]}
+\end{figure}
+
+We make the following contributions in our paper:
+\begin{itemize}
+    \item We provide the tool, \texttt{ltl2timeline}, which takes LTL formulas and synthesizes timeline visualizations for them
+    \item We prove correctness in Section 4. We show that for every LTL formula, the timeline outputted indeed represents the set of satisfying traces.
+    \item We showcase the results of our tool on a range of example formulas in Section 5, including discussing the air traffic example above. 
+\end{itemize}
+
+\section{Setting the stage}
+
+We must begin by setting up the prerequisite definitions involved in our work. 
+First, we provide the definition and semantics for LTL. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFAs) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines. 
+
+\subsection{Linear temporal logic (LTL)}
+
+\begin{definition}[Linear Temporal Logic (LTL)]
+    % cite Kristin's survey paper
+    The syntax of an LTL formula over a set of atomic propositions $\AP$, where $p\in\AP$ is a propositional variable, is given by the following grammar:
+    \begin{align*}
+        \Phi ::= p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
+    \end{align*}\label{ltl-defn}
+\end{definition}
+
+\begin{remark}
+    Intuitively, $\always \Phi$ says that formula $\Phi$ is true at every time step; $\eventually \Phi$ says that formula $\Phi$ is true either now or at sometime in the future time step; and $\nextt \Phi$ says formula $\Phi$ is true at the next time step immediately after the current one; $\Phi \stronguntil \Psi$ says that formula $\Phi$ is true \textit{until} such time formula $\Psi$ becomes true; $\Phi \weakrelease \Psi$ says that formula $\Psi$ must be true now and remain true until formula $\Phi$ becomes true, after which point \textit{release} $\Psi$ (if formula $\Phi$ is never true, then formula $\Psi$ must remain true at all time).
+\end{remark}
+
+\begin{remark}
+    The tool we provide in this paper uses a set of concrete syntax to represent those logical connectives, in order to avoid the difficulty of typesetting connectives such as $\always$ and $\eventually$. The concrete syntax is defined in \ref{sec:concrete-syntax}.
+\end{remark}
+
+\begin{definition}[Semantics of \ltl\ formula]
+    The semantics of \ltl\ formula is defined via judgement $\pi, i \models \Phi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from Rozier~\cite{Roz11}.
+\end{definition}
+
+\subsection{State-based \Buchi automata (BA)}
+\begin{definition}[$\omega$-word]
+    An $\omega$-word or infinite run of $\Sigma$, is an infinite string $s = (s_0, s_1, s_2, \dots)$ where each $s_i\in \Sigma$
+\end{definition}
+\begin{definition}[\Buchi automaton]
+    A \Buchi automaton is a $5$-tuple, $G = (Q, \Sigma, \delta, s, F)$ consisting of
+    \begin{enumerate}
+        \item a finite set of states $Q$
+        \item a finite alphabet of input symbols called the alphabet $\Sigma$
+        \item a partial function $\delta : Q\times \Sigma \to Q$, called the transition function
+        \item an initial or start state called $s\in Q$
+        \item a set of accept states $F \subseteq Q$
+    \end{enumerate}
+    $G$ accepts an infinite run iff at least one of its infinitely visited states is in $F$
+\end{definition}
+
+\subsection{$\omega$-regular expression}
+\begin{definition}[Regular expression]
+    For word $a \in \Sigma$, regular expression is defined by the following grammar:
+    \begin{align*}
+        A ::= \emptyset \mid \epsilon \mid a \mid AA \mid A + A \mid A^*
+    \end{align*}
+\end{definition}
+\begin{definition}[Semantics of regular expression]
+    Let $L(A)$ denote the language accepted by regular expression $A$. Then $L(A)$ is inductively defined as
+    \begin{align*}
+        L(\emptyset) & = \emptyset \\
+        L(\epsilon) & = \{\epsilon\} \\
+        L(a) & = \{a\} \\
+        L(A_1A_2) & = \{s_1s_2 \mid s_1 \in L(A_1) \text{ and } s_2 \in L(A_2)\} \\
+        L(A_1 + A_2) & = L(A_1) \cup L(A_2) \\
+        L^{(0)}(A) & = \{\epsilon\} \\
+        L^{(i + 1)}(A) & = \{s_1s_2 \mid s_1 \in L(A) \text{ and } s_2 \in L^{(i)}(A)\} \\\
+        L(A^*) & = \bigcup_{i \ge 0} L^{(i)}(A)
+    \end{align*}
+\end{definition}
+
+\begin{remark}
+    For the purpose of our tool, $\Sigma$ is the set of propositional logic formula defined as
+    \[
+    \Psi ::= p \mid \neg \Psi \mid \Psi \land \Psi \mid \Psi \lor \Psi \mid \Psi \limplies \Psi
+    \]
+\end{remark}
+
+\begin{definition}[$\omega$-regular expression]
+    Regular expression concerns only finite-length strings. However, since \ltl\ formulas reason about events that happen over an infinite-length timeline, we need to model it using infinite regular expressions (i.e. $\omega$-regular expression). $\omega$-regular expression is defined by the following grammar:
+    \begin{align*}
+        B ::= A^{\omega} \mid AB \mid B + B
+    \end{align*}
+\end{definition}
+\begin{definition}[Semantics of $\omega$-regular expression]\label{def:omega-semantics}
+    Let $\Sigma^{\omega}$ denote the set of infinite-length string over fixed alphabet $\Sigma$. Let $L_{\omega}(B)$ denote the $\omega$-language accepted by $\omega$-regular expression $B$. Then $L_{\omega}(B)$ is inductively defined as
+    \begin{align*}
+        L_{\omega}(A^{\omega}) & = \{s_1s_2s_3\cdots \mid s_i \in L(A) \text{ and } i \ge 1\} \\
+        L_{\omega}(AB) & = \{s_1s_2 \mid s_1 \in L(A) \text{ and } s_2 \in L_{\omega}(B)\} \\
+        L_{\omega}(B_1 + B_2) &= L_{\omega}(B_1) \cup L_{\omega}(B_2)
+    \end{align*}
+\end{definition}
+
+\subsection{Timeline}
+We present timelines as graphic visualizations. It contains the following features:
+\begin{itemize}
+    \item Every timeline starts with a node named ``start''.
+    \item Every node represents one time step, and each node has a propositional logic formula $\Psi$, which specifies the behavior of atomic propositions at that time step. The formula $\Psi$ must be true at that time step. If $\Psi = 1$, that means all atomic propositions can behave arbitrarily.
+    \item A node with label ``$\cdots$'' means to repeat the node prior to it and after it finitely many times.
+    \item The grey box means repeat infinitely. Once we reach the end of a timeline in the grey box, we must reenter the same grey box from any of its starting point.
+\end{itemize}
+
+\begin{example}
+    In \cref{fig:ex2}, one can reason about two parallel timelines: the upper timeline starts with $p$ at the first time step, followed by entering the grey box with one step of $!p$ and one step of $p$. Then at the end of the grey box, we reenter the box, with the next time step being $!p$, and so on. The lower timeline starts with one step of $!p$ and one step of $p$ outside the grey box, and then enter the infinite run of $!p$ and $p$ repeating.
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.4]{examples/ex2/ex2.png}
+        \caption{Example timeline for specification ``$p$ oscillates every time step''}
+        \label{fig:ex2}
+    \end{figure}
+\end{example}
+
+\begin{example}
+    In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by two nodes with $!a$ separated by $\cdots$ (could also be zero time step); followed by one node with $a$ which substantiates the specification of ``$a$ eventually true''; once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $1$ (true) in the grey box.
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.4]{examples/ex15/ex15.png}
+        \caption{Example timeline for specification ``$a$ is eventually true''}
+        \label{fig:ex15}
+    \end{figure}
+\end{example}
+
+\section{Algorithm}
+On a high level, our algorithm of converting \ltl\ formulas into timeline visualization works as follows:
+\begin{enumerate}
+    \item Convert the given \ltl\ formula to its corresponding \Buchi automata % (as detailed in \cref{ltl2aut})
+    \item Derive the $\omega$-regular expression corresponding to the \Buchi automata % (in \cref{aut2regex})
+    \item Simplify the derived $\omega$-regular expression % (in \cref{regex-simplify})
+    \item Visualize the $\omega$-regular expression according to its structure %(in \cref{regex2timeline})
+\end{enumerate}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{img/algorithm_outline.pdf}
+    \caption{Algorithm outline}
+    \label{fig:algo}
+\end{figure}
+
+\subsection{LTL to BA} \label{ltl2aut}
+The translation from LTL formulas to \Buchi automata is provided by SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.}. SPOT is a C++ library that provides a variety of tools to generate, convert and translate LTL formulas and $\omega$-automata. To aid our tool, we only use its function to translate LTL formulas to state-based \Buchi automata. % write about how spot works? 
+
+\subsection{BA to $\omega$-regex} \label{aut2regex}
+We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths for looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in digraph of the automaton.
+
+The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
+
+\begin{algorithm}[h!]
+    \caption{reduce\_dfa}
+    \begin{algorithmic}
+        \Require ($G, v$), a DFA with state $v$ that is not initial or final
+        \Ensure Deletes state $v$ from $G$ while ensuring the same language is recognized
+        \For{ every $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ }
+            \If {$v$ has a self-edge  $v\xrightarrow{r_\mathrm{loop}}v$}
+                \State replace edges $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ with $u \xrightarrow{r_\mathrm{in} r_\mathrm{loop}* r_\mathrm{out}} w$
+            \Else
+                \State replace edges $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ with $u \xrightarrow{r_\mathrm{in}  r_\mathrm{out}} w$
+            \EndIf
+        \EndFor
+        %\State \Return the reduced graph $G$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[h!]
+    \caption{dfa2regex}
+    \begin{algorithmic}
+        \Require ($G, s, f$), a DFA with initial state $s$ and final state $f$
+        \Ensure The regular expression corresponding to all paths from $s$ to $f$
+        % WHile there exists any edge except r_sf
+        \While{ there exists an interior vertex $v$ }
+            \State reduce\_dfa($G, v$)
+            \State combine multiedges, i.e. $r1 : u \to w, r2 : u \to w$  to $r1 | r2 : u \to w$
+        \EndWhile
+        \State \Return $(r_\mathrm{ss}| r_\mathrm{sf} r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$
+        % if called by first visit, this is r_\mathrm{ss}* r_\mathrm{sf}
+        % if called by ba2wregex, s=f, this is r_\mathrm{ff}
+        % consider modularizing fns differently
+        % \State \Return regexp labelling the edge $s\to f$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[h!]
+    \caption{dfa2regex\_firstvisit}
+    \begin{algorithmic}
+        \Require ($G, s, f$), a DFA with initial state $s$ and final state $f$
+        \Ensure The regular expression of all paths from $s$ reaching $f$ for the first time
+        \State delete all out edges from $f$ in $G$
+        \State \Return dfa2regex($G, s, f$)
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[h!]
+    \label{alg:ba2wregex}
+    \caption{ba2wregex}
+    \begin{algorithmic}
+        \Require $G$, a \Buchi automaton
+        \Ensure The $\omega$-regular expression recognized by $G$
+        \State \Return $\bigcup_{f \in F}\left(\text{dfa2regex\_firstvisit}(G, s, f)\text{\^{}dfa2regex}(G, f, f) \right) $
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{$\omega$-regex simplification} \label{regex-simplify}
+
+The $\omega$-regular expression generated in \cref{aut2regex} may not be the ``simplest'' for the purpose of visualizing the timeline. We have observed multiple patterns in the resulting $\omega$-regular expression that could be simplified. For example, an $\omega$-regular expression in the form of $r^*r^{\omega}$ represents the same timeline as $r^{\omega}$, but the latter is more intuitive. For this purpose, we devised some simplification rules in our tool, based on our observation of common patterns in the generated $\omega$-regular expression.
+
+\paragraph*{Rule-based simplification}
+Here we show a demonstrating subset of simplification rules we encoded.
+\begin{alignat*}{2}
+        & r_1 + r_1r_2^* && \Longrightarrow r_1r_2^* \\
+        & r + r && \Longrightarrow r \\
+        & r_1 + r_2^*r_1 && \Longrightarrow r_2^*r_1 \\
+        & (r^*)^{\omega} && \Longrightarrow r^{\omega} \\
+        & (r_1r_2^*)r_2^{\omega} && \Longrightarrow r_1r_2^{\omega} \\
+        & (r_1r_2)r_2^{\omega} && \Longrightarrow r_1r_2^{\omega} \\
+        & r^*r^{\omega} && \Longrightarrow r^{\omega} \\
+        & rr^{\omega} && \Longrightarrow r^{\omega}
+\end{alignat*}
+
+\paragraph*{Result of simplification}
+Those simplification rules lead to more intuitive representation of timelines. Here we demonstrate their effects using an example.
+
+\begin{example}
+    The formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates un-simplified $\omega$-regular expression $((!a) | (aa^*(!a)))((!a) | (aa^*(!a)))^{\omega}$, and simplified version $((!a) | (aa^*(!a)))^{\omega}$, which corresponds to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.3]{examples/ex9/ex9-unsimplified.png}
+        \caption{Timeline for un-simplified $\omega$-regular expression $((!a) | (aa^*(!a)))((!a) | (aa^*(!a)))^{\omega}$}
+        \label{fig:unsimplified}
+    \end{figure}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.3]{examples/ex9/ex9.png}
+        \caption{Timeline for simplified $\omega$-regular expression $((!a) | (aa^*(!a)))^{\omega}$}
+        \label{fig:simplified}
+    \end{figure}
+\end{example}
+
+\begin{remark}
+    Both simplified and un-simplified $\omega$-regular expression would generate correct timeline representations. Correct as they faithfully represent the set of satisfying traces of the original \ltl\ formula $\Phi$. Nonetheless, we, as human user, oftentimes find the simplified version more intuitive to reason about.
+\end{remark}
+
+\subsection{$\omega$-regex to timeline} \label{regex2timeline}
+Our tool uses Graphviz~\cite{Ellson2001GraphvizO} to achieve the timeline visualization step. By construction of our algorithm, every $\omega$-regular expression is in the form of
+\[
+    A_1A_2^{\omega} + A_3A_4^{\omega} + \cdots + A_{2n-1}A_{2n}^{\omega}
+\]
+where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a high level, for each of regular expression $A_i$, we visualize it as a set of accepted input. We view each union operator as parallel timelines, and each $A_{2i-1}$ is concatenated with $A_{2i}$ repeated infinitely many times, as represented in the grey box. \cref{fig:timeline} presents a generic timeline resulting from this form of construction.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.5]{img/timeline.png}
+    \caption{Generic timeline construction from $A_1A_2^{\omega} + A_3A_4^{\omega} + \cdots + A_{2n-1}A_{2n}^{\omega}$}
+    \label{fig:timeline}
+\end{figure}
+
+\section{Theoretical Analyses}
+\subsection{Correctness of Regex Translation}
+\begin{lemma}
+    % reduce_dfa does its input to output behaviour
+    For any DFA $G$ and any state $v$ in $G$ that is neither a start state or a final state, \textbf{reduce\_dfa}$(G, v)$ preserves the regular language accepted by $G$
+\end{lemma}
+\begin{proof}
+    Let $G'$ be the graph of $G$ post reduction by the application of \textbf{reduce\_dfa}$(G, v)$. We show that the trace of every path accepted by $G$ is also accepted by $G'$. Suppose a path accepted by $G$ does not pass through $v$, clearly this is true. Else, suppose it passes through $v$, since $v$ is an interior node, $v$ cannot be the first or last in the path. Thus, for every pass through $v$, let $u\neq v$ be the last node passed before entering $v$, and likewise $w$ be the first node after exiting $v$. We show that the regular language of sub-traces from $u$ to $w$ in $G$ (shown in \cref{fig:uvw-dfa}) is identical to that in $G'$.
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.75]{img/uvw_dfa.pdf}
+        \caption{$u$ to $w$ path in $G$}
+        \label{fig:uvw-dfa}
+    \end{figure}
+    Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_\mathrm{uv}}v\xrightarrow{r_\mathrm{vw}}w$, with the trace $r=r_\mathrm{uv}r_\mathrm{vw}$. If there is a loop edge $r_\mathrm{vv}$, this edge can be travelled any number of times before exiting $v$, thus the regular expression is $r=r_\mathrm{uv}r_\mathrm{vv}^*r_\mathrm{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
+\end{proof}
+
+\begin{lemma}
+    For any DFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{dfa2regex}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$ (i.e., the language accepted by $G$)
+\end{lemma}
+\begin{proof}
+    The while loop clearly terminates since the number of interior nodes is strictly decreasing, and upon termination, $G$ is a DFA containing only the nodes $s$ and $f$. Now, every non-terminal visit from $s$ to $f$ and back to $s$, can be replaced by an edge $s\xrightarrow{r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs}} s$, instead of the edge $f\to s$. This DFA yields the regular language $(r_\mathrm{ss}|r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$, as outputted by the algorithm.
+\end{proof}
+
+\begin{lemma}
+    For any DFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{dfa2regex\_firstvisit}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$, visiting $f$ for the first time.
+\end{lemma}
+\begin{proof}
+    Let $G'$ be $G$ with all out-edge (including loops) from $f$ deleted. We claim that $L(G')$ is equal to the language $L'$ of all paths from $s$ reaching $f$ for the first time.
+
+    First we show $L(G') \subseteq L'$, i.e., every path accepted by $G'$ starts in $s$ and ends by reaching $f$ for the first time. Since $s$ and $f$ are the initial and final states of $G'$ respectively, clearly every path accepted by $G$ must start in $s$ and end in $f$. Further, as $f$ has no out-edges in $G$, any accepted path must end immediately once it reaches $f$. Thus it must end once it reaches $f$ for the first time.
+
+    Also, we show $L' \subseteq L(G')$, i.e., every path starting in $s$ and ending by $f$ reaching $f$ for the first time is accepted by $G'$. If a path contains an out-edge of $f$, it cannot be in $L'$ as the trace continues beyond the first time step at $f$. Thus, every trace in $L'$ only uses edges in $G'$, and is thus accepted by $G$ iff it is accepted by $G'$.
+\end{proof}
+
+\begin{theorem}
+    For any \Buchi automaton $G$ with start state $s$ and final states $F$, \textbf{ba2wregex}$(G)$ outputs the $\omega$-regular language accepted by $G$
+\end{theorem}
+\begin{proof}
+    We show that
+    \[
+        L = \bigcup_{f\in F} \textbf{dfa2regex}(G, s, f) \verb|^| \left(\textbf{dfa2regex\_firstvisit}(G, f, f)\right)^\omega
+    \]
+    and the $\omega$-language accepted by $G$, $L_\omega(G)$ are identical.
+
+    First, $L\subseteq L_\omega(G)$ since for every infinite run in $L$, clearly by definition of $L$, there is some $f\in F$ such that passes through $f$ infinitely often. The converse is true as well: for every infinite run $q_0, q_1, \dots$ accepted by $G$, then $q_0 = s$ and by definition of the accepting language, there is some accepting state $f$, passed through infinitely often, thus the run is in $\textbf{dfa2regex}(G, s, f)$ \verb|^| $\left(\textbf{dfa2regex\_firstvisit}(G, f, f)\right)^\omega$
+\end{proof}
+\subsection{Correctness of Rewrite Rules}
+\begin{lemma}
+    For all regular expressions $r_1, r_2, r$, each of the following rewrite rules preserve the regular or $\omega$-regular language represented by the expressions:
+    \begin{alignat}{2}
+        & r_1 + r_1r_2^* && \Longrightarrow r_1r_2^* \\
+        & r + r && \Longrightarrow r \\
+        & r_1 + r_2^*r_1 && \Longrightarrow r_2^*r_1 \\
+        & (r^*)^{\omega} && \Longrightarrow r^{\omega} \\
+        & (r_1r_2^*)r_2^{\omega} && \Longrightarrow r_1r_2^{\omega} \\
+        & (r_1r_2)r_2^{\omega} && \Longrightarrow r_1r_2^{\omega} \\
+        & r^*r^{\omega} && \Longrightarrow r^{\omega} \\
+        & rr^{\omega} && \Longrightarrow r^{\omega}
+    \end{alignat}
+\end{lemma}
+
+The soundness of each of these translations can be proven by reasoning about the  semantics detailed in \cref{def:omega-semantics}. A full proof is not provided at this time.
+
+\section{Tool showcase}
+To demonstrate the result of our tool, we present two examples, one from a real-world model checking example from Zhao and Rozier~\cite{ZR14} and one from a randomly generated \ltl\ formula.
+
+\begin{example}
+    Zhao and Rozier~\cite{ZR14} presents a model verification specification says ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft'' which corresponds to \ltl\ formula
+    \[
+        \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \limplies \nextt (\neg \texttt{controller.CTR\_control\_1}))
+    \]
+    For simplicity, we swap the concrete atomic proposition to $a,b$ and get
+    \[
+        \always (a \land b \limplies \nextt (\neg b))
+    \]
+    For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex14}.
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.3]{examples/ex14/ex14.png}
+        \caption{Timeline for $\always (a \land b \limplies \nextt (\neg b))$}
+        \label{fig:ex14}
+    \end{figure}
+\end{example}
+
+\begin{example}
+    Spot~\cite{SPOT-online} presents command-line tool for random \ltl\ formula generator \texttt{randltl}~\cite{duret.13.atva}. The following \ltl\ formula is generated from this tool.
+    \[
+        p_2 \land (\eventually \always p_0 \weakrelease \nextt(\always p_1 \land ((p_0 \limplies p_2 \land p_2 \limplies p_0) \stronguntil \eventually p_0)))
+    \]
+    This formula is reasonably complicated, and hard for human to reason about directly. For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex13}.
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.3]{examples/ex13/ex13.png}
+        \caption{Timeline for $p_2 \land (\eventually \always p_0 \weakrelease \nextt(\always p_1 \land ((p_0 \limplies p_2 \land p_2 \limplies p_0) \stronguntil \eventually p_0)))$}
+        \label{fig:ex13}
+    \end{figure}
+\end{example}
+\begin{remark}
+    These two examples show that our tool can generate reasonably clear diagrams for both real-world formula and randomly generated formula.
+\end{remark}
+
+\section{Artifact availability}
+The tool we present in this paper is available at
+\[
+    \texttt{\url{https://github.com/EULIR/ltl-explainability}}
+\]
+which comes with two command-line tools, \texttt{ltl2regex} and \texttt{ltl2timeline}. The specific usage of the tool can be found  \href{https://github.com/EULIR/ltl-explainability#usage}{here}.
+
+\section{Discussion}
+% Questions we were asked during the talk
+% Where there formulas we had trouble representing
+% Going from timelines to LTL
+% It would be helpful to have benchmarks beyond showcase because what is cool is timelines being remarkably short
+% Also a theoretical discussion of same with star height
+
+Based on our results, we propose the following questions for discussions and future works:
+\begin{itemize}
+    \item Can there be more simplifications methods as described in Section \ref{regex-simplify}? The answer is definitely positive. On one hand, more rule-based simplifications can be discovered by finding more patterns in the generated $\omega$-regular expressions. On the other hand, other simplification are possible: for example, if the generated $\omega$-regular expression is $r_1 + r_2$ where $r_1, r_2$ are not syntactically equivalent (or equivalent up to algebraic rules) $\omega$-regular expressions, but they accepts the same set of infinite-length strings, then we can simplify this down to just $r_1$. This reduce the problem to equivalence test on $\omega$-regular expressions, which is decidable. In the similar vein, many more simplifications can be used, but the question is how efficient are they? In the end, one have to balance trade-off between the efficiency of the tool and the simplicity of the result.
+    %\item Our tool is effective at translating a wide range of LTL formulas. Even with LTL formulae with complex nesting structure are represented by relatively readable timeline visualizations.
+    \item Can we define timeline more formally so that one can do this process reversely (i.e. a tool that converts timeline representation to its corresponding \ltl\ formula)? That would be a very useful tool in practice. However, a direct reverse of the algorithm we presented in this paper may not be viable.
+\end{itemize}
+
+\section{Conclusion}
+Making formal methods, such as LTL, easier for humans in the loop is an important problem today, in making systems safer with verification. 
+In this paper, we present a novel tool to visualize LTL specification behavior and aid in validating their correctness.
+We hope that this will assist system designers in formulating error-free specifications and thus improve the effectiveness of verification tools for LTL.  
+
+\appendix
+\section{Concrete Syntax of \texttt{ltl2timeline}} \label{sec:concrete-syntax}
+Recall from \ref{ltl-defn} that we define \ltl\ formula as
+\begin{align*}
+    \Phi ::= p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
+\end{align*}
+where $p \in \AP$. In our tool \texttt{ltl2timeline}, we use the following concrete syntax to represent \ltl\ formulae.
+\[
+    \begin{array}{c r l l l@{\qquad} l}
+         &      & \textit{abstract syntax}              & \textit{concrete syntax}                       & \textit{description} \\
+    \Phi & ::=  & p                                     & \texttt{p}                                     & \text{atomic proposition} \\
+         & \mid & \neg \Phi                             & \texttt{!} \Phi                                & \text{negation} \\
+         & \mid & \Phi \land \Phi                       & \Phi \texttt{ \& } \Phi                        & \text{conjunction} \\
+         & \mid & \Phi \lor \Phi                        & \Phi \texttt{ | } \Phi                         & \text{disjunction} \\
+         & \mid & \Phi \limplies \Phi                   & \Phi \texttt{ -> } \Phi                        & \text{implication} \\
+         & \mid & \always \Phi                          & \texttt{G} \Phi                                & \text{globally} \\
+         & \mid & \eventually \Phi                      & \texttt{F} \Phi                                & \text{finally} \\
+         & \mid & \nextt \Phi                           & \texttt{X} \Phi                                & \text{next} \\
+         & \mid & \Phi \stronguntil \Phi                & \Phi \texttt{ U } \Phi                         & \text{until} \\
+         & \mid & \Phi \weakrelease \Phi                & \Phi \texttt{ R } \Phi                         & \text{release} \\
+    \end{array}
+\]
+
+\bibliographystyle{elsarticle-num}
+\bibliography{RelatedWork}
+
+
+\end{document}
