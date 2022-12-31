@@ -39,6 +39,8 @@
 \newcommand{\weakrelease}{\hspace{0.1cm} \mathcal{R} \hspace{0.1cm}}
 \newcommand{\liff}{\leftrightarrow}
 
+\newcommand{\tool}{\texttt{ltl2timeline}}
+
 \begin{document}
 
 \begin{frontmatter}
@@ -445,12 +447,37 @@ To demonstrate the result of our tool, we present two examples, one from a real-
     These two examples show that our tool can generate reasonably clear diagrams for both real-world formula and randomly generated formula.
 \end{remark}
 
+\section{Playing it out} %KYR: may swap order with the next section on artifact availability?
+
+We quantify the useability and performance of \tool by compiling an extensive set of LTL formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of all real-life LTL formulas over those metrics. We release the set of real-life LTL formulas as a benchmark set for the research community. Our experimental evaluation conclusively demonstrates that \tool scales to provide helpful visualizations of LTL formulas written by humans.
+
+\subsection{Set of Real LTL Formulas}
+
+We collect the LTL formulas from a covering set of publicly-available case studies that use LTL in the analysis of real-life safety-critical systems. As some formulas are redundant (i.e., common properties occur in many different case studies), it is not necessary to include every paper that has ever used LTL in a real setting; we instead opt for the largest and most unique formulas to cover the space of realistic use of LTL.
+
+
+
+\subsection{Timeline Metrics}
+
+Define size, length, height, complexity, etc. here.
+
+\subsection{Experimental Analysis} %We could come up with a less-generic name for this, which would be nicer...
+
+Here we nicely summarize (with pictures as much as possible) all of the statistics and results we gathered.
+
+<image>
+caption: For all of the <large number> of real LTL formulas historically used to analyze real systems, \tool efficiently yields useable, readable timeine visualizations.
+
+
+
 \section{Artifact availability}
 The tool we present in this paper is available at
 \[
     \texttt{\url{https://github.com/EULIR/ltl-explainability}}
 \]
 which comes with two command-line tools, \texttt{ltl2regex} and \texttt{ltl2timeline}. The specific usage of the tool can be found  \href{https://github.com/EULIR/ltl-explainability#usage}{here}.
+
+KYR: link LTL database here too.
 
 \section{Discussion}
 Based on our results, we propose the following questions for discussions and future works:
