@@ -357,8 +357,8 @@ Those simplification rules lead to more intuitive representation of timelines. H
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a12) [left= .75cm of a11] {\!\!\!$a$\!\!\!};
 
         
-        \draw[thick] (s) edge[-latex] (a12) (s) edge[-latex] (a7) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
-        \draw[thick] (a12) edge[-latex] (a11) (a11) edge[-latex] (a10) (a10) edge[-latex] (a9) (a9) edge[-latex] (a8) (a8) edge[-latex] (a1) (a8) edge[-latex] (a2) (a7) edge[-latex] (a1) (a7) edge[-latex] (a2);
+        \draw[thick, line width=1.25] (s) edge[-latex] (a12) (s) edge[-latex] (a7) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
+        \draw[thick, line width=1.25] (a12) edge[-latex] (a11) (a11) edge[-latex] (a10) (a10) edge[-latex] (a9) (a9) edge[-latex] (a8) (a8) edge[-latex] (a1) (a8) edge[-latex] (a2) (a7) edge[-latex] (a1) (a7) edge[-latex] (a2);
 
         \end{tikzpicture}}
         \includegraphics[scale=0.3]{examples/ex9/ex9-unsimplified.png}
@@ -381,7 +381,7 @@ Those simplification rules lead to more intuitive representation of timelines. H
         \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a5) [right= 0.75cm of a4] {\!\!\!$a$\!\!\!};
         \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a6) [right= 0.75cm of a5] {\!\!\!$\lnot a$\!\!\!};
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) [left= 2cm of m] {\!\!\!start\!\!\!};
-        \draw[thick] (s) edge[-latex] (a1) (s) edge[-latex] (a2) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
+        \draw[thick, line width=1.25] (s) edge[-latex] (a1) (s) edge[-latex] (a2) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
         \end{tikzpicture}}
         \includegraphics[scale=0.3]{examples/ex9/ex9.png}
         \caption{Timeline for simplified $\omega$-regular expression $((!a) | (aa^*(!a)))^{\omega}$}
