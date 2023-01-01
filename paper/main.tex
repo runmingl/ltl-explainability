@@ -113,12 +113,7 @@ Thus, a significant hurdle remains: how can we convincingly demonstrate to the h
 
 We take a simple idiomatic approach to address this problem. As Linear Temporal Logic formulas are temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the \ltl\ formula, and thereby represent the specified behavior in a more natural human-intelligible form.
 
-Our tool, \tool, uses a remarkably simple algorithm: transforming an input \ltl\ formula through a sequence of automaton and regular expression-based intermediate representations, and is surprisingly effective at providing small representations for a range of \ltl formulas. It would visualize the above air traffic control requirement behavior with the following timeline:
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=\textwidth]{examples/ex14/ex14.png}
-    \caption{[TODO: make fig with variables, explain a, b or just use oscillating example if that's easier]}
-\end{figure}
+Our tool, \tool, uses a remarkably simple algorithm: transforming an input \ltl\ formula through a sequence of automaton and regular expression-based intermediate representations, and is surprisingly effective at providing small representations for a range of \ltl\ formulas. It would visualize the above air traffic control requirement behavior with the timeline shown in \cref{example:air}.
 
 We make the following contributions in our paper:
 \begin{itemize}
@@ -516,7 +511,7 @@ The soundness of each of these translations can be proven by reasoning about the
 \section{Tool showcase} \label{sec:tool-showcase}
 To demonstrate the result of our tool, we present two examples, one from a real-world model checking example from Zhao and Rozier~\cite{ZR14} and one from a randomly generated \ltl\ formula.
 
-\begin{example}
+\begin{example} \label{example:air}
     Zhao and Rozier~\cite{ZR14} presents a model verification specification says ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft'' which corresponds to \ltl\ formula
     \begin{align*}
         \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \\
