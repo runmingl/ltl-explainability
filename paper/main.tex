@@ -530,7 +530,7 @@ To demonstrate the result of our tool, we present two examples, one from a real-
     These two examples show that our tool can generate reasonably clear diagrams for both real-world formula and randomly generated formula.
 \end{remark}
 
-\section{Playing it out} %KYR: may swap order with the next section on artifact availability?
+\section{Playing it out} \label{sec:playing}%KYR: may swap order with the next section on artifact availability?
 
 We quantify the usability and performance of \tool by compiling an extensive set of LTL formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of all real-life LTL formulas over those metrics. We release the set of real-life LTL formulas as a benchmark set for the research community. Our experimental evaluation conclusively demonstrates that \tool scales to provide helpful visualizations of LTL formulas written by humans.
 
@@ -599,10 +599,6 @@ We use timeline length, defined below, to capture the length of our timeline vis
 
 \end{definition}
 
-
-
-
-
 \subsection{Experimental Analysis} %We could come up with a less-generic name for this, which would be nicer...
 
 KYR: Here we nicely show (with pictures as much as possible) all of the individual statistics and results we gathered (note aggregation occurs below).
@@ -627,7 +623,7 @@ The tool we present in this paper is available at
 \]
 which comes with two command-line tools, \texttt{ltl2regex} and \texttt{ltl2timeline}. The specific usage of the tool can be found  \href{https://github.com/EULIR/ltl-explainability#usage}{here}.
 
-KYR: link LTL database here too.
+The set of \ltl\ formulas we used to evaluate our tool in \cref{sec:playing} can be found \href{https://github.com/EULIR/ltl-explainability/tree/main/ltl-formulas}{here}.
 
 \section{Discussion}
 Based on our results, we propose the following questions for discussions and future works:
