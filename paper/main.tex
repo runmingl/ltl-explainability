@@ -160,7 +160,7 @@ However, \ltl\ is literally a language of timelines, so timeline visualizations 
     Let $L(A)$ denote the language accepted by regular expression $A$. Then $L(A)$ is inductively defined as
     \begin{align*}
         L(\emptyset) & = \emptyset \\
-        L(\epsilon) & = \{\epsilon\} \\
+        L(\epsilon) & = \{\epsilon\} \tag{$\epsilon$ denotes the empty string}\\
         L(a) & = \{a\} \\
         L(A_1A_2) & = \{s_1s_2 \mid s_1 \in L(A_1) \text{ and } s_2 \in L(A_2)\} \\
         L(A_1 + A_2) & = L(A_1) \cup L(A_2) \\
