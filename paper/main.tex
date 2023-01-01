@@ -21,9 +21,6 @@
 \DeclareMathOperator*{\bigplus}{\scalerel*{+}{\sum}}
 
 \usepackage[strings]{underscore} % fixes doi underscores
-
-\usepackage{graphicx}
-
 \usepackage{hyperref} % brings up so many errors
 \usepackage[capitalise, noabbrev]{cleveref}
 
@@ -100,16 +97,40 @@
         \sep Regular languages
     \end{keyword}
 \end{frontmatter}
-
 \section{Introduction}
 
-Formal methods, including Linear Temporal Logic (\ltl), are widely used in the specification and analysis of safety-critical systems, such as those found in the aerospace industry. These methods provide powerful tools for rigorously verifying the correctness of system designs, from early design-time model checking to on-board runtime verification. However, these methods can be difficult for humans to understand and use, leading to the possibility of errors and misunderstandings.
+Requirement specification is a central step in the development of safety-critical systems. As a first step, requirements are typically written in natural language. For example, here is a real-world requirement specification from an air traffic control system ~\cite{ZR14}
+\begin{center}
+    "If a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft"
+\end{center}
+Such natural language requirements are often ambiguous and not amenable to formal analysis, so requirements must often be specified using rigorous formalized semantics for the purpose of verification and validation. The above requirement, when translated to Linear Temporal Logic (detailed in Section 2.1), may be expressed as follows:
+\begin{align*}
+    \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \\
+    \limplies \nextt (\neg \texttt{controller.CTR\_control\_1}))
+\end{align*}
+Several tools have been developed to reason about formal specifications written with such LTL formulas, like R2U2 and FRET \cite{GPMS20}. However, these formalized semantics are unintintuitive and error-prone for human practitioners, and the tools are much less useful when system designers can't validate input specifications.
+Thus, a significant hurdle remains: how can we convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the desired system requirements? % quote MLTL paper?
 
-There has been recent work aimed at making the use of formal methods more intuitive for humans, such as NASA's FRET (Formal Requirements Engineering Tool) \cite{GPMS20} which uses structured natural language to bridge the gap between natural language and formal semantics.
+We take a simple idiomatic approach to address this problem. As Linear Temporal Logic formulas are temporal information, we devise a tool, \texttt{ltl2timeline}, which can draw timelines to depict the satisfying traces of the LTL formula, and thereby represent the specified behaviour in a more natural human-intelligible form. 
 
-However, \ltl\ is literally a language of timelines, so timeline visualizations have the potential to be a powerful tool for representing \ltl\ formulas in an intuitive manner. In this paper, we propose such a timeline visualization tool, using regular expressions, to effectively represent a wide range of \ltl-based formulas.
+Our tool, \texttt{ltl2timeline}, uses a remarkably simple algorithm: transforming an input LTL formula through a sequence of automaton and regular expression-based intermediate representations, and is surprisingly effective at providing small representations for a range of LTL formulas. It would visualize the above air traffic control requirement behaviour with the following timeline:
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{examples/ex14/ex14.png}
+    \caption{[TODO: make fig with variables, explain a, b or just use oscillating example if that's easier]}
+\end{figure}
+
+We make the following contributions in our paper:
+\begin{itemize}
+    \item We provide the tool, \texttt{ltl2timeline}, which takes LTL formulas and synthesizes timeline visualizations for them
+    \item We prove correctness in Section 4. We show that for every LTL formula, the timeline outputted indeed represents the set of satisfying traces.
+    \item We showcase the results of our tool on a range of example formulas in Section 5, including discussing the air traffic example above. 
+\end{itemize}
 
 \section{Setting the stage}
+
+We must begin by setting up the prerequisite definitions involved in our work. 
+First, we provide the definition and semantics for LTL. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFAs) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines. 
 
 \subsection{Linear temporal logic (LTL)}
 
@@ -497,9 +518,10 @@ To demonstrate the result of our tool, we present two examples, one from a real-
 
 \begin{example}
     Zhao and Rozier~\cite{ZR14} presents a model verification specification says ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft'' which corresponds to \ltl\ formula
-    \[
-        \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \limplies \nextt (\neg \texttt{controller.CTR\_control\_1}))
-    \]
+    \begin{align*}
+        \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \\
+        \limplies \nextt (\neg \texttt{controller.CTR\_control\_1}))
+    \end{align*}
     For simplicity, we swap the concrete atomic proposition to $a,b$ and get
     \[
         \always (a \land b \limplies \nextt (\neg b))
@@ -634,7 +656,9 @@ Based on our results, we propose the following questions for discussions and fut
 \end{itemize}
 
 \section{Conclusion}
-To add. % Journal also asks for a Discussion section
+Making formal methods, such as LTL, easier for humans in the loop is an important problem today, in making systems safer with verification. 
+In this paper, we present a novel tool to visualize LTL specification behavior and aid in validating their correctness.
+We hope that this will assist system designers in formulating error-free specifications and thus improve the effectiveness of verification tools for LTL.  
 
 \appendix
 \section{Concrete Syntax of \texttt{ltl2timeline}} \label{sec:concrete-syntax}
