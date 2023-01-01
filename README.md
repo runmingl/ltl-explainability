@@ -15,6 +15,9 @@ Stuff We Think Is True:
 
 # Dependencies
 - SPOT (https://spot.lre.epita.fr/install.html)
+```
+./configure --prefix ~/.local && make && sudo make install
+```
 - Graphviz
 ```
 brew install graphviz
