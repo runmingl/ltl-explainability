@@ -57,7 +57,7 @@
     \author[inst1]{Marijn~J.H.~Heule\corref{cor2}}
     \ead{marijn@cmu.edu}
     
-    \author[inst2]{Kristin Y. Rozier}
+    \author[inst2]{Kristin~Y.~Rozier}
     \ead{kyrozier@iastate.edu}
 
     \affiliation[inst1]{organization={Carnegie Mellon University},%Department and Organization
@@ -363,7 +363,7 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
         \caption{$u$ to $w$ path in $G$}
         \label{fig:uvw-dfa}
     \end{figure}
-    Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_\mathrm{uv}}v\xrightarrow{r_\mathrm{vw}}w$, with the trace $r=r_\mathrm{uv}r_\mathrm{vw}$. If there is a loop edge $r_\mathrm{vv}$, this edge can be traveled any number of times before exiting $v$, thus the regular expression is $r=r_\mathrm{uv}r_\mathrm{vv}^*r_\mathrm{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
+    Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_{uv}}v\xrightarrow{r_{vw}}w$, with the trace $r=r_{uv}r_{vw}$. If there is a loop edge $r_{vv}$, this edge can be traveled any number of times before exiting $v$, thus the regular expression is $r=r_{uv}r_{vv}^*r_{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
 \end{proof}
 
 \begin{lemma}
@@ -468,7 +468,7 @@ Given the tremendous popularity of LTL as a specification language for industria
   \hline
   Design space for NASA's AAC (Automated Airspace Concept) & 20,250 & \cite{GCMTR16} \\
   \hline
-  Safety specificatons for Boeing's AIR6110 wheel brake system & & \cite{BCFJKPRT15} \\
+  Safety specifications for Boeing's AIR6110 wheel brake system & & \cite{BCFJKPRT15} \\
   \hline
   Requirements for model checking NASA's AAC high-level architecture & 6 & \cite{ZR14} \\
   \hline
