@@ -33,7 +33,7 @@ for i in range(1,24):
 print("Found acacia formulas: ", len(acacia_ltls))
 
 
-ltls = aac_ltls #+ acacia_ltls (needs formatting) #+ tacas_counter_ltls (takes too long to compute)
+ltls = aac_ltls # + acacia_ltls (needs formatting) # + tacas_counter_ltls (takes too long to compute)
 regexs = [tl.ltl2regex(ltl) for ltl in ltls]
 tllens = [len(wregex) for wregex in regexs]
 
