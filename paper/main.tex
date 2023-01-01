@@ -41,6 +41,8 @@
 
 \newcommand{\tool}{\hspace{0.1cm}\texttt{ltl2timeline}\hspace{0.1cm}}
 
+\newcommand{\tllen}{\text{tllen}}
+
 \begin{document}
 
 \begin{frontmatter}
@@ -83,9 +85,11 @@
         We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
     \end{abstract}
 
-    \begin{highlights} %TODO ~ Highly encouraged but not mandatory
-        \item Research highlight 1
-        \item Research highlight 2
+    \begin{highlights} 
+        \item We transform Linear Temporal Logic (LTL) formulas to timeline visualizations for the set of satisfying traces.
+        \item We translate LTL formulas to \Buchi automata, then to $\omega$-regular expressions, then simplify them and use graph visualization tools to draw timelines.
+        \item Our algorithm is sound and complete. 
+        \item Our tool, \texttt{ltl2timeline}, effectively constructs small timeline visualizations for a range of LTL formulas.
     \end{highlights}
 
     \begin{keyword}
@@ -476,7 +480,47 @@ Given the tremendous popularity of LTL as a specification language for industria
 \subsection{Timeline Metrics}
 \label{sec:metrics}
 
-KYR: Define size, length, height, complexity, etc. here.
+%KYR: Define size, length, height, complexity, etc. here.
+
+We use two measures of complexity for timeline visualizations: timeline length and star height. 
+
+We use timeline length, defined below, to capture the length of our timeline visualization graphs. Since Kleene stars are the trickiest operator to depict in timelines, we also use star height, a well-studied measure for the structural complexity of regular expressions, to measure the complexity of our visualizations. 
+
+\begin{definition}[Timeline Length]
+    We define the timeline length of a regular expression $\tllen(A)$ recursively as follows
+    \begin{align*}
+        \tllen(\emptyset)   &= -\infty\\
+        \tllen(\epsilon)        &= 0\\
+        \tllen(a)           &= 1\\
+        \tllen(A_1 A_2)     &= \tllen(A_1) + \tllen(A_2)\\
+        \tllen(A_1 + A_2)   &= \max(\tllen(A_1, A_2))\\
+        \tllen(A^*)         &= 2\tllen(A) + 1 
+    \end{align*}
+    We also extend this definition to $\omega$-regular expressions as follows
+    \begin{align*}
+        \tllen(A^\omega)    &= \tllen(A)\\
+        \tllen(AB)          &= \tllen(A) + \tllen(B)\\
+        \tllen(B_1 + B_2)   &= \max(\tllen(B_1), \tllen(B_2))
+    \end{align*}
+    This quantity $\tllen$ captures the length of the longest path in our timeline graph visualization.
+\end{definition}
+
+\begin{definition}[Star height]
+    We define the star height of regular and $\omega$-regular expressions to be the star-nesting depth in the (unsimplified) expression. Namely,
+    \begin{align*}
+        h(\emptyset) = h(\epsilon) = h(a) &= 0\\
+        h(A_1 A_2) = h(A_1 + A_2) &= \max(h(A_1), h(A_2))\\
+        h(A^*) &= 1 + h(A)\\
+        h(A^\omega) &= h(A)\\
+        h(A B) &= \max(h(A), h(B))\\
+        h(B_1 + B_2) &= \max(h(B_1), h(B_2))
+    \end{align*}
+    
+\end{definition}
+
+
+
+
 
 \subsection{Experimental Analysis} %We could come up with a less-generic name for this, which would be nicer...
 
