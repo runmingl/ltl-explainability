@@ -103,17 +103,17 @@ Requirement specification is a central step in the development of safety-critica
 \begin{center}
     ``If a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft''
 \end{center}
-Such natural language requirements are often ambiguous and not amenable to formal analysis, so requirements must often be specified using rigorous formalized semantics for the purpose of verification and validation. The above requirement, when translated to Linear Temporal Logic (detailed in Section 2.1), may be expressed as follows:
+Such natural language requirements are often ambiguous and not amenable to formal analysis, so requirements must often be specified using rigorous formalized semantics for the purpose of verification and validation. The above requirement, when translated to Linear Temporal Logic (detailed in \cref{sec:ltl}), may be expressed as follows:
 \begin{align*}
     \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \\
     \limplies \nextt (\neg \texttt{controller.CTR\_control\_1}))
 \end{align*}
-Several tools have been developed to reason about formal specifications written with such LTL formulas, like R2U2 and FRET \cite{GPMS20}. However, these formalized semantics are unintintuitive and error-prone for human practitioners, and the tools are much less useful when system designers can't validate input specifications.
+Several tools have been developed to reason about formal specifications written with such \ltl\ formulas, like R2U2 and FRET \cite{GPMS20}. However, these formalized semantics are unintuitive and error-prone for human practitioners, and the tools are much less useful when system designers can't validate input specifications.
 Thus, a significant hurdle remains: how can we convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the desired system requirements? % quote MLTL paper?
 
-We take a simple idiomatic approach to address this problem. As Linear Temporal Logic formulas are temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the LTL formula, and thereby represent the specified behaviour in a more natural human-intelligible form.
+We take a simple idiomatic approach to address this problem. As Linear Temporal Logic formulas are temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the \ltl\ formula, and thereby represent the specified behavior in a more natural human-intelligible form.
 
-Our tool, \tool, uses a remarkably simple algorithm: transforming an input LTL formula through a sequence of automaton and regular expression-based intermediate representations, and is surprisingly effective at providing small representations for a range of LTL formulas. It would visualize the above air traffic control requirement behaviour with the following timeline:
+Our tool, \tool, uses a remarkably simple algorithm: transforming an input \ltl\ formula through a sequence of automaton and regular expression-based intermediate representations, and is surprisingly effective at providing small representations for a range of \ltl formulas. It would visualize the above air traffic control requirement behavior with the following timeline:
 \begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{examples/ex14/ex14.png}
@@ -122,17 +122,17 @@ Our tool, \tool, uses a remarkably simple algorithm: transforming an input LTL f
 
 We make the following contributions in our paper:
 \begin{itemize}
-    \item We provide the tool, \tool, which takes LTL formulas and synthesizes timeline visualizations for them
-    \item We prove correctness in Section 4. We show that for every LTL formula, the timeline outputted indeed represents the set of satisfying traces.
-    \item We showcase the results of our tool on a range of example formulas in Section 5, including discussing the air traffic example above.
+    \item We provide the tool, \tool, which takes \ltl\ formulas and synthesizes timeline visualizations for them.
+    \item We prove correctness in \cref{sec:analysis}. We show that for every \ltl\ formula, the timeline outputted indeed represents the set of satisfying traces.
+    \item We showcase the results of our tool on a range of example formulas in \cref{sec:tool-showcase} and \cref{sec:playing}, including discussing the air traffic example above.
 \end{itemize}
 
 \section{Setting the stage}
 
 We must begin by setting up the prerequisite definitions involved in our work.
-First, we provide the definition and semantics for LTL. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFAs) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines.
+First, we provide the definition and semantics for \ltl. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFAs) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines.
 
-\subsection{Linear temporal logic (LTL)}
+\subsection{Linear temporal logic (LTL)} \label{sec:ltl}
 
 \begin{definition}[Linear Temporal Logic (LTL)]
     % cite Kristin's survey paper
@@ -271,7 +271,7 @@ On a high level, our algorithm of converting \ltl\ formulas into timeline visual
 \end{figure}
 
 \subsection{LTL to BA} \label{ltl2aut}
-The automata-theoretic approach \cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e. reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as \cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from LTL formulas to \Buchi automata.
+The automata-theoretic approach \cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e. reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as \cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from \ltl\ formulas to \Buchi automata.
 
 \subsection{BA to $\omega$-regex} \label{aut2regex}
 We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths for looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in digraph of the automaton.
@@ -443,7 +443,7 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
     \label{fig:timeline}
 \end{figure}
 
-\section{Theoretical Analyses}
+\section{Theoretical Analyses} \label{sec:analysis}
 \subsection{Correctness of Regex Translation}
 \begin{lemma}
     % reduce_dfa does its input to output behaviour
@@ -513,7 +513,7 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
 
 The soundness of each of these translations can be proven by reasoning about the  semantics detailed in \cref{def:omega-semantics}. A full proof is not provided at this time.
 
-\section{Tool showcase}
+\section{Tool showcase} \label{sec:tool-showcase}
 To demonstrate the result of our tool, we present two examples, one from a real-world model checking example from Zhao and Rozier~\cite{ZR14} and one from a randomly generated \ltl\ formula.
 
 \begin{example}
@@ -554,13 +554,13 @@ To demonstrate the result of our tool, we present two examples, one from a real-
 
 \section{Playing it out} \label{sec:playing}%KYR: may swap order with the next section on artifact availability?
 
-We quantify the usability and performance of \tool by compiling an extensive set of LTL formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of all real-life LTL formulas over those metrics. We release the set of real-life LTL formulas as a benchmark set for the research community. Our experimental evaluation conclusively demonstrates that \tool scales to provide helpful visualizations of LTL formulas written by humans.
+We quantify the usability and performance of \tool by compiling an extensive set of \ltl\ formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of all real-life \ltl\ formulas over those metrics. We release the set of real-life \ltl\ formulas as a benchmark set for the research community. Our experimental evaluation conclusively demonstrates that \tool scales to provide helpful visualizations of \ltl\ formulas written by humans.
 
 \subsection{Set of Real LTL Formulas}
 
-We collect the LTL formulas from a covering set of publicly-available case studies that use LTL in the analysis of real-life safety-critical systems. As some formulas are redundant (i.e., common properties occur in many different case studies), it is not necessary to include every paper that has ever used LTL in a real setting; we instead opt for the largest and most unique formulas to cover the space of realistic use of LTL.
+We collect the \ltl\ formulas from a covering set of publicly-available case studies that use \ltl\ in the analysis of real-life safety-critical systems. As some formulas are redundant (i.e., common properties occur in many different case studies), it is not necessary to include every paper that has ever used \ltl\ in a real setting; we instead opt for the largest and most unique formulas to cover the space of realistic use of \ltl.
 
-Given the tremendous popularity of LTL as a specification language for industrial analysis, surprisingly few real-life system analysis case studies publicly release their LTL formula specifications, largely to protect proprietary system information. We purposely avoid using the random or machine-generated formulas from published benchmarks because the purpose of \tool is helping humans understand and validate LTL formulas. Thus, we gather an extensive, representative set of formulas humans have written or needed to understand. Our LTL formula collection is as follows.
+Given the tremendous popularity of \ltl\ as a specification language for industrial analysis, surprisingly few real-life system analysis case studies publicly release their \ltl\ formula specifications, largely to protect proprietary system information. We purposely avoid using the random or machine-generated formulas from published benchmarks because the purpose of \tool is helping humans understand and validate \ltl\ formulas. Thus, we gather an extensive, representative set of formulas humans have written or needed to understand. Our \ltl\ formula collection is as follows.
 
 \noindent
 \begin{table}[h]
@@ -627,7 +627,7 @@ KYR: Here we nicely show (with pictures as much as possible) all of the individu
 
 
 \paragraph{Scalability}
-KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter LTL formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real LTL formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from \cite{RV10}.
+KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter \ltl\ formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real \ltl\ formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from \cite{RV10}.
 
 
 \paragraph{Denouement}
@@ -656,9 +656,9 @@ Based on our results, we propose the following questions for discussions and fut
 \end{itemize}
 
 \section{Conclusion}
-Making formal methods, such as LTL, easier for humans in the loop is an important problem today, in making systems safer with verification.
-In this paper, we present a novel tool to visualize LTL specification behavior and aid in validating their correctness.
-We hope that this will assist system designers in formulating error-free specifications and thus improve the effectiveness of verification tools for LTL.
+Making formal methods, such as \ltl, easier for humans in the loop is an important problem today, in making systems safer with verification.
+In this paper, we present a novel tool to visualize \ltl\ specification behavior and aid in validating their correctness.
+We hope that this will assist system designers in formulating error-free specifications and thus improve the effectiveness of verification tools for \ltl.
 
 \appendix
 \section{Concrete Syntax of \tool} \label{sec:concrete-syntax}
