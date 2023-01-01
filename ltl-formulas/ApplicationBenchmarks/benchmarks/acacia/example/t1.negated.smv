@@ -1,0 +1,5 @@
+MODULE main
+VAR
+  q: boolean;
+  p: boolean;
+LTLSPEC (((F(q))->((p)U(q))))

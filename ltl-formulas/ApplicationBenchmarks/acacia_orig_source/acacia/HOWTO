@@ -1,0 +1,93 @@
+This file includes instructions on how to run the Acacia tool.  
+
+---------------------------------------------------------------------
+Content:
+
+1) Input Files 
+2) The ouput Files
+3) The Batch File
+4) The Options          
+5) Work without the batch file
+6) From Dot to PS
+7) Model Checking
+---------------------------------------------------------------------
+
+1) Input Files 
+You have to provide two files to run the Acacia. One (.ltl) 
+contains the ltl formulas to be analyzied and the other (.part) one
+specifises the interface. We suggest you to a common filename to those files,
+except their extentions, namely, test-1.ltl and test-1.part. 
+
+2) The ouput Files
+Acacia will generate various output files w.r.t. different options. Please refer The Options for more details. 
+
+3) The Batch File
+Under $YOUR_Acacia_FOLDER/example/, there is a file "demo-call"
+which provides a template for running Acacia. There are many options, 
+but they are not related to Acacia. You only have to modify the 
+"prefix" (line 10), and "demos" (line 11) of "demo-call". Suppose, the 
+files are test-1.ltl and test-1.part, you can set 
+  prefix="test-"
+  demos="`seq 1 1`"
+The outputs are available under 
+$YOUR_TEST_FOLDER/test-1/
+ 
+4) The Options          
+Having set the file "demo-call", you can run Acacia by typing 
+ ./demo-call
+
+*) The verbose (-v) option. 
+   ./demo-call (or -v 1, default): Acacia will not generate any output files.
+   ./demo-call -v 2: Acacia will generate some .dot files for the intermediate 
+                     Automata.   
+   ./demo-call -v 3: Acacia will generate extra files.
+                     antichain.log: It logs the results of EPre and APre. 
+										 post.log: Itlogs for foreward fixed-point calculation	
+                     tba.dot:  A dot file for "Good for Game Automaton". 
+										 bi_0.dot: The reachbility Bigraph of the foreward fixed-point calculation
+										 bi_1.dot: The reachbility Bigraph after removing redundant link from bi_0.dot
+										 bi_2.dot: The reachbility Bigraph after removing unnecessary node from bi_1.dot						
+										 bi_3.dot: The reachbility Bigraph after duplicating some node of bi_2.dot such
+															 that all universal fixed-points has only one output.																							 
+										 moore.dot: The machine encodes a winning strategy of the controller	
+										 mealy.dot: The machine encodes a winning strategy of the environment if the 
+																specification is unrealizable.	
+   ./demo-call -v 4: Acacia will log each step of the calculation H(f,s) in antichain.log
+
+*) The minimal K (-k) option.
+   Setting the minimal value of k to 1. The default value is 0.
+   ./demo-call -k 1 
+ 
+*) The maximal K (-K) option.
+	 Setting the maximal value of k to 20. The default value is 20
+   ./demo-call -K 30:    
+
+*) The winner (-w) option
+	 Setting the winner of the game. The winner can be either "mod" (controller) 
+	 or "env" (environment). The default value is "mod".
+	 For batch file, one can change the option by changing the value of "winner" 	
+ 	
+*) The model checking (-m) option
+	 The setting "-m 1" will try model checking with VIS after the synthesis stage. 
+	 The default value is "0"
+	 To turn on model-checking in batch mode execution, you only have to set "mc=1" in "demo-call".
+
+5) Work without the batch file.
+	 For running Acacia without the batch file, please append the folder
+		$YOUR_Acacia_FOLDER/lib/
+   to the enivronment variable $PATH. And you have to move the 
+	 .ltl file and the .part file into your working directory. Then 
+   Type the command, like
+   $YOUR_Acacia_FOLDER/lib/main.pl -syn YourPart.part -ltl YourLTL.ltl -syndir ./    
+ 
+   For other options, please refer the previous section.   
+
+6) From Dot to PS
+	 For different platforms, the dot-to-ps transformation tools are different. 
+   To save your effort for manual transformation, you can set your dot-to-ps 
+   tool in the subroutine of "dot2ps" in lib/Utils.pm, and remove the heading comment 
+   marks before "Utils::dot2ps" in the lib/Acacia.pm. 
+
+7) Model Checking
+	 To verify the correctness of the resulting acacia.v, you have to install vis and vl2ml.
+

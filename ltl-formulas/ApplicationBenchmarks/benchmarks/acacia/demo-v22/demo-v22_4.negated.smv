@@ -1,0 +1,7 @@
+MODULE main
+VAR
+  godown: boolean;
+  goup: boolean;
+  ws: boolean;
+  ss: boolean;
+LTLSPEC (((((!godown)&(!goup))&(!ws)) & (G((!godown)|(!goup))) & (G(((!ws)&(ss))->(X(!ws))))) -> ((G((goup)->(F(!ss)))) & (G((godown)->(F(ss)))) & (G(!((ws)&(X(ss)))))))

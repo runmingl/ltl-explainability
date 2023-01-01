@@ -1,0 +1,36 @@
+anzu set
+
+- authors:
+  R. Bloem, S. Galler, B. Jobstmann, N. Piterman, A. Pnueli, and
+  M. Weiglhofer
+	
+- url:
+  http://www.iaik.tugraz.at/content/research/design_verification/anzu/
+
+- obtained: (yyyy/mm/dd)
+  2010/01/20
+
+- papers:
+  [1], [2]
+   
+- description:
+  
+  All instances are taken from
+
+  http://www.iaik.tugraz.at/content/research/design_verification/anzu/amba_cfg.tgz
+
+  and
+
+  http://www.iaik.tugraz.at/content/research/design_verification/anzu/genbuf_cfg.tgz
+
+- copyright:
+  Please refer to the original site/authors.
+
+- references:
+
+  [1] R. Bloem, S. Galler, B. Jobstmann, N. Piterman, A. Pnueli, and
+      M. Weiglhofer: Specify, Compile, Run: Hardware from PSL". In COCV'07.
+
+  [2] R. Bloem, S. Galler, B. Jobstmann, N. Piterman, A. Pnueli, and
+      M. Weiglhofer: Automatic hardware synthesis from specification:
+      A case study. In DATE'07.

@@ -1,0 +1,18 @@
+assume (G( cancel=1 -> X(go=1) ));					   
+
+G( req1=1 -> (X(grant1=1) + X(X(grant1=1)) + X(X(X(grant1=1)))));
+G( grant1=1 -> X(grant1=0));
+G( cancel=1 -> X(grant1=0 U go=1));
+
+G( req2=1 -> (X(grant2=1) + X(X(grant2=1)) + X(X(X(grant2=1)))));
+G( grant2=1 -> X(grant2=0));
+G( cancel=1 -> X(grant2=0 U go=1));
+
+G( req3=1 -> (X(grant3=1) + X(X(grant3=1)) + X(X(X(grant3=1)))));
+G( grant3=1 -> X(grant3=0));
+G( cancel=1 -> X(grant3=0 U go=1));
+
+G( req4=1 -> (X(grant4=1) + X(X(grant4=1)) + X(X(X(grant4=1)))));
+G( grant4=1 -> X(grant4=0));
+G( cancel=1 -> X(grant4=0 U go=1));
+

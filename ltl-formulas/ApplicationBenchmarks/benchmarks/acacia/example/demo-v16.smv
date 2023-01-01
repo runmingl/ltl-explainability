@@ -1,0 +1,9 @@
+MODULE main
+VAR
+  r0: boolean;
+  r1: boolean;
+  r2: boolean;
+  a0: boolean;
+  a1: boolean;
+  a2: boolean;
+LTLSPEC !((G((r0)->(F(a0)))) & (G((r1)->(F(a1)))) & (G((r2)->(F(a2)))) & (G(!((a0)&(a1)))) & (G(!((a0)&(a2)))) & (G(!((a1)&(a2)))) & (((!a0)U(r0))|(G(!a0))) & (((!a1)U(r1))|(G(!a1))) & (((!a2)U(r2))|(G(!a2))))

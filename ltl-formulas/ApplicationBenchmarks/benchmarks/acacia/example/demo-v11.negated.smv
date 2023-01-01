@@ -1,0 +1,7 @@
+MODULE main
+VAR
+  req: boolean;
+  go: boolean;
+  grant: boolean;
+  ack: boolean;
+LTLSPEC ((!((G((req)->(F(ack))))&(G((go)->(F(grant)))))))
