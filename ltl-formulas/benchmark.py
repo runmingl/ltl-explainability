@@ -23,7 +23,7 @@ for i in range(2, 17):
     tacas_counter_ltls.append(f.read())
 print("Found TACAS counter formulas: ", len(tacas_counter_ltls), ". Didn't use") # very long formulas, 1000+ chars, not useful
 
-# acacsia formulas
+# acacia formulas
 base_path = 'ApplicationBenchmarks/acacia_orig_source/acacia/examples/example/'
 
 acacia_ltls = []
@@ -42,17 +42,26 @@ print("Found acacia formulas: ", len(acacia_ltls))
 ltls = aac_ltls # + tacas_counter_ltls (takes too long to compute)
 ltls += [ltl for ltl in acacia_ltls if len(ltl) < 170] # len > takes too long
 # use len < 120 for nice plot, use len < 170 for computable cases that blow up
+ltls = [ltl.strip() for ltl in ltls]
 
-ltllens = [len(ltl.strip()) for ltl in ltls]
+ltllens = [len(ltl) for ltl in ltls]
 regexs = [tl.ltl2regex(ltl) for ltl in ltls]
 tllens = [len(wregex) for wregex in regexs]
 star_heights = [OmegaRegex.star_height(wregex) for wregex in regexs]
+
 
 print("\nNumber of formulas: ", len(ltls))
 print("\nLTL Formula lengths: ", ltllens)
 print("\nTimeline lengths: ", tllens)
 print("\nStar heights: ", star_heights)
 print("\nMean timeline length: ", np.mean(tllens))
+
+
+file = open('benchmark-ltls.txt','w')
+for ltl in ltls:
+	file.write(ltl+";\n")
+file.close()
+print("\nWrote ltl-formulas to benchmark-ltls.txt")
 
 #LTL Formula lengths:  [42, 42, 34, 40, 54, 50, 61, 25, 33, 61, 25, 33, 156, 26, 109, 55, 47, 59, 39, 75, 18, 18, 17, 23, 23, 18, 18, 18, 17, 17, 17, 23, 23, 23, 24, 24, 10, 17, 17, 17, 24, 24, 24, 10, 17, 17, 17, 17, 17, 17, 121, 5, 30, 20, 20, 32, 32, 42, 42, 18, 20, 12, 14, 14, 14, 14, 14, 14, 49, 49, 49, 49, 14, 14, 14, 14, 14, 14, 24, 20, 10, 27, 68, 20, 23, 20, 63]
 #Timeline lengths:  [5, 9, 1, 5, 5, 5, 41, 9, 21, 113, 9, 21, 86042, 9, 170, 6, 5, 5, 6, 21, 5, 5, 1, 5, 5, 5, 5, 5, 1, 1, 1, 5, 5, 5, 9, 9, 5, 1, 1, 1, 9, 9, 9, 5, 1, 1, 1, 1, 1, 1, 303958, 2, 9, 5, 9, 9, 9, 9, 9, 1, 5, 5, 1, 1, 1, 1, 1, 1, 113, 113, 113, 113, 1, 1, 1, 1, 1, 1, 2, 1, 5, 9, 69, 5, 5, 9, 7]
