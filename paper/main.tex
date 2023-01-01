@@ -1,7 +1,9 @@
 \documentclass[preprint,12pt]{elsarticle}
 \journal{Journal of Computer Languages}
 
-\usepackage{amsmath, amssymb, amsthm}
+\usepackage{amsmath, amssymb, amsthm,tikz}
+\usetikzlibrary{positioning,shapes,quotes}
+
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}{Lemma}[section]
@@ -359,8 +361,14 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
     Let $G'$ be the graph of $G$ post reduction by the application of \textbf{reduce\_dfa}$(G, v)$. We show that the trace of every path accepted by $G$ is also accepted by $G'$. Suppose a path accepted by $G$ does not pass through $v$, clearly this is true. Else, suppose it passes through $v$, since $v$ is an interior node, $v$ cannot be the first or last in the path. Thus, for every pass through $v$, let $u\neq v$ be the last node passed before entering $v$, and likewise $w$ be the first node after exiting $v$. We show that the regular language of sub-traces from $u$ to $w$ in $G$ (shown in \cref{fig:uvw-dfa}) is identical to that in $G'$.
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.75]{img/uvw_dfa.pdf}
-        \caption{$u$ to $w$ path in $G$}
+        \begin{tikzpicture}
+	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm}] (u) {$u$};
+	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm}] (v) [right=of u] {$v$};
+	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm}] (w) [right=of v] {$w$};
+	\draw[thick] (u) edge["$r_{uv}$",-latex] (v) (v) edge["$r_{vv}$",-latex,loop above] (v) (v) edge["$r_{vw}$",-latex] (w); 
+        \end{tikzpicture}
+ %       \includegraphics[scale=0.75]{img/uvw_dfa.pdf}
+        \caption{A path from $u$ to $w$ in $G$}
         \label{fig:uvw-dfa}
     \end{figure}
     Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_{uv}}v\xrightarrow{r_{vw}}w$, with the trace $r=r_{uv}r_{vw}$. If there is a loop edge $r_{vv}$, this edge can be traveled any number of times before exiting $v$, thus the regular expression is $r=r_{uv}r_{vv}^*r_{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
@@ -462,6 +470,7 @@ We collect the LTL formulas from a covering set of publicly-available case studi
 Given the tremendous popularity of LTL as a specification language for industrial analysis, surprisingly few real-life system analysis case studies publicly release their LTL formula specifications, largely to protect proprietary system information. We purposely avoid using the random or machine-generated formulas from published benchmarks because the purpose of \tool is helping humans understand and validate LTL formulas. Thus, we gather an extensive, representative set of formulas humans have written or needed to understand. Our LTL formula collection is as follows.
 
 \noindent
+\begin{table}[h]
 \begin{tabular}{p{3.6in}|c|c}
   \hline
   Purpose & \# formulas & Source \\
@@ -475,6 +484,7 @@ Given the tremendous popularity of LTL as a specification language for industria
   Real formulas collected from all publicly-available, pre-2011 case studies & 63 & \cite{RV11} \\
   \hline
 \end{tabular}
+\end{table}
 
 
 \subsection{Timeline Metrics}
