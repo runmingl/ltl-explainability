@@ -406,7 +406,7 @@ Those simplification rules lead to more intuitive representation of timelines. H
 \end{example}
 
 \begin{remark}
-    Both simplified and un-simplified $\omega$-regular expression would generate correct timeline representations. Correct as they faithfully represent the set of satisfying traces of the original \ltl\ formula $\Phi$. Nonetheless, we, as human user, oftentimes find the simplified version more intuitive to reason about.
+    Both simplified and un-simplified $\omega$-regular expression would generate correct timeline representations. Correct as they faithfully represent the set of satisfying traces of the original \ltl\ formula $\Phi$. Nonetheless, we, as human users, oftentimes find the simplified version more intuitive to reason about.
 \end{remark}
 
 \subsection{$\omega$-regex to timeline} \label{regex2timeline}
@@ -622,7 +622,15 @@ KYR: Here we nicely show (with pictures as much as possible) all of the individu
 
 
 \paragraph{Scalability}
-KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter \ltl\ formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real \ltl\ formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from \cite{RV10}.
+We measure the scalability of our tool by running it against a set of scalable \ltl\ formulas. We define a scalable \ltl\ formula as one that describes an $n$-bit number using a binary counter \cite{RV10}. As $n$ gets larger, the \ltl\ formula used to encode the $n$-bit counter scales in size, but it remains practical. The result is shown in \cref{fig:scalability}.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.7]{img/scale.png}
+    \caption{Scalability measured with binary counter examples from Rozier and Vardi \cite{RV10}}
+    \label{fig:scalability}
+\end{figure}
+
+% KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter \ltl\ formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real \ltl\ formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from \cite{RV10}.
 
 
 \paragraph{Denouement}
