@@ -335,12 +335,54 @@ Those simplification rules lead to more intuitive representation of timelines. H
     The formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates un-simplified $\omega$-regular expression $((!a) | (aa^*(!a)))((!a) | (aa^*(!a)))^{\omega}$, and simplified version $((!a) | (aa^*(!a)))^{\omega}$, which corresponds to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
     \begin{figure}[h!]
         \centering
+                \resizebox{\textwidth}{!}{
+        \begin{tikzpicture}
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) {\!\!\!$\lnot a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [below=0.4cm of a1] {\!\!\!$a$\!\!\!};
+        \node (m) at ($(a1)!0.5!(a2)$) {};
+        \node[shape=rectangle, fill=gray!30!white, style={minimum width=10.9cm, minimum height=3cm}] (g) [right= -1.1cm of m] {};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) {\!\!\!$\lnot a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [below=0.4cm of a1] {\!\!\!$a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a3) [right= 0.75cm of a2] {\!\!\!$a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a4) [right= 0.75cm of a3] {\!\!\!$\dots$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a5) [right= 0.75cm of a4] {\!\!\!$a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a6) [right= 0.75cm of a5] {\!\!\!$\lnot a$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) [left= 12.5cm of m] {\!\!\!start\!\!\!};
+        
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a7) [left= .75cm of a1] {\!\!\!$\lnot a$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a8) [left= .75cm of a2] {\!\!\!$\lnot a$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a9) [left= .75cm of a8] {\!\!\!$a$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a10) [left= .75cm of a9] {\!\!\!$\dots$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a11) [left= .75cm of a10] {\!\!\!$a$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a12) [left= .75cm of a11] {\!\!\!$a$\!\!\!};
+
+        
+        \draw[thick] (s) edge[-latex] (a12) (s) edge[-latex] (a7) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
+        \draw[thick] (a12) edge[-latex] (a11) (a11) edge[-latex] (a10) (a10) edge[-latex] (a9) (a9) edge[-latex] (a8) (a8) edge[-latex] (a1) (a8) edge[-latex] (a2) (a7) edge[-latex] (a1) (a7) edge[-latex] (a2);
+
+        \end{tikzpicture}}
         \includegraphics[scale=0.3]{examples/ex9/ex9-unsimplified.png}
         \caption{Timeline for un-simplified $\omega$-regular expression $((!a) | (aa^*(!a)))((!a) | (aa^*(!a)))^{\omega}$}
         \label{fig:unsimplified}
     \end{figure}
     \begin{figure}[h!]
         \centering
+        \resizebox{.8\textwidth}{!}{
+        \begin{tikzpicture}
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) {\!\!\!$\lnot a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [below=0.4cm of a1] {\!\!\!$a$\!\!\!};
+  %      \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p3) [left= 1cm of p2] {\!\!\!$\lnot p$\!\!\!};
+        \node (m) at ($(a1)!0.5!(a2)$) {};
+        \node[shape=rectangle, fill=gray!30!white, style={minimum width=10.9cm, minimum height=3cm}] (g) [right= -1.1cm of m] {};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) {\!\!\!$\lnot a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [below=0.4cm of a1] {\!\!\!$a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a3) [right= 0.75cm of a2] {\!\!\!$a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a4) [right= 0.75cm of a3] {\!\!\!$\dots$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a5) [right= 0.75cm of a4] {\!\!\!$a$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a6) [right= 0.75cm of a5] {\!\!\!$\lnot a$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) [left= 2cm of m] {\!\!\!start\!\!\!};
+        \draw[thick] (s) edge[-latex] (a1) (s) edge[-latex] (a2) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
+        \end{tikzpicture}}
         \includegraphics[scale=0.3]{examples/ex9/ex9.png}
         \caption{Timeline for simplified $\omega$-regular expression $((!a) | (aa^*(!a)))^{\omega}$}
         \label{fig:simplified}
