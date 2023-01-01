@@ -205,7 +205,20 @@ We present timelines as graphic visualizations. It contains the following featur
     In \cref{fig:ex2}, one can reason about two parallel timelines: the upper timeline starts with $p$ at the first time step, followed by entering the grey box with one step of $!p$ and one step of $p$. Then at the end of the grey box, we reenter the box, with the next time step being $!p$, and so on. The lower timeline starts with one step of $!p$ and one step of $p$ outside the grey box, and then enter the infinite run of $!p$ and $p$ repeating.
     \begin{figure}[!h]
         \centering
-        \includegraphics[scale=0.4]{examples/ex2/ex2.png}
+        \begin{tikzpicture}
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) {\!\!\!$p$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p2) [below=0.4cm of p1] {\!\!\!$p$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p3) [left= 1cm of p2] {\!\!\!$\lnot p$\!\!\!};
+        \node (m) at ($(p1)!0.5!(p2)$) {};
+        \node[shape=rectangle, fill=gray!30!white, style={minimum width=4.3cm, minimum height=1.5cm}] (g) [right= 1.35cm of m] {};
+
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p4) [right= 1.5cm of m] {\!\!\!$\lnot p$\!\!\!};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p5) [right= 1cm of p4] {\!\!\!$p$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) [left= 4cm of m] {\!\!\!start\!\!\!};
+        \draw[thick] (s) edge[-latex] (p1) (s) edge[-latex] (p3) (p3) edge[-latex] (p2) (p1) edge[-latex] (p4) (p2) edge[-latex] (p4) (p4) edge[-latex] (p5);
+
+        \end{tikzpicture}
+   %     \includegraphics[scale=0.4]{examples/ex2/ex2.png}
         \caption{Example timeline for specification ``$p$ oscillates every time step''}
         \label{fig:ex2}
     \end{figure}
@@ -378,9 +391,9 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
     \begin{figure}[h!]
         \centering
         \begin{tikzpicture}
-	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm}] (u) {$u$};
-	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm}] (v) [right=of u] {$v$};
-	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm}] (w) [right=of v] {$w$};
+	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (u) {$u$};
+	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (v) [right=of u] {$v$};
+	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (w) [right=of v] {$w$};
 	\draw[thick] (u) edge["$r_{uv}$",-latex] (v) (v) edge["$r_{vv}$",-latex,loop above] (v) (v) edge["$r_{vw}$",-latex] (w); 
         \end{tikzpicture}
  %       \includegraphics[scale=0.75]{img/uvw_dfa.pdf}
