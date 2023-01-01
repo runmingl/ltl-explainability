@@ -58,7 +58,7 @@
 
     \author[inst1]{Marijn~J.H.~Heule\corref{cor2}}
     \ead{marijn@cmu.edu}
-    
+
     \author[inst2]{Kristin~Y.~Rozier}
     \ead{kyrozier@iastate.edu}
 
@@ -87,10 +87,10 @@
         We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
     \end{abstract}
 
-    \begin{highlights} 
+    \begin{highlights}
         \item We transform Linear Temporal Logic (LTL) formulas to timeline visualizations for the set of satisfying traces.
         \item We translate LTL formulas to \Buchi automata, then to $\omega$-regular expressions, then simplify them and use graph visualization tools to draw timelines.
-        \item Our algorithm is sound and complete. 
+        \item Our algorithm is sound and complete.
         \item Our tool, \texttt{ltl2timeline}, effectively constructs small timeline visualizations for a range of LTL formulas.
     \end{highlights}
 
@@ -250,7 +250,7 @@ On a high level, our algorithm of converting \ltl\ formulas into timeline visual
 \end{figure}
 
 \subsection{LTL to BA} \label{ltl2aut}
-The translation from LTL formulas to \Buchi automata is provided by SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.}.
+The automata-theoretic approach \cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e. reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as \cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from LTL formulas to \Buchi automata.
 
 \subsection{BA to $\omega$-regex} \label{aut2regex}
 We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths for looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in digraph of the automaton.
@@ -348,7 +348,7 @@ Those simplification rules lead to more intuitive representation of timelines. H
         \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a5) [right= 0.75cm of a4] {\!\!\!$a$\!\!\!};
         \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a6) [right= 0.75cm of a5] {\!\!\!$\lnot a$\!\!\!};
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) [left= 12.5cm of m] {\!\!\!start\!\!\!};
-        
+
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a7) [left= .75cm of a1] {\!\!\!$\lnot a$\!\!\!};
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a8) [left= .75cm of a2] {\!\!\!$\lnot a$\!\!\!};
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a9) [left= .75cm of a8] {\!\!\!$a$\!\!\!};
@@ -356,7 +356,7 @@ Those simplification rules lead to more intuitive representation of timelines. H
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a11) [left= .75cm of a10] {\!\!\!$a$\!\!\!};
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a12) [left= .75cm of a11] {\!\!\!$a$\!\!\!};
 
-        
+
         \draw[thick, line width=1.25] (s) edge[-latex] (a12) (s) edge[-latex] (a7) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
         \draw[thick, line width=1.25] (a12) edge[-latex] (a11) (a11) edge[-latex] (a10) (a10) edge[-latex] (a9) (a9) edge[-latex] (a8) (a8) edge[-latex] (a1) (a8) edge[-latex] (a2) (a7) edge[-latex] (a1) (a7) edge[-latex] (a2);
 
@@ -436,7 +436,7 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
 	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (u) {$u$};
 	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (v) [right=of u] {$v$};
 	\node[draw, thick, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (w) [right=of v] {$w$};
-	\draw[thick] (u) edge["$r_{uv}$",-latex] (v) (v) edge["$r_{vv}$",-latex,loop above] (v) (v) edge["$r_{vw}$",-latex] (w); 
+	\draw[thick] (u) edge["$r_{uv}$",-latex] (v) (v) edge["$r_{vv}$",-latex,loop above] (v) (v) edge["$r_{vw}$",-latex] (w);
         \end{tikzpicture}
  %       \includegraphics[scale=0.75]{img/uvw_dfa.pdf}
         \caption{A path from $u$ to $w$ in $G$}
@@ -563,9 +563,9 @@ Given the tremendous popularity of LTL as a specification language for industria
 
 %KYR: Define size, length, height, complexity, etc. here.
 
-We use two measures of complexity for timeline visualizations: timeline length and star height. 
+We use two measures of complexity for timeline visualizations: timeline length and star height.
 
-We use timeline length, defined below, to capture the length of our timeline visualization graphs. Since Kleene stars are the trickiest operator to depict in timelines, we also use star height, a well-studied measure for the structural complexity of regular expressions, to measure the complexity of our visualizations. 
+We use timeline length, defined below, to capture the length of our timeline visualization graphs. Since Kleene stars are the trickiest operator to depict in timelines, we also use star height, a well-studied measure for the structural complexity of regular expressions, to measure the complexity of our visualizations.
 
 \begin{definition}[Timeline Length]
     We define the timeline length of a regular expression $\tllen(A)$ recursively as follows
@@ -575,7 +575,7 @@ We use timeline length, defined below, to capture the length of our timeline vis
         \tllen(a)           &= 1\\
         \tllen(A_1 A_2)     &= \tllen(A_1) + \tllen(A_2)\\
         \tllen(A_1 + A_2)   &= \max(\tllen(A_1, A_2))\\
-        \tllen(A^*)         &= 2\tllen(A) + 1 
+        \tllen(A^*)         &= 2\tllen(A) + 1
     \end{align*}
     We also extend this definition to $\omega$-regular expressions as follows
     \begin{align*}
@@ -596,7 +596,7 @@ We use timeline length, defined below, to capture the length of our timeline vis
         h(A B) &= \max(h(A), h(B))\\
         h(B_1 + B_2) &= \max(h(B_1), h(B_2))
     \end{align*}
-    
+
 \end{definition}
 
 
@@ -614,7 +614,7 @@ KYR: Here we characterize the size of the timeline as a function of the number o
 
 \paragraph{Denouement}
 KYR: aggregate and summarize all experiments here.
-  
+
 <image>
 caption: For all of the <large number> of real LTL formulas historically used to analyze real systems, \tool efficiently yields usable, readable timeline visualizations.
 
