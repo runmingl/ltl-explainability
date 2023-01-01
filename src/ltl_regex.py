@@ -57,7 +57,7 @@ def regex_to_string(regex: Regex) -> str:
         case Star(r):
             return f'({regex_to_string(r)})*'
         case _:
-            raise Typeerror(f'Unknown regex type: {type(regex)}')
+            raise TypeError(f'Unknown regex type: {type(regex)}')
 
 def regex_tllen(regex: Regex) -> int:
     # currently returns timeline length of regex
