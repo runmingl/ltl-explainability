@@ -6,6 +6,7 @@ from aut2regex import aut_to_regex
 from vis import make_graph
 
 
+
 class Ltl2Regex(object):
     def ltl2regex(self, formula: str):
         return aut_to_regex(aut_to_graph(ltl_to_aut(formula)))
