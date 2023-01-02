@@ -677,9 +677,12 @@ Based on our results, we propose the following questions for discussions and fut
 \end{itemize}
 
 \section{Conclusion}
-Making formal methods, such as \ltl, easier for humans in the loop is an important problem today, in making systems safer with verification.
-In this paper, we present a novel tool to visualize \ltl\ specification behavior and aid in validating their correctness.
-We hope that this will assist system designers in formulating error-free specifications and thus improve the effectiveness of verification tools for \ltl.
+The Achilles heel of formal verification is specification; formal methods are only as effective at verification as their specifications are at describing the essential properties to verify. Yet, specification remains the biggest bottleneck to the use of formal methods \cite{Roz16}. LTL is one of the most popular specification logics for industrial-scale critical systems; in the space domain alone, it is currently encapsulating specifications for the development of the NASA Lunar Gateway \cite{DBR21}, the Air Force Research Laboratory/Collins Aerospace Spacecraft Collision Avoidance system \cite{HDWF21}, Space Systems Finland's Attitude and Orbit Control Systems (AOCS) \cite{ILLTV13}, and NASA/JPL's Europa Lander Mission Concept \cite{CDRWRWL22} just to name a few. 
+ %
+Yet the humans that need to use formal verification tools and deeply understand their results struggle to validate that LTL formulas capture the specifications they are meant to capture. A major contributor to LTL's popularity is the propensity of humans to think of requirements in terms of timelines. This inspired the creation of LTL in the first place, as a logic that ``intuitively'' represents timelines. Our work serves to reinforce that connection, enabling visualization of most realistic LTL formulas as timelines. By releasing \tool, we contribute to better validation capabilities for LTL specifications and aid the effort to make formal verification more accessible and wide-spread. 
+%We hope that this will assist system designers in formulating error-free specifications and thus improve the effectiveness of verification tools for \ltl.
+
+Future extensions of this work include optimizations to the algorithm and implementation to improve performance and scalability. While we have chosen visual elements that succinctly represent timelines, it would be informative to conduct a study on different possible visualizations and which of the many ways of representing different timeline elements humans find most intuitive. It is possible that factors of context, such as the type of requirement an LTL formula describes, change its optimal timeline representation. 
 
 \appendix
 \section{Concrete Syntax of \tool} \label{sec:concrete-syntax}
