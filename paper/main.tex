@@ -241,7 +241,7 @@ We present timelines as graphic visualizations. It contains the following featur
 \end{example}
 
 \begin{example}
-    In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by two nodes with $!a$ separated by $\cdots$ (could also be zero time step); followed by one node with $a$ which substantiates the specification of ``$a$ eventually true''; once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $1$ (true) in the grey box.
+    In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by two nodes with $\lnot a$ separated by $\cdots$ (could also be zero time step); followed by one node with $a$ which substantiates the specification of ``$a$ eventually true''; once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $1$ (true) in the grey box.
     \begin{figure}[!h]
         \centering
         \includegraphics[scale=0.4]{examples/ex15/ex15.png}
@@ -349,7 +349,7 @@ Here we show a demonstrating subset of simplification rules we encoded.
 Those simplification rules lead to more intuitive representation of timelines. Here we demonstrate their effects using an example.
 
 \begin{example}
-    The formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates un-simplified $\omega$-regular expression $((!a) | (aa^*(!a)))((!a) | (aa^*(!a)))^{\omega}$, and simplified version $((!a) | (aa^*(!a)))^{\omega}$, which corresponds to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
+    The formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which corresponds to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
     \begin{figure}[h!]
         \centering
                 \resizebox{\textwidth}{!}{
@@ -379,7 +379,8 @@ Those simplification rules lead to more intuitive representation of timelines. H
 
         \end{tikzpicture}}
 %        \includegraphics[scale=0.3]{examples/ex9/ex9-unsimplified.png}
-        \caption{Timeline for un-simplified $\omega$-regular expression $((!a) | (aa^*(!a)))((!a) | (aa^*(!a)))^{\omega}$}
+        \caption{Timeline for %un-simplified 
+        $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$}
         \label{fig:unsimplified}
     \end{figure}
     \begin{figure}[h!]
@@ -401,7 +402,7 @@ Those simplification rules lead to more intuitive representation of timelines. H
         \draw[thick, line width=1.25] (s) edge[-latex] (a1) (s) edge[-latex] (a2) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
         \end{tikzpicture}}
   %      \includegraphics[scale=0.3]{examples/ex9/ex9.png}
-        \caption{Timeline for simplified $\omega$-regular expression $((!a) | (aa^*(!a)))^{\omega}$}
+        \caption{Timeline for simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))^{\omega}$}
         \label{fig:simplified}
     \end{figure}
 \end{example}
