@@ -623,7 +623,10 @@ KYR: Here we nicely show (with pictures as much as possible) all of the individu
 
 
 \paragraph{Scalability}
-We measure the scalability of our tool by running it against a set of scalable \ltl\ formulas. We define a scalable \ltl\ formula as one that describes an $n$-bit number using a binary counter \cite{RV10}. As $n$ gets larger, the \ltl\ formula used to encode the $n$-bit counter scales in size, but it remains practical. The result is shown in \cref{fig:scalability}.
+We measure the scalability of our tool by running it against a set of scalable \ltl\ formulas. We define a scalable \ltl\ formula as one that describes an $n$-bit number using a binary counter \cite{RV10}. As $n$ gets larger, the \ltl\ formula used to encode the $n$-bit counter scales in size, but it remains practical. The result is shown in \cref{fig:scalability}. In this analysis, the timeline length grows approximately exponentially with the number of bits in the counter, which matches the result in Rozier and Vardi \cite{RV10}.
+
+In \cref{fig:scalability}, the x-axis ranges from $1$ to $6$, after which point it hits the $30$ seconds timeout we set, as the timeline length grows exponentially fast.
+
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.7]{img/scale.png}
