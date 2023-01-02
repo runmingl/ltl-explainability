@@ -31,6 +31,10 @@
 \newcommand{\limplies}{\rightarrow}
 \newcommand{\ltl}{\textit{LTL}}
 
+\newcommand{\tand}{\land}
+\newcommand{\tor}{\lor}
+\newcommand{\tnot}{\lnot}
+
 \newcommand{\Buchi}{B\"{u}chi }
 \newcommand{\stronguntil}{\hspace{0.1cm} \mathcal{U}  \hspace{0.1cm}}
 \newcommand{\strongrelease}{\hspace{0.1cm} \mathcal{M} \hspace{0.1cm}}
@@ -60,16 +64,16 @@
     \ead{kyrozier@iastate.edu}
 
     \affiliation[inst1]{organization={Carnegie Mellon University},%Department and Organization
-                addressline={5000 Forbes Ave},
+                %addressline={5000 Forbes Ave},
                 city={Pittsburgh},
-                postcode={15213},
+                %postcode={15213},
                 state={PA},
                 country={USA}}
 
     \affiliation[inst2]{organization={Iowa State University},%Department and Organization
                 %addressline={Address Two},
                 city={Ames},
-                postcode={50010},
+                %postcode={50010},
                 state={IA},
                 country={USA}}
 
@@ -226,12 +230,12 @@ We present timelines as graphic visualizations. It contains the following featur
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p2) [below=0.4cm of p1] {\!\!\!$p$\!\!\!};
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p3) [left= 1cm of p2] {\!\!\!$\lnot p$\!\!\!};
         \node (m) at ($(p1)!0.5!(p2)$) {};
-        \node[shape=rectangle, fill=gray!30!white, style={minimum width=4.3cm, minimum height=1.5cm}] (g) [right= 1.35cm of m] {};
+        \node[shape=rectangle, fill=gray!30!white, style={minimum width=4.3cm, minimum height=1.25cm}] (g) [right= 1.35cm of m] {};
 
         \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p4) [right= 1.5cm of m] {\!\!\!$\lnot p$\!\!\!};
         \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p5) [right= 1cm of p4] {\!\!\!$p$\!\!\!};
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) [left= 4cm of m] {\!\!\!start\!\!\!};
-        \draw[thick] (s) edge[-latex] (p1) (s) edge[-latex] (p3) (p3) edge[-latex] (p2) (p1) edge[-latex] (p4) (p2) edge[-latex] (p4) (p4) edge[-latex] (p5);
+        \draw[thick, line width=1.25] (s) edge[-latex] (p1) (s) edge[-latex] (p3) (p3) edge[-latex] (p2) (p1) edge[-latex] (p4) (p2) edge[-latex] (p4) (p4) edge[-latex] (p5);
 
         \end{tikzpicture}
    %     \includegraphics[scale=0.4]{examples/ex2/ex2.png}
@@ -244,7 +248,18 @@ We present timelines as graphic visualizations. It contains the following featur
     In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by two nodes with $\lnot a$ separated by $\cdots$ (could also be zero time step); followed by one node with $a$ which substantiates the specification of ``$a$ eventually true''; once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $1$ (true) in the grey box.
     \begin{figure}[!h]
         \centering
-        \includegraphics[scale=0.4]{examples/ex15/ex15.png}
+        \begin{tikzpicture}
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) {\!\!\!start\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) [right= 0.75cm of s] {\!\!\!$\lnot a$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [right= 0.75cm of a1] {\!\!\!$\dots$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a3) [right= 0.75cm of a2] {\!\!\!$\lnot a$\!\!\!};
+        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a4) [right= 0.75cm of a3] {\!\!\!$a$\!\!\!};
+        \node[shape=rectangle, fill=gray!30!white, style={minimum width=1.8cm, minimum height=1.25cm}] (g) [right= 0.6cm of a4] {};
+        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a5) [right= 0.75cm of a4] {\!\!\!$1$\!\!\!};
+        \draw[thick, line width=1.25] (s) edge[-latex] (a1) (a1) edge[-latex] (a2) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5);
+
+        \end{tikzpicture}
+    %    \includegraphics[scale=0.4]{examples/ex15/ex15.png}
         \caption{Example timeline for specification ``$a$ is eventually true''}
         \label{fig:ex15}
     \end{figure}
@@ -526,7 +541,33 @@ To demonstrate the result of our tool, we present two examples, one from a real-
     For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex14}.
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.3]{examples/ex14/ex14.png}
+        \resizebox{\textwidth}{!}{
+        \begin{tikzpicture}
+            \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) {\!\!\!\!start\!\!\!\!};
+            \node[shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab1) [right= of s]{\!\!\!\!$a \tand b$\!\!\!\!};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab2) [above= 0.6cm of ab1]{\!\!\!\!$a \tand b$\!\!\!\!};
+            \node (m) at ($(ab1)!0.5!(ab2)$) {};
+            \node[shape=rectangle, fill=gray!30!white, style={minimum width=4cm, minimum height=3cm}] (g2) [right= -1cm of m] {};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab1) [right= of s]{\!\!\!\!$a \tand b$\!\!\!\!};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab2) [above= 0.6cm of ab1]{\!\!\!\!$a \tand b$\!\!\!\!};
+            \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab3) [below= 0.6cm  of ab1]{\!\!\!\!\!\!\!\!$\tnot a\! \tor \! \tnot b$\!\!\!\!\!\!\!\!};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (b1) [right= 0.75cm  of ab1]{\!\!\!\!\!\!\!\!$\tnot b$\!\!\!\!\!\!\!\!};
+            \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab4) [right= .75cm of ab3]{\!\!\!\!\!\!\!\!$\dots$\!\!\!\!\!\!\!\!};
+            \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab5) [right= .75cm of ab4]{\!\!\!\!\!\!\!\!$\tnot a\! \tor \! \tnot b$\!\!\!\!\!\!\!\!};
+            \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab6) [right= .75cm of ab5]{\!\!\!\!\!\!\!\!$a \tand b$\!\!\!\!\!\!\!\!};
+            \node[shape=rectangle, fill=gray!30!white, style={minimum width=10.9cm, minimum height=1.3cm}] (g2) [right= 0.6cm of ab6] {};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab7) [right= .75cm of ab6]{\!\!\!\!\!\!\!\!$\tnot b$\!\!\!\!\!\!\!\!};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab8) [right= .75cm of ab7]{\!\!\!\!\!\!\!\!$\tnot a\! \tor \! \tnot b$\!\!\!\!\!\!\!\!};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab9) [right= .75cm of ab8]{\!\!\!\!\!\!\!\!$\dots$\!\!\!\!\!\!\!\!};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab10) [right= .75cm of ab9]{\!\!\!\!\!\!\!\!$\tnot a\! \tor \! \tnot b$\!\!\!\!\!\!\!\!};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab11) [right= .75cm of ab10]{\!\!\!\!\!\!\!\!$a \tand b$\!\!\!\!\!\!\!\!};
+
+        \draw[thick, line width=1.25] (s) edge[-latex] (ab1) (s) edge[-latex] (ab2) (s) edge[-latex] (ab3) (ab3) edge[-latex] (ab4) (ab4) edge[-latex] (ab5) (ab5) edge[-latex] (ab6) (ab1) edge[-latex] (b1);
+        \draw[thick, line width=1.25] (ab6) edge[-latex] (ab7) (ab6) edge[-latex] (ab7) (ab7) edge[-latex] (ab8) (ab8) edge[-latex] (ab9) (ab9) edge[-latex] (ab10) (ab10) edge[-latex] (ab11);
+
+        \end{tikzpicture}}
+        
+     %   \includegraphics[scale=0.3]{examples/ex14/ex14.png}
         \caption{Timeline for $\always (a \land b \limplies \nextt (\neg b))$}
         \label{fig:ex14}
     \end{figure}
@@ -540,7 +581,39 @@ To demonstrate the result of our tool, we present two examples, one from a real-
     This formula is reasonably complicated, and hard for human to reason about directly. For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex13}.
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=0.3]{examples/ex13/ex13.png}
+        \resizebox{\textwidth}{!}{
+        \begin{tikzpicture}
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) {\!\!\!\!start\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) [right= .75cm of s]{\!\!\!\!\!\!\!\!$p_2$\!\!\!\!\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p2) [right= .75cm of p1]{\!\!\!\!\!\!\!\!$\tnot p_0 \! \tand \!  p_1$\!\!\!\!\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p3) [right= .75cm of p2]{\!\!\!\!\!\!\!\!$\tnot p_0 \! \tand \!  p_1$\!\!\!\!\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p4) [right= .75cm of p3]{\!\!\!\!\!\!\!\!$\dots$\!\!\!\!\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p5) [right= .75cm of p4]{\!\!\!\!\!\!\!\!$\tnot p_0 \! \tand \!  p_1$\!\!\!\!\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p6) [right= .75cm of p5]{\!\!\!\!\!\!\!\!$p_0 \! \tand \! p_1$\!\!\!\!\!\!\!\!};
+
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p7) [above= .6cm of p1]{\!\!\!\!\!\!\!\!$p_2$\!\!\!\!\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p8) [above= .6cm of p6]{\!\!\!\!\!\!\!\!$p_0 \! \tand \! p_1$\!\!\!\!\!\!\!\!};
+            \node (m) at ($(p6)!0.5!(p8)$) {};
+            \node[shape=rectangle, fill=gray!30!white, style={minimum width=1.8cm, minimum height=1.25cm}] (g1) [right= 1cm of m] {};
+           \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (o1) [right= 1.15cm of m]{\!\!\!\!\!\!\!\!$p_1$\!\!\!\!\!\!\!\!};
+
+
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p9) [below= .6cm of p1]{\!\!\!\!\!\!\!\!$p_2$\!\!\!\!\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p10) [below= .6cm of p2]{\!\!\!\!\!\!\!\!$1$\!\!\!\!\!\!\!\!};
+	   \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p11) [below= .6cm of p3]{\!\!\!\!\!\!\!\!$1$\!\!\!\!\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p12) [below= .6cm of p4]{\!\!\!\!\!\!\!\!$\dots$\!\!\!\!\!\!\!\!};
+           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p13) [below= .6cm of p5]{\!\!\!\!\!\!\!\!$1$\!\!\!\!\!\!\!\!};
+           \node[shape=rectangle, fill=gray!30!white, style={minimum width=1.8cm, minimum height=1.25cm}] (g2) [right= 0.6cm of p13] {};
+
+           \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p14) [below= .6cm of p6]{\!\!\!\!\!\!\!\!$p_0 \! \tand \! p_1$\!\!\!\!\!\!\!\!};
+
+           \draw[thick, line width=1.25] (s) edge[-latex] (p1) (s) edge[-latex] (p7) (s) edge[-latex] (p9) (p1) edge[-latex] (p2) (p2) edge[-latex] (p3) (p3) edge[-latex] (p4) (p4) edge[-latex] (p5) (p5) edge[-latex] (p6) (p7) edge[-latex] (p8);
+           \draw[thick, line width=1.25] (p8) edge[-latex] (o1) (p6) edge[-latex] (o1) (p9) edge[-latex] (p10) (p10) edge[-latex] (p11) (p11) edge[-latex] (p12) (p12) edge[-latex] (p13) (p13) edge[-latex] (p14);
+
+
+        \end{tikzpicture}}
+
+   %     \includegraphics[scale=0.3]{examples/ex13/ex13.png}
         \caption{Timeline for $p_2 \land (\eventually \always p_0 \weakrelease \nextt(\always p_1 \land ((p_0 \limplies p_2 \land p_2 \limplies p_0) \stronguntil \eventually p_0)))$}
         \label{fig:ex13}
     \end{figure}
