@@ -507,7 +507,7 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
     \end{alignat}
 \end{lemma}
 
-The soundness of each of these translations can be proven by reasoning about the  semantics detailed in \cref{def:omega-semantics}. A full proof is not provided at this time.
+The soundness of each of these translations can be proven by reasoning about the  semantics detailed in \cref{def:omega-semantics}. A full proof is not provided here.
 
 \section{Tool showcase} \label{sec:tool-showcase}
 To demonstrate the result of our tool, we present two examples, one from a real-world model checking example from Zhao and Rozier~\cite{ZR14} and one from a randomly generated \ltl\ formula.
@@ -551,29 +551,6 @@ To demonstrate the result of our tool, we present two examples, one from a real-
 \section{Playing it out} \label{sec:playing}%KYR: may swap order with the next section on artifact availability?
 
 We quantify the usability and performance of \tool by compiling an extensive set of \ltl\ formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of all real-life \ltl\ formulas over those metrics. We release the set of real-life \ltl\ formulas as a benchmark set for the research community. Our experimental evaluation conclusively demonstrates that \tool scales to provide helpful visualizations of \ltl\ formulas written by humans.
-
-\subsection{Set of Real LTL Formulas}
-
-We collect the \ltl\ formulas from a covering set of publicly-available case studies that use \ltl\ in the analysis of real-life safety-critical systems. As some formulas are redundant (i.e., common properties occur in many different case studies), it is not necessary to include every paper that has ever used \ltl\ in a real setting; we instead opt for the largest and most unique formulas to cover the space of realistic use of \ltl.
-
-Given the tremendous popularity of \ltl\ as a specification language for industrial analysis, surprisingly few real-life system analysis case studies publicly release their \ltl\ formula specifications, largely to protect proprietary system information. We purposely avoid using the random or machine-generated formulas from published benchmarks because the purpose of \tool is helping humans understand and validate \ltl\ formulas. Thus, we gather an extensive, representative set of formulas humans have written or needed to understand. Our \ltl\ formula collection is as follows.
-
-\noindent
-\begin{table}[h]
-\begin{tabular}{p{3.6in}|c|c}
-  \hline
-  Purpose & \# formulas & Source \\
-  \hline
-  Design space for NASA's AAC (Automated Airspace Concept) & 20,250 & \cite{GCMTR16} \\
-  \hline
-  Safety specifications for Boeing's AIR6110 wheel brake system & & \cite{BCFJKPRT15} \\
-  \hline
-  Requirements for model checking NASA's AAC high-level architecture & 6 & \cite{ZR14} \\
-  \hline
-  Real formulas collected from all publicly-available, pre-2011 case studies & 63 & \cite{RV11} \\
-  \hline
-\end{tabular}
-\end{table}
 
 
 \subsection{Timeline Metrics}
@@ -619,7 +596,7 @@ We use timeline length, defined below, to capture the length of our timeline vis
 
 \subsection{Experimental Analysis} %We could come up with a less-generic name for this, which would be nicer...
 
-KYR: Here we nicely show (with pictures as much as possible) all of the individual statistics and results we gathered (note aggregation occurs below).
+%KYR: Here we nicely show (with pictures as much as possible) all of the individual statistics and results we gathered (note aggregation occurs below).
 \paragraph{Real-world datasets} We study the feasibility of our tool on a benchmark suite of LTL formulas gathered from real world use cases. 
 
 We gather a test suite of 91 formulas used in real-world requirement specification. We take $6$ specifications from NASA's Automated Airspace Concept (AAC)\cite{GCMTR16}. We also collect formulas from the Acacia suite of examples \cite{RV10}. We reap $85$ formulas from the suit of $23$ examples, by generating seperate visualizations for each line of specification. % We choose to visualize each formula specifically, rather than complete specifications, as 
@@ -651,11 +628,11 @@ In \cref{fig:scalability}, the x-axis ranges from $1$ to $6$, after which point 
 % KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter \ltl\ formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real \ltl\ formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from \cite{RV10}.
 
 
-\paragraph{Denouement}
-KYR: aggregate and summarize all experiments here.
+%\paragraph{Denouement}
+%KYR: aggregate and summarize all experiments here.
 
-<image>
-caption: For all of the <large number> of real LTL formulas historically used to analyze real systems, \tool efficiently yields usable, readable timeline visualizations.
+%<image>
+%caption: For all of the <large number> of real LTL formulas historically used to analyze real systems, \tool efficiently yields usable, readable timeline visualizations.
 
 
 
@@ -712,3 +689,29 @@ where $p \in \AP$. In our tool \tool, we use the following concrete syntax to re
 
 
 \end{document}
+
+
+\subsection{Set of Real LTL Formulas}
+
+We collect the \ltl\ formulas from a covering set of publicly-available case studies that use \ltl\ in the analysis of real-life safety-critical systems. As some formulas are redundant (i.e., common properties occur in many different case studies), it is not necessary to include every paper that has ever used \ltl\ in a real setting; we instead opt for the largest and most unique formulas to cover the space of realistic use of \ltl.
+
+Given the tremendous popularity of \ltl\ as a specification language for industrial analysis, surprisingly few real-life system analysis case studies publicly release their \ltl\ formula specifications, largely to protect proprietary system information. We purposely avoid using the random or machine-generated formulas from published benchmarks because the purpose of \tool is helping humans understand and validate \ltl\ formulas. Thus, we gather an extensive, representative set of formulas humans have written or needed to understand. Our \ltl\ formula collection is as follows.
+
+\noindent
+\begin{table}[h]
+\begin{tabular}{p{3.6in}|c|c}
+  \hline
+  Purpose & \# formulas & Source \\
+  \hline
+  Design space for NASA's AAC (Automated Airspace Concept) & 20,250 & \cite{GCMTR16} \\
+  \hline
+  Safety specifications for Boeing's AIR6110 wheel brake system & & \cite{BCFJKPRT15} \\
+  \hline
+  Requirements for model checking NASA's AAC high-level architecture & 6 & \cite{ZR14} \\
+  \hline
+  Real formulas collected from all publicly-available, pre-2011 case studies & 63 & \cite{RV11} \\
+  \hline
+\end{tabular}
+\end{table}
+
+
