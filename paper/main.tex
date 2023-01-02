@@ -571,7 +571,7 @@ We use timeline length, defined below, to capture the length of our timeline vis
         \tllen(\epsilon)        &= 0\\
         \tllen(a)           &= 1\\
         \tllen(A_1 A_2)     &= \tllen(A_1) + \tllen(A_2)\\
-        \tllen(A_1 + A_2)   &= \max(\tllen(A_1, A_2))\\
+        \tllen(A_1 + A_2)   &= \max(\tllen(A_1), \tllen(A_2))\\
         \tllen(A^*)         &= 2\tllen(A) + 1
     \end{align*}
     We also extend this definition to $\omega$-regular expressions as follows
