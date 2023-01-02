@@ -285,6 +285,7 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
                 \State replace edges $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ with $u \xrightarrow{r_\mathrm{in}  r_\mathrm{out}} w$
             \EndIf
         \EndFor
+	\State delete node $v$ from $G$
         %\State \Return the reduced graph $G$
     \end{algorithmic}
 \end{algorithm}
