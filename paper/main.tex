@@ -1,7 +1,7 @@
 \documentclass[preprint,12pt]{elsarticle}
 \journal{Journal of Computer Languages}
 
-\usepackage{amsmath, amssymb, amsthm,tikz}
+\usepackage{amsmath, amssymb, amsthm,tikz, subfig}
 \usetikzlibrary{positioning,shapes,quotes,calc}
 
 \newtheorem{theorem}{Theorem}[section]
@@ -620,7 +620,21 @@ We use timeline length, defined below, to capture the length of our timeline vis
 \subsection{Experimental Analysis} %We could come up with a less-generic name for this, which would be nicer...
 
 KYR: Here we nicely show (with pictures as much as possible) all of the individual statistics and results we gathered (note aggregation occurs below).
+\paragraph{Real-world datasets} We study the feasibility of our tool on a benchmark suite of LTL formulas gathered from real world use cases. 
 
+We gather a test suite of 91 formulas used in real-world requirement specification. We take $6$ specifications from NASA's Automated Airspace Concept (AAC)\cite{GCMTR16}. We also collect formulas from the Acacia suite of examples \cite{RV10}. We reap $85$ formulas from the suit of $23$ examples, by generating seperate visualizations for each line of specification. % We choose to visualize each formula specifically, rather than complete specifications, as 
+
+We run \texttt{ltl2regex} on these $91$ examples, the tool completes execution (within timeout of $20$s) on $87$. Within the $87$, two examples have regular expressions of star height $8$ and are intractible to generate graph visualizations of. We are able to generate tractible visualization on the $85$, or over $93\%$ of benchmarks tested. The plots of visualization complexity on these formula are provided below in \cref{fig:real-world}.
+
+
+\begin{figure}[h!]
+    \centering
+    \subfloat{{\includegraphics[width=6.5cm]{img/naive-ltl2tl-scatterplot-omit-big-values.png} }}%
+    \quad % [\centering label 1]
+    \subfloat{{\includegraphics[width=6.5cm]{img/star-height-scatter-plot.png}}}
+    \caption{Visualization complexity metrics for formulas collected from Acacia \cite{RV10} and NASA's  AAC \cite{GCMTR16}}
+    \label{fig:real-world}
+\end{figure}
 
 \paragraph{Scalability}
 We measure the scalability of our tool by running it against a set of scalable \ltl\ formulas. We define a scalable \ltl\ formula as one that describes an $n$-bit number using a binary counter \cite{RV10}. As $n$ gets larger, the \ltl\ formula used to encode the $n$-bit counter scales in size, but it remains practical. The result is shown in \cref{fig:scalability}. In this analysis, the timeline length grows approximately exponentially with the number of bits in the counter, which matches the result in Rozier and Vardi \cite{RV10}.
