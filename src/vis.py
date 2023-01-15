@@ -63,16 +63,27 @@ def make_graph(regex: OmegaRegex, filename: str, format: str) -> Digraph:
                     g, r2, parents, connect_parent)
                 return list(set(node1_tail + node2_tail)), list(set(node1_head + node2_head))
             case Star(r):
-                node1_tail, node1_head = make_regex_graph(
-                    g, r, parents, connect_parent)
-                node_name = str(node_counter)
-                g.node(node_name, '...')
-                node_counter += 1
-                for tail in node1_tail:
-                    g.edge(tail, node_name)
-                node2_tail, node2_head = make_regex_graph(
-                    g, r, [node_name], connect_parent=True)
-                return node2_tail, node2_head
+                match r:
+                    case Symbol(s):
+                        node_name = str(node_counter)
+                        s1 = s.replace("&", "&amp;")
+                        g.node(node_name, label=f"<{s1}<BR /> <FONT POINT-SIZE=\"10\">repeats 0-∞</FONT>>", shape='egg')
+                        node_counter += 1
+                        if connect_parent:
+                            for parent in parents:
+                                g.edge(parent, node_name)
+                        return [node_name], [node_name]
+                    case _:
+                        node1_tail, node1_head = make_regex_graph(
+                            g, r, parents, connect_parent)
+                        node_name = str(node_counter)
+                        g.node(node_name, '...')
+                        node_counter += 1
+                        for tail in node1_tail:
+                            g.edge(tail, node_name)
+                        node2_tail, node2_head = make_regex_graph(
+                            g, r, [node_name], connect_parent=True)
+                        return node2_tail, node2_head
             case _:
                 raise TypeError(f'Unsupported regex type: {r}')
 
