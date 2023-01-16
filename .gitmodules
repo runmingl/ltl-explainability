@@ -1,0 +1,3 @@
+[submodule "src/pylogics"]
+	path = src/pylogics
+	url = https://github.com/whitemech/pylogics.git
