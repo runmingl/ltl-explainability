@@ -46,6 +46,12 @@
 
 \newcommand{\tllen}{\text{tllen}}
 
+\tikzset{
+    partial ellipse/.style args={#1:#2:#3}{
+        insert path={+ (#1:#3) arc (#1:#2:#3)}
+    }
+}
+
 \begin{document}
 
 \begin{frontmatter}
@@ -101,7 +107,58 @@
         \sep Regular languages
     \end{keyword}
 \end{frontmatter}
+
 \section{Introduction}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+        \node[fill=white!50!gray, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) {\!\!\!$p$\!\!\!};
+        \node (p0) [left= 0.5cm of p1] {};
+        \node (p2) [right= 0.5cm of p1] {};
+        \draw[-latex, thick] (p0) edge (p1) (p1) edge (p2);
+          
+%        \draw[thick, black, -latex] (0,0) [partial ellipse=180:90:0.75cm and 0.5cm];
+%        \draw[thick, black, -] (0,0) [partial ellipse=90:0:0.75cm and 0.5cm];
+%
+%        \draw[thick, black, -latex] (0,0) [partial ellipse=360:270:0.75cm and 0.5cm];
+%        \draw[thick, black, -] (0,0) [partial ellipse=270:180:0.75cm and 0.5cm];
+
+   \end{tikzpicture}
+   ~~~~~
+    \begin{tikzpicture}
+        \node[fill=white!50!gray, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) {\!\!\!$p$\!\!\!};
+        \node (p0) [left= 0.5cm of p1] {};
+        \node (p2) [right= 0.5cm of p1] {};
+        \draw[-latex, thick] (p0) edge (p1) (p1) edge (p2);
+          
+%        \draw[thick, black, -latex] (0,0) [partial ellipse=180:90:0.75cm and 0.5cm];
+%        \draw[thick, black, -] (0,0) [partial ellipse=90:0:0.75cm and 0.5cm];
+
+        \draw[thick, black, -latex] (-0.15,0) [partial ellipse=360:270:1cm and 0.7cm];
+        \draw[thick, black, -] (-0.15,0) [partial ellipse=270:180:1cm and 0.7cm];
+
+  \end{tikzpicture}
+  ~~~~~~
+  \begin{tikzpicture}
+        \node[fill=white!50!gray, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) {\!\!\!$p$\!\!\!};
+        \node (p0) [left= 0.5cm of p1] {};
+        \node (p2) [right= 0.5cm of p1] {};
+        \draw[-latex, thick] (p0) edge (p1) (p1) edge (p2);
+          
+        \draw[thick, black, -latex] (-0.05cm,0) [partial ellipse=180:90:1cm and 0.7cm];
+        \draw[thick, black, -] (-0.05cm,0) [partial ellipse=90:0:1cm and 0.7cm];
+
+        \draw[thick, black, -latex] (-0.15,0) [partial ellipse=360:270:1cm and 0.7cm];
+        \draw[thick, black, -] (-0.15,0) [partial ellipse=270:180:1cm and 0.7cm];
+
+%        \draw[thick, black, -latex] (0,0) [partial ellipse=360:270:0.75cm and 0.5cm];
+%        \draw[thick, black, -] (0,0) [partial ellipse=270:180:0.75cm and 0.5cm];
+
+  \end{tikzpicture}
+\end{figure}
+
+
 
 Requirement specification is a central step in the development of safety-critical systems. As a first step, requirements are typically written in natural language. For example, here is a real-world requirement specification from an air traffic control system ~\cite{ZR14}
 \begin{center}
@@ -545,11 +602,11 @@ To demonstrate the result of our tool, we present two examples, one from a real-
         \begin{tikzpicture}
             \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) {\!\!\!\!start\!\!\!\!};
             \node[shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab1) [right= of s]{\!\!\!\!$a \tand b$\!\!\!\!};
-            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab2) [above= 0.6cm of ab1]{\!\!\!\!$a \tand b$\!\!\!\!};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab2) [above= 0.6cm of ab1]{\!\!\!\!\!\!\!\!$\tnot a\! \tor \! \tnot b$\!\!\!\!\!\!\!\!};
             \node (m) at ($(ab1)!0.5!(ab2)$) {};
             \node[shape=rectangle, fill=gray!30!white, style={minimum width=4cm, minimum height=3cm}] (g2) [right= -1cm of m] {};
             \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab1) [right= of s]{\!\!\!\!$a \tand b$\!\!\!\!};
-            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab2) [above= 0.6cm of ab1]{\!\!\!\!$a \tand b$\!\!\!\!};
+            \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab2) [above= 0.6cm of ab1]{\!\!\!\!\!\!\!\!$\tnot a\! \tor \! \tnot b$\!\!\!\!\!\!\!\!};
             \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab3) [below= 0.6cm  of ab1]{\!\!\!\!\!\!\!\!$\tnot a\! \tor \! \tnot b$\!\!\!\!\!\!\!\!};
             \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (b1) [right= 0.75cm  of ab1]{\!\!\!\!\!\!\!\!$\tnot b$\!\!\!\!\!\!\!\!};
             \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab4) [right= .75cm of ab3]{\!\!\!\!\!\!\!\!$\dots$\!\!\!\!\!\!\!\!};
@@ -567,7 +624,7 @@ To demonstrate the result of our tool, we present two examples, one from a real-
 
         \end{tikzpicture}}
         
-     %   \includegraphics[scale=0.3]{examples/ex14/ex14.png}
+   %    \includegraphics[scale=0.3]{examples/ex14/ex14.png}
         \caption{Timeline for $\always (a \land b \limplies \nextt (\neg b))$}
         \label{fig:ex14}
     \end{figure}
