@@ -1,87 +1,87 @@
-(G ((! TSAFE_clear) -> (F TSAFE_command)));
-(G ((! TSAFE_clear) -> (X TSAFE_command)));
-(G (! AR_command & TSAFE_command));
-(G ((! TSAFE_clear) -> (F TSAFE_clear)));
-(G (controller_request -> (F (! controller_request))));
-(G (aircraft_request -> (F (! aircraft_request))));
-G( req=1 -> (X(grant=1) * X(X(grant=1)) * X(X(X(grant=1))) ));
-G( grant=1 -> X(grant=0));
-G( cancel=1 -> X(grant=0 U go=1));
-G( req=1 -> (X(grant=1) + X(X(grant=1)) + X(X(X(grant=1))) ));
-G( grant=1 -> X(grant=0));
-G( cancel=1 -> X(grant=0 U go=1));
-(G( cancel=1 -> X(go=1) )) -> (G( req=1 -> (X(grant=1) + X(X(grant=1)) + X(X(X(grant=1))))) * G( grant=1 -> X(grant=0)) * G( cancel=1 -> X(grant=0 U go=1)));
-G(F(req=1))->G(F(grant=1));
-(G(F(req=1))) -> ((G(grant=0 -> (grant=0 U req=1)))*(((grant=0))*((G(req=1 -> F(grant=1)))*(G(F(grant=1))))));
-(G(F(req=1)) + F(cancel=1))->(G(F(grant=1)) + G(ack=1));
-!(G((req=1)->F(ack=1)) * G((go=1)->F(grant=1)));
-G(grant=0) + (G((req=1)->F(ack=1)) + G((go=1)->F(grant=1)));
-(G(r1=1)->F(a1=1)) * (G(r1=0)->F(a1=0));
-(G(F(r0=1)) -> G(F(g0=1))) * (G(F(r1=1)) -> G(F(g1=1))) * G(!(g0=1 * g1=1));
-G(r1=1 -> F(a1=1));
-G(r2=1 -> F(a2=1));
-G(!(a1=1 * a2=1));
-(a1=0 U r1=1) + G(a1=0);
-(a2=0 U r2=1) + G(a2=0);
-G(r0=1 -> F(a0=1));
-G(r1=1 -> F(a1=1));
-G(r2=1 -> F(a2=1));
-G(!(a0=1 * a1=1));
-G(!(a0=1 * a2=1));
-G(!(a1=1 * a2=1));
-(a0=0 U r0=1) + G(a0=0);
-(a1=0 U r1=1) + G(a1=0);
-(a2=0 U r2=1) + G(a2=0);
-G(F(i0=1)) -> G(F(a0=1));
-G(F(i1=1)) -> G(F(a1=1));
-G(F(a2=1));
-G(!(a0=1 * a1=1));
-G(!(a1=1 * a2=1));
-G(!(a2=1 * a0=1));
-G(F(i0=1)) -> G(F(a0=1));
-G(F(i1=1)) -> G(F(a1=1));
-G(F(i2=1)) -> G(F(a2=1));
-G(F(a3=1));
-G(!(a0=1 * a1=1));
-G(!(a0=1 * a2=1));
-G(!(a0=1 * a3=1));
-G(!(a1=1 * a2=1));
-G(!(a1=1 * a3=1));
-G(!(a2=1 * a3=1));
-G(F(ets=1)) -> (G(hl=1 -> (hl=1 U ets=1)) * G(fl=1 -> (fl=1 U ets=1)) * G(hl=0 + fl=0) * G(ec=1 -> F(fl=1)) * G(F(hl=1)));
-etc=0;
-G((etc=0 * sts=0) -> X(etc=0));
-G(etc=1 -> F(etc=0));
-G(sts=1 -> X(etc=1));
-G((shlr=1 * X(shlr=0)) -> sts=1);
-G((sflr=1 * X(sflr=0)) -> sts=1);
-G((sflr=0 * (etc=0 + ec=0)) -> X (sflr=1));
-G((shlr=0 * (etc=0 + ec=1)) -> X (shlr=1));
-G(sflr=1 + shlr=1);
-G(ec=1 -> F(sflr=0));
-G(F(shlr=0));
-G(r1=0 + r2=0);
-G(r1=0 + r3=0);
-G(r1=0 + r4=0);
-G(r2=0 + r3=0);
-G(r2=0 + r4=0);
-G(r3=0 + r4=0);
-G(r1=1 -> (X(g1=1) + X(X(g1=1)) + X(X(X(g1=1)))));
-G(r2=1 -> (X(g2=1) + X(X(g2=1)) + X(X(X(g2=1)))));
-G(r3=1 -> (X(g3=1) + X(X(g3=1)) + X(X(X(g3=1)))));
-G(r4=1 -> (X(g4=1) + X(X(g4=1)) + X(X(X(g4=1)))));
-G(g1=0 + g2=0);
-G(g1=0 + g3=0);
-G(g1=0 + g4=0);
-G(g2=0 + g3=0);
-G(g2=0 + g4=0);
-G(g3=0 + g4=0);
-godown=0 * goup=0 * ws=0;
-G(godown=0 + goup=0);
-G(F(ws=0));
-G((ws=0 * ss=1) -> X(ws=0));
-G(ws=1 -> (X(ws=0) + X(X(ws=0)) + X(X(X(ws=0))) + X(X(X(X(ws=0))))));
-G(goup=1 -> F(ss=0));
-G(godown=1  -> F(ss=1));
-G(!(ws=1 * X(ss=1)));
-(G((e=1 * X(s=1)) -> X(e=1)) * G(F(e=0))) -> G(X(e=0 * X(s=0)));
+(G ((! TSAFE_clear) -> (F TSAFE_command)))
+(G ((! TSAFE_clear) -> (X TSAFE_command)))
+(G (! AR_command & TSAFE_command))
+(G ((! TSAFE_clear) -> (F TSAFE_clear)))
+(G (controller_request -> (F (! controller_request))))
+(G (aircraft_request -> (F (! aircraft_request))))
+G( req=1 -> (X(grant=1) * X(X(grant=1)) * X(X(X(grant=1))) ))
+G( grant=1 -> X(grant=0))
+G( cancel=1 -> X(grant=0 U go=1))
+G( req=1 -> (X(grant=1) + X(X(grant=1)) + X(X(X(grant=1))) ))
+G( grant=1 -> X(grant=0))
+G( cancel=1 -> X(grant=0 U go=1))
+(G( cancel=1 -> X(go=1) )) -> (G( req=1 -> (X(grant=1) + X(X(grant=1)) + X(X(X(grant=1))))) * G( grant=1 -> X(grant=0)) * G( cancel=1 -> X(grant=0 U go=1)))
+G(F(req=1))->G(F(grant=1))
+(G(F(req=1))) -> ((G(grant=0 -> (grant=0 U req=1)))*(((grant=0))*((G(req=1 -> F(grant=1)))*(G(F(grant=1))))))
+(G(F(req=1)) + F(cancel=1))->(G(F(grant=1)) + G(ack=1))
+!(G((req=1)->F(ack=1)) * G((go=1)->F(grant=1)))
+G(grant=0) + (G((req=1)->F(ack=1)) + G((go=1)->F(grant=1)))
+(G(r1=1)->F(a1=1)) * (G(r1=0)->F(a1=0))
+(G(F(r0=1)) -> G(F(g0=1))) * (G(F(r1=1)) -> G(F(g1=1))) * G(!(g0=1 * g1=1))
+G(r1=1 -> F(a1=1))
+G(r2=1 -> F(a2=1))
+G(!(a1=1 * a2=1))
+(a1=0 U r1=1) + G(a1=0)
+(a2=0 U r2=1) + G(a2=0)
+G(r0=1 -> F(a0=1))
+G(r1=1 -> F(a1=1))
+G(r2=1 -> F(a2=1))
+G(!(a0=1 * a1=1))
+G(!(a0=1 * a2=1))
+G(!(a1=1 * a2=1))
+(a0=0 U r0=1) + G(a0=0)
+(a1=0 U r1=1) + G(a1=0)
+(a2=0 U r2=1) + G(a2=0)
+G(F(i0=1)) -> G(F(a0=1))
+G(F(i1=1)) -> G(F(a1=1))
+G(F(a2=1))
+G(!(a0=1 * a1=1))
+G(!(a1=1 * a2=1))
+G(!(a2=1 * a0=1))
+G(F(i0=1)) -> G(F(a0=1))
+G(F(i1=1)) -> G(F(a1=1))
+G(F(i2=1)) -> G(F(a2=1))
+G(F(a3=1))
+G(!(a0=1 * a1=1))
+G(!(a0=1 * a2=1))
+G(!(a0=1 * a3=1))
+G(!(a1=1 * a2=1))
+G(!(a1=1 * a3=1))
+G(!(a2=1 * a3=1))
+G(F(ets=1)) -> (G(hl=1 -> (hl=1 U ets=1)) * G(fl=1 -> (fl=1 U ets=1)) * G(hl=0 + fl=0) * G(ec=1 -> F(fl=1)) * G(F(hl=1)))
+etc=0
+G((etc=0 * sts=0) -> X(etc=0))
+G(etc=1 -> F(etc=0))
+G(sts=1 -> X(etc=1))
+G((shlr=1 * X(shlr=0)) -> sts=1)
+G((sflr=1 * X(sflr=0)) -> sts=1)
+G((sflr=0 * (etc=0 + ec=0)) -> X (sflr=1))
+G((shlr=0 * (etc=0 + ec=1)) -> X (shlr=1))
+G(sflr=1 + shlr=1)
+G(ec=1 -> F(sflr=0))
+G(F(shlr=0))
+G(r1=0 + r2=0)
+G(r1=0 + r3=0)
+G(r1=0 + r4=0)
+G(r2=0 + r3=0)
+G(r2=0 + r4=0)
+G(r3=0 + r4=0)
+G(r1=1 -> (X(g1=1) + X(X(g1=1)) + X(X(X(g1=1)))))
+G(r2=1 -> (X(g2=1) + X(X(g2=1)) + X(X(X(g2=1)))))
+G(r3=1 -> (X(g3=1) + X(X(g3=1)) + X(X(X(g3=1)))))
+G(r4=1 -> (X(g4=1) + X(X(g4=1)) + X(X(X(g4=1)))))
+G(g1=0 + g2=0)
+G(g1=0 + g3=0)
+G(g1=0 + g4=0)
+G(g2=0 + g3=0)
+G(g2=0 + g4=0)
+G(g3=0 + g4=0)
+godown=0 * goup=0 * ws=0
+G(godown=0 + goup=0)
+G(F(ws=0))
+G((ws=0 * ss=1) -> X(ws=0))
+G(ws=1 -> (X(ws=0) + X(X(ws=0)) + X(X(X(ws=0))) + X(X(X(X(ws=0))))))
+G(goup=1 -> F(ss=0))
+G(godown=1  -> F(ss=1))
+G(!(ws=1 * X(ss=1)))
+(G((e=1 * X(s=1)) -> X(e=1)) * G(F(e=0))) -> G(X(e=0 * X(s=0)))

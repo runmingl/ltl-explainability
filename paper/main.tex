@@ -786,6 +786,19 @@ Based on our results, we propose the following questions for discussions and fut
     \item Can we define timeline more formally so that one can do this process reversely (i.e. a tool that converts timeline representation to its corresponding \ltl\ formula)? That would be a very useful tool in practice. However, a direct reverse of the algorithm we presented in this paper may not be viable.
 \end{itemize}
 
+Going forward, it will become important to conduct a user survey to gather data from a representative audience of system engineers regarding what timeline visualizations help most with formula validation. Specifically, we list the following questions regarding the intuitive aesthetics of timelines.
+\begin{itemize}
+\item {\bf Can lines in timelines be curved or do they need to be straight?} If a timeline has a curved line is that still visually, intuitively a line? Does the placement of the line matter as to whether it is intuitive for the line to be straight or curved (e.g., to save space or reduce possible visual clutter)? 
+
+\item {\bf Can there be back edges in a limited fashion (i.e., to simplify formulas) in timelines?} Most of our formulas have star-height of 1, so if we limit the back-edge representation to only surrounding a single node, that would simplify most formulas. We can then use the expanded notation for stared formulas larger than a single proposition, thus navigating a trade-off between small representation and limiting the visual complication. Do the back edges in a limited capacity cause confusion between timeline and automata representatins?
+
+\item {\bf What are intuitive representations of star-formulas and do they change depending on the formula?} There are two ways to represent stars in regular expressions \cite{Runming where did you find these?}. We can represent a stared formula inside a box \cite{where?} or with a back edge \cite{where?}. Does using the box cause confusion with respect to the LTL $\Box$ operator? What is the most intuitive way to remind users of the corner case where the starred formula occurs zero times? 
+
+\item {\bf When do we choose to unroll for clarity? When do we merge parallel parts of timelines?} To merge parts of lines, we have to check for logical equivalence of the parts of the timelines we want to merge. By our algorithm, we generate parallel lines only when the formulas are not syntactically equivalent, so we would be guaranteed to run the more complex check for logical equivalence. In some cases, this could provide a clarifying simplification, with the cost of a repetitive computationally expensive check. Would it make sense to offer an ``optimizing'' compilation option to users that takes longer to create a timeline representation but checks for smaller representations via logical equivalence?
+\end{itemize}
+KYR note: we should include a figure here with the different visual options we brainstormed and reference it in the bullets above.
+
+
 \section{Conclusion}
 The Achilles heel of formal verification is specification; formal methods are only as effective at verification as their specifications are at describing the essential properties to verify. Yet, specification remains the biggest bottleneck to the use of formal methods \cite{Roz16}. \ltl\ is one of the most popular specification logics for industrial-scale critical systems; in the space domain alone, it is currently encapsulating specifications for the development of the NASA Lunar Gateway \cite{DBR21}, the Air Force Research Laboratory/Collins Aerospace Spacecraft Collision Avoidance system \cite{HDWF21}, Space Systems Finland's Attitude and Orbit Control Systems (AOCS) \cite{ILLTV13}, and NASA/JPL's Europa Lander Mission Concept \cite{CDRWRWL22} just to name a few.
  %
