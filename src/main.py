@@ -3,8 +3,13 @@ import fire
 from ltl_regex import *
 from ltl2aut import ltl_to_aut, aut_to_graph
 from aut2regex import aut_to_regex
-from vis import make_graph
+from vis import make_graph, post_process_latex
+import subprocess
+import os
 
+def clean_up(filename: str):
+    if os.path.exists(filename):
+        os.remove(filename)
 
 
 class Ltl2Regex(object):
@@ -15,23 +20,17 @@ class Ltl2Regex(object):
         g = make_graph(aut_to_regex(aut_to_graph(
             ltl_to_aut(formula))), filename, output_format)
         g.view()
+        if output_format == 'latex':
+            gv_file = open(f"{filename}1.gv", "w")
+            tex_file = open(f"{filename}.tex", "w")
+            subprocess.run(['dot2tex', '--preproc', f"{filename}.gv"], stdout=gv_file)
+            subprocess.run(['dot2tex', '-tmath', f"{filename}1.gv"], stdout=tex_file)
+            gv_file.close()
+            tex_file.close()
+            clean_up(f"{filename}.gv.pdf")
+            clean_up(f"{filename}1.gv")
+            post_process_latex(filename)
 
 
 if __name__ == '__main__':
     fire.Fire(Ltl2Regex)
-
-
-# print(Ltl2Regex.ltl2regex('G(a & b)'))
-# print(Ltl2Regex.ltl2regex('G(a & b) & F(c & d)'))
-# print(Ltl2Regex.ltl2regex('GFa -> GFb'))
-# print(Ltl2Regex.ltl2regex('G(p xor Xp)'))
-# print(Ltl2Regex.ltl2regex('0'))
-# print(Ltl2Regex.ltl2regex('0 R p1'))
-# print(Ltl2Regex.ltl2regex('F(XG(F!p1 M Fp1) W (p1 R p0))'))
-# print(Ltl2Regex.ltl2regex('F(p0 R !p2)'))
-# print(Ltl2Regex.ltl2regex('G(p0 | Fp1) W (FGp1 R !p1)'))
-# print(Ltl2Regex.ltl2regex('X!(Xp0 U !p2)'))
-# print(Ltl2Regex.ltl2regex('Fp2 | !(X(p2 xor Gp2) R (p1 W !Fp2))'))
-# print(Ltl2Regex.ltl2regex('XXG((Xp1 R (p0 W p2)) -> (p2 R GXp0))'))
-# print(Ltl2Regex.ltl2regex('X(0)'))
-# print(Ltl2Regex.ltl2regex('XXF(p0 R p1)'))

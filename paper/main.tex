@@ -1,8 +1,9 @@
 \documentclass[preprint,12pt]{elsarticle}
 \journal{Journal of Computer Languages}
-
+\usepackage[x11names, svgnames, rgb]{xcolor}
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath, amssymb, amsthm,tikz, subfig}
-\usetikzlibrary{positioning,shapes,quotes,calc}
+\usetikzlibrary{positioning,shapes,quotes,calc,snakes,arrows}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
@@ -274,7 +275,8 @@ We present timelines as graphic visualizations. It contains the following featur
 \begin{itemize}
     \item Every timeline starts with a node named ``start''.
     \item Every node represents one time step, and each node has a propositional logic formula $\Psi$, which specifies the behavior of atomic propositions at that time step. The formula $\Psi$ must be true at that time step. If $\Psi = 1$, that means all atomic propositions can behave arbitrarily.
-    \item A node with label ``$\cdots$'' means to repeat the node prior to it and after it finitely many times.
+    \item A node in egg shake with a caption ``repeats $0$ - $\infty$'' means to repeat the (one time step) current node for arbitrarily finitely many times.
+    \item A node with label ``$\cdots$'' means to repeat the pattern prior to it and after it arbitrarily finitely many times.
     \item The grey box means repeat infinitely. Once we reach the end of a timeline in the grey box, we must reenter the same grey box from any of its starting point.
 \end{itemize}
 
@@ -302,20 +304,61 @@ We present timelines as graphic visualizations. It contains the following featur
 \end{example}
 
 \begin{example}
-    In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by two nodes with $\lnot a$ separated by $\cdots$ (could also be zero time step); followed by one node with $a$ which substantiates the specification of ``$a$ eventually true''; once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $1$ (true) in the grey box.
+    In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by the second node (could also be zero time step); followed by one node with $a$ which substantiates the specification of ``$a$ eventually true''; once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $\top$ (true) in the grey box.
     \begin{figure}[!h]
         \centering
-        \begin{tikzpicture}
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) {\!\!\!start\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) [right= 0.75cm of s] {\!\!\!$\lnot a$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [right= 0.75cm of a1] {\!\!\!$\dots$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a3) [right= 0.75cm of a2] {\!\!\!$\lnot a$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a4) [right= 0.75cm of a3] {\!\!\!$a$\!\!\!};
-        \node[shape=rectangle, fill=gray!30!white, style={minimum width=1.8cm, minimum height=1.25cm}] (g) [right= 0.6cm of a4] {};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a5) [right= 0.75cm of a4] {\!\!\!$1$\!\!\!};
-        \draw[thick, line width=1.25] (s) edge[-latex] (a1) (a1) edge[-latex] (a2) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5);
-
-        \end{tikzpicture}
+        \begin{tikzpicture}[>=latex',line join=bevel,]
+            \pgfsetlinewidth{1bp}
+          %%
+          \begin{scope}
+            \pgfsetstrokecolor{black}
+            \definecolor{strokecol}{rgb}{0.83,0.83,0.83};
+            \pgfsetstrokecolor{strokecol}
+            \definecolor{fillcol}{rgb}{0.83,0.83,0.83};
+            \pgfsetfillcolor{fillcol}
+            \filldraw (287.84bp,8.0bp) -- (287.84bp,60.0bp) -- (357.84bp,60.0bp) -- (357.84bp,8.0bp) -- cycle;
+          \end{scope}
+            \pgfsetcolor{black}
+            % Edge: start -> 0
+            \draw [->] (54.252bp,34.0bp) .. controls (61.968bp,34.0bp) and (70.673bp,34.0bp)  .. (90.636bp,34.0bp);
+            % Edge: 0 -> 1
+            \draw [->] (169.36bp,34.0bp) .. controls (177.45bp,34.0bp) and (185.97bp,34.0bp)  .. (205.41bp,34.0bp);
+            % Edge: 1 -> 2
+            \draw [->] (260.25bp,34.0bp) .. controls (267.73bp,34.0bp) and (276.03bp,34.0bp)  .. (295.46bp,34.0bp);
+            % Node: 2
+          \begin{scope}
+            \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+            \pgfsetstrokecolor{strokecol}
+            \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+            \pgfsetfillcolor{fillcol}
+            \filldraw [opacity=1] (322.84bp,34.0bp) ellipse (27.0bp and 18.0bp);
+            \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+            \pgfsetstrokecolor{strokecol}
+            \draw (322.84bp,34.0bp) node {$\top$};
+          \end{scope}
+            % Node: start
+          \begin{scope}
+            \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+            \pgfsetstrokecolor{strokecol}
+            \draw (27.0bp,34.0bp) ellipse (27.0bp and 18.0bp);
+            \draw (27.0bp,34.0bp) node {start};
+          \end{scope}
+            % Node: 0
+          \begin{scope}
+            \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+            \pgfsetstrokecolor{strokecol}
+            \draw (133.61bp,16.05bp) -- (136.05bp,16.15bp) -- (138.47bp,16.3bp) -- (140.85bp,16.49bp) -- (143.18bp,16.74bp) -- (145.46bp,17.03bp) -- (147.68bp,17.36bp) -- (149.83bp,17.75bp) -- (151.9bp,18.18bp) -- (153.88bp,18.65bp) -- (155.76bp,19.16bp) -- (157.54bp,19.71bp) -- (159.22bp,20.31bp) -- (160.78bp,20.94bp) -- (162.23bp,21.61bp) -- (163.56bp,22.31bp) -- (164.76bp,23.04bp) -- (165.83bp,23.8bp) -- (166.78bp,24.59bp) -- (167.59bp,25.41bp) -- (168.28bp,26.25bp) -- (168.83bp,27.11bp) -- (169.25bp,27.99bp) -- (169.55bp,28.89bp) -- (169.72bp,29.8bp) -- (169.76bp,30.72bp) -- (169.69bp,31.65bp) -- (169.5bp,32.59bp) -- (169.19bp,33.53bp) -- (168.77bp,34.47bp) -- (168.25bp,35.41bp) -- (167.63bp,36.35bp) -- (166.92bp,37.28bp) -- (166.11bp,38.2bp) -- (165.22bp,39.11bp) -- (164.26bp,40.01bp) -- (163.21bp,40.89bp) -- (162.1bp,41.75bp) -- (160.93bp,42.59bp) -- (159.7bp,43.41bp) -- (158.42bp,44.2bp) -- (157.09bp,44.96bp) -- (155.71bp,45.69bp) -- (154.3bp,46.39bp) -- (152.85bp,47.06bp) -- (151.38bp,47.69bp) -- (149.87bp,48.29bp) -- (148.35bp,48.84bp) -- (146.8bp,49.35bp) -- (145.24bp,49.82bp) -- (143.66bp,50.25bp) -- (142.07bp,50.64bp) -- (140.47bp,50.97bp) -- (138.86bp,51.26bp) -- (137.24bp,51.51bp) -- (135.62bp,51.7bp) -- (133.99bp,51.85bp) -- (132.37bp,51.95bp) -- (130.74bp,52.0bp) -- (129.11bp,52.0bp) -- (127.48bp,51.95bp) -- (125.85bp,51.85bp) -- (124.22bp,51.7bp) -- (122.6bp,51.51bp) -- (120.99bp,51.26bp) -- (119.38bp,50.97bp) -- (117.78bp,50.64bp) -- (116.19bp,50.25bp) -- (114.61bp,49.82bp) -- (113.04bp,49.35bp) -- (111.5bp,48.84bp) -- (109.97bp,48.29bp) -- (108.47bp,47.69bp) -- (106.99bp,47.06bp) -- (105.54bp,46.39bp) -- (104.13bp,45.69bp) -- (102.76bp,44.96bp) -- (101.43bp,44.2bp) -- (100.14bp,43.41bp) -- (98.91bp,42.59bp) -- (97.74bp,41.75bp) -- (96.63bp,40.89bp) -- (95.59bp,40.01bp) -- (94.62bp,39.11bp) -- (93.73bp,38.2bp) -- (92.92bp,37.28bp) -- (92.21bp,36.35bp) -- (91.59bp,35.41bp) -- (91.07bp,34.47bp) -- (90.65bp,33.53bp) -- (90.35bp,32.59bp) -- (90.15bp,31.65bp) -- (90.08bp,30.72bp) -- (90.12bp,29.8bp) -- (90.29bp,28.89bp) -- (90.59bp,27.99bp) -- (91.01bp,27.11bp) -- (91.57bp,26.25bp) -- (92.25bp,25.41bp) -- (93.07bp,24.59bp) -- (94.01bp,23.8bp) -- (95.09bp,23.04bp) -- (96.29bp,22.31bp) -- (97.61bp,21.61bp) -- (99.06bp,20.94bp) -- (100.62bp,20.31bp) -- (102.3bp,19.71bp) -- (104.08bp,19.16bp) -- (105.97bp,18.65bp) -- (107.95bp,18.18bp) -- (110.01bp,17.75bp) -- (112.16bp,17.36bp) -- (114.38bp,17.03bp) -- (116.66bp,16.74bp) -- (119.0bp,16.49bp) -- (121.38bp,16.3bp) -- (123.79bp,16.15bp) -- (126.23bp,16.05bp) -- (128.69bp,16.0bp) -- (131.15bp,16.0bp) -- cycle;
+            \draw (129.92bp,34.0bp) node [align=center] {$\neg \text{a}$ \\ {\tiny repeats $0$ - $\infty$}};
+          \end{scope}
+            % Node: 1
+          \begin{scope}
+            \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+            \pgfsetstrokecolor{strokecol}
+            \draw (232.84bp,34.0bp) ellipse (27.0bp and 18.0bp);
+            \draw (232.84bp,34.0bp) node {$\text{a}$};
+          \end{scope}
+          %
+          \end{tikzpicture}
     %    \includegraphics[scale=0.4]{examples/ex15/ex15.png}
         \caption{Example timeline for specification ``$a$ is eventually true''}
         \label{fig:ex15}
@@ -425,54 +468,200 @@ Those simplification rules lead to more intuitive representation of timelines. H
     \begin{figure}[h!]
         \centering
                 \resizebox{\textwidth}{!}{
-        \begin{tikzpicture}
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) {\!\!\!$\lnot a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [below=0.4cm of a1] {\!\!\!$a$\!\!\!};
-        \node (m) at ($(a1)!0.5!(a2)$) {};
-        \node[shape=rectangle, fill=gray!30!white, style={minimum width=10.9cm, minimum height=3cm}] (g) [right= -1.1cm of m] {};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) {\!\!\!$\lnot a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [below=0.4cm of a1] {\!\!\!$a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a3) [right= 0.75cm of a2] {\!\!\!$a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a4) [right= 0.75cm of a3] {\!\!\!$\dots$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a5) [right= 0.75cm of a4] {\!\!\!$a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a6) [right= 0.75cm of a5] {\!\!\!$\lnot a$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) [left= 12.5cm of m] {\!\!\!start\!\!\!};
-
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a7) [left= .75cm of a1] {\!\!\!$\lnot a$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a8) [left= .75cm of a2] {\!\!\!$\lnot a$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a9) [left= .75cm of a8] {\!\!\!$a$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a10) [left= .75cm of a9] {\!\!\!$\dots$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a11) [left= .75cm of a10] {\!\!\!$a$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a12) [left= .75cm of a11] {\!\!\!$a$\!\!\!};
-
-
-        \draw[thick, line width=1.25] (s) edge[-latex] (a12) (s) edge[-latex] (a7) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
-        \draw[thick, line width=1.25] (a12) edge[-latex] (a11) (a11) edge[-latex] (a10) (a10) edge[-latex] (a9) (a9) edge[-latex] (a8) (a8) edge[-latex] (a1) (a8) edge[-latex] (a2) (a7) edge[-latex] (a1) (a7) edge[-latex] (a2);
-
-        \end{tikzpicture}}
+                    \begin{tikzpicture}[>=latex',line join=bevel,]
+                        \pgfsetlinewidth{1bp}
+                      %%
+                      \begin{scope}
+                        \pgfsetstrokecolor{black}
+                        \definecolor{strokecol}{rgb}{0.83,0.83,0.83};
+                        \pgfsetstrokecolor{strokecol}
+                        \definecolor{fillcol}{rgb}{0.83,0.83,0.83};
+                        \pgfsetfillcolor{fillcol}
+                        \filldraw (371.46bp,8.0bp) -- (371.46bp,114.0bp) -- (640.91bp,114.0bp) -- (640.91bp,8.0bp) -- cycle;
+                      \end{scope}
+                        \pgfsetcolor{black}
+                        % Edge: 5 -> 6
+                        \draw [->] (433.9bp,34.0bp) .. controls (441.44bp,34.0bp) and (449.89bp,34.0bp)  .. (469.54bp,34.0bp);
+                        % Edge: 6 -> 7
+                        \draw [->] (542.74bp,34.0bp) .. controls (550.66bp,34.0bp) and (559.09bp,34.0bp)  .. (578.42bp,34.0bp);
+                        % Edge: start -> 0
+                        \draw [->] (54.272bp,65.285bp) .. controls (105.49bp,69.739bp) and (218.83bp,79.597bp)  .. (289.35bp,85.729bp);
+                        % Edge: start -> 1
+                        \draw [->] (52.513bp,56.593bp) .. controls (61.118bp,54.344bp) and (70.969bp,51.769bp)  .. (91.313bp,46.452bp);
+                        % Edge: 0 -> 4
+                        \draw [->] (343.86bp,88.0bp) .. controls (351.34bp,88.0bp) and (359.64bp,88.0bp)  .. (379.07bp,88.0bp);
+                        % Edge: 0 -> 5
+                        \draw [->] (336.99bp,76.016bp) .. controls (348.61bp,68.885bp) and (363.57bp,59.705bp)  .. (385.98bp,45.951bp);
+                        % Edge: 1 -> 2
+                        \draw [->] (144.45bp,39.459bp) .. controls (152.06bp,39.303bp) and (160.61bp,39.128bp)  .. (180.45bp,38.722bp);
+                        % Edge: 2 -> 3
+                        \draw [->] (253.84bp,36.522bp) .. controls (261.64bp,36.203bp) and (269.9bp,35.864bp)  .. (289.26bp,35.072bp);
+                        % Edge: 3 -> 4
+                        \draw [->] (336.99bp,45.984bp) .. controls (348.61bp,53.115bp) and (363.57bp,62.295bp)  .. (385.98bp,76.049bp);
+                        % Edge: 3 -> 5
+                        \draw [->] (343.86bp,34.0bp) .. controls (351.34bp,34.0bp) and (359.64bp,34.0bp)  .. (379.07bp,34.0bp);
+                        % Node: 4
+                      \begin{scope}
+                        \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                        \pgfsetfillcolor{fillcol}
+                        \filldraw [opacity=1] (406.46bp,88.0bp) ellipse (27.0bp and 18.0bp);
+                        \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \draw (406.46bp,88.0bp) node {$\neg \text{a}$};
+                      \end{scope}
+                        % Node: 5
+                      \begin{scope}
+                        \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                        \pgfsetfillcolor{fillcol}
+                        \filldraw [opacity=1] (406.46bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                        \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \draw (406.46bp,34.0bp) node {$\text{a}$};
+                      \end{scope}
+                        % Node: 6
+                      \begin{scope}
+                        \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                        \pgfsetfillcolor{fillcol}
+                        \filldraw (509.6bp,16.05bp) -- (511.87bp,16.15bp) -- (514.11bp,16.3bp) -- (516.32bp,16.49bp) -- (518.48bp,16.74bp) -- (520.6bp,17.03bp) -- (522.66bp,17.36bp) -- (524.65bp,17.75bp) -- (526.57bp,18.18bp) -- (528.4bp,18.65bp) -- (530.15bp,19.16bp) -- (531.8bp,19.71bp) -- (533.36bp,20.31bp) -- (534.81bp,20.94bp) -- (536.15bp,21.61bp) -- (537.38bp,22.31bp) -- (538.5bp,23.04bp) -- (539.49bp,23.8bp) -- (540.37bp,24.59bp) -- (541.12bp,25.41bp) -- (541.76bp,26.25bp) -- (542.27bp,27.11bp) -- (542.67bp,27.99bp) -- (542.94bp,28.89bp) -- (543.1bp,29.8bp) -- (543.14bp,30.72bp) -- (543.07bp,31.65bp) -- (542.89bp,32.59bp) -- (542.61bp,33.53bp) -- (542.22bp,34.47bp) -- (541.74bp,35.41bp) -- (541.16bp,36.35bp) -- (540.5bp,37.28bp) -- (539.75bp,38.2bp) -- (538.93bp,39.11bp) -- (538.03bp,40.01bp) -- (537.06bp,40.89bp) -- (536.03bp,41.75bp) -- (534.95bp,42.59bp) -- (533.8bp,43.41bp) -- (532.61bp,44.2bp) -- (531.38bp,44.96bp) -- (530.11bp,45.69bp) -- (528.8bp,46.39bp) -- (527.45bp,47.06bp) -- (526.08bp,47.69bp) -- (524.69bp,48.29bp) -- (523.27bp,48.84bp) -- (521.84bp,49.35bp) -- (520.39bp,49.82bp) -- (518.92bp,50.25bp) -- (517.45bp,50.64bp) -- (515.96bp,50.97bp) -- (514.47bp,51.26bp) -- (512.97bp,51.51bp) -- (511.47bp,51.7bp) -- (509.96bp,51.85bp) -- (508.45bp,51.95bp) -- (506.94bp,52.0bp) -- (505.43bp,52.0bp) -- (503.92bp,51.95bp) -- (502.41bp,51.85bp) -- (500.9bp,51.7bp) -- (499.39bp,51.51bp) -- (497.9bp,51.26bp) -- (496.4bp,50.97bp) -- (494.92bp,50.64bp) -- (493.44bp,50.25bp) -- (491.98bp,49.82bp) -- (490.53bp,49.35bp) -- (489.09bp,48.84bp) -- (487.68bp,48.29bp) -- (486.28bp,47.69bp) -- (484.91bp,47.06bp) -- (483.57bp,46.39bp) -- (482.26bp,45.69bp) -- (480.99bp,44.96bp) -- (479.75bp,44.2bp) -- (478.56bp,43.41bp) -- (477.42bp,42.59bp) -- (476.33bp,41.75bp) -- (475.3bp,40.89bp) -- (474.34bp,40.01bp) -- (473.44bp,39.11bp) -- (472.61bp,38.2bp) -- (471.87bp,37.28bp) -- (471.2bp,36.35bp) -- (470.63bp,35.41bp) -- (470.14bp,34.47bp) -- (469.76bp,33.53bp) -- (469.47bp,32.59bp) -- (469.3bp,31.65bp) -- (469.23bp,30.72bp) -- (469.27bp,29.8bp) -- (469.43bp,28.89bp) -- (469.7bp,27.99bp) -- (470.09bp,27.11bp) -- (470.61bp,26.25bp) -- (471.24bp,25.41bp) -- (472.0bp,24.59bp) -- (472.88bp,23.8bp) -- (473.87bp,23.04bp) -- (474.99bp,22.31bp) -- (476.21bp,21.61bp) -- (477.56bp,20.94bp) -- (479.01bp,20.31bp) -- (480.56bp,19.71bp) -- (482.22bp,19.16bp) -- (483.96bp,18.65bp) -- (485.8bp,18.18bp) -- (487.72bp,17.75bp) -- (489.71bp,17.36bp) -- (491.77bp,17.03bp) -- (493.88bp,16.74bp) -- (496.05bp,16.49bp) -- (498.26bp,16.3bp) -- (500.5bp,16.15bp) -- (502.76bp,16.05bp) -- (505.04bp,16.0bp) -- (507.32bp,16.0bp) -- cycle;
+                        \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \draw (506.18bp,34.0bp) node [align=center] {$\text{a}$ \\ {\tiny repeats $0$ - $\infty$}};
+                      \end{scope}
+                        % Node: 7
+                      \begin{scope}
+                        \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                        \pgfsetfillcolor{fillcol}
+                        \filldraw [opacity=1] (605.91bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                        \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \draw (605.91bp,34.0bp) node {$\neg \text{a}$};
+                      \end{scope}
+                        % Node: start
+                      \begin{scope}
+                        \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \draw (27.0bp,63.0bp) ellipse (27.0bp and 18.0bp);
+                        \draw (27.0bp,63.0bp) node {start};
+                      \end{scope}
+                        % Node: 0
+                      \begin{scope}
+                        \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \draw (316.46bp,88.0bp) ellipse (27.0bp and 18.0bp);
+                        \draw (316.46bp,88.0bp) node {$\neg \text{a}$};
+                      \end{scope}
+                        % Node: 1
+                      \begin{scope}
+                        \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \draw (117.0bp,40.0bp) ellipse (27.0bp and 18.0bp);
+                        \draw (117.0bp,40.0bp) node {$\text{a}$};
+                      \end{scope}
+                        % Node: 2
+                      \begin{scope}
+                        \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \draw (220.15bp,20.05bp) -- (222.41bp,20.15bp) -- (224.65bp,20.3bp) -- (226.86bp,20.49bp) -- (229.03bp,20.74bp) -- (231.14bp,21.03bp) -- (233.2bp,21.36bp) -- (235.19bp,21.75bp) -- (237.11bp,22.18bp) -- (238.95bp,22.65bp) -- (240.7bp,23.16bp) -- (242.35bp,23.71bp) -- (243.9bp,24.31bp) -- (245.35bp,24.94bp) -- (246.7bp,25.61bp) -- (247.93bp,26.31bp) -- (249.04bp,27.04bp) -- (250.04bp,27.8bp) -- (250.91bp,28.59bp) -- (251.67bp,29.41bp) -- (252.3bp,30.25bp) -- (252.82bp,31.11bp) -- (253.21bp,31.99bp) -- (253.49bp,32.89bp) -- (253.64bp,33.8bp) -- (253.68bp,34.72bp) -- (253.61bp,35.65bp) -- (253.44bp,36.59bp) -- (253.15bp,37.53bp) -- (252.77bp,38.47bp) -- (252.28bp,39.41bp) -- (251.71bp,40.35bp) -- (251.04bp,41.28bp) -- (250.3bp,42.2bp) -- (249.47bp,43.11bp) -- (248.57bp,44.01bp) -- (247.61bp,44.89bp) -- (246.58bp,45.75bp) -- (245.49bp,46.59bp) -- (244.35bp,47.41bp) -- (243.16bp,48.2bp) -- (241.92bp,48.96bp) -- (240.65bp,49.69bp) -- (239.34bp,50.39bp) -- (238.0bp,51.06bp) -- (236.63bp,51.69bp) -- (235.23bp,52.29bp) -- (233.82bp,52.84bp) -- (232.38bp,53.35bp) -- (230.93bp,53.82bp) -- (229.47bp,54.25bp) -- (227.99bp,54.64bp) -- (226.51bp,54.97bp) -- (225.02bp,55.26bp) -- (223.52bp,55.51bp) -- (222.01bp,55.7bp) -- (220.51bp,55.85bp) -- (219.0bp,55.95bp) -- (217.48bp,56.0bp) -- (215.97bp,56.0bp) -- (214.46bp,55.95bp) -- (212.95bp,55.85bp) -- (211.44bp,55.7bp) -- (209.94bp,55.51bp) -- (208.44bp,55.26bp) -- (206.95bp,54.97bp) -- (205.46bp,54.64bp) -- (203.99bp,54.25bp) -- (202.52bp,53.82bp) -- (201.07bp,53.35bp) -- (199.64bp,52.84bp) -- (198.22bp,52.29bp) -- (196.83bp,51.69bp) -- (195.46bp,51.06bp) -- (194.12bp,50.39bp) -- (192.81bp,49.69bp) -- (191.53bp,48.96bp) -- (190.3bp,48.2bp) -- (189.11bp,47.41bp) -- (187.97bp,46.59bp) -- (186.88bp,45.75bp) -- (185.85bp,44.89bp) -- (184.88bp,44.01bp) -- (183.98bp,43.11bp) -- (183.16bp,42.2bp) -- (182.41bp,41.28bp) -- (181.75bp,40.35bp) -- (181.17bp,39.41bp) -- (180.69bp,38.47bp) -- (180.3bp,37.53bp) -- (180.02bp,36.59bp) -- (179.84bp,35.65bp) -- (179.77bp,34.72bp) -- (179.81bp,33.8bp) -- (179.97bp,32.89bp) -- (180.24bp,31.99bp) -- (180.64bp,31.11bp) -- (181.15bp,30.25bp) -- (181.79bp,29.41bp) -- (182.54bp,28.59bp) -- (183.42bp,27.8bp) -- (184.42bp,27.04bp) -- (185.53bp,26.31bp) -- (186.76bp,25.61bp) -- (188.1bp,24.94bp) -- (189.55bp,24.31bp) -- (191.11bp,23.71bp) -- (192.76bp,23.16bp) -- (194.51bp,22.65bp) -- (196.34bp,22.18bp) -- (198.26bp,21.75bp) -- (200.25bp,21.36bp) -- (202.31bp,21.03bp) -- (204.43bp,20.74bp) -- (206.59bp,20.49bp) -- (208.8bp,20.3bp) -- (211.04bp,20.15bp) -- (213.31bp,20.05bp) -- (215.59bp,20.0bp) -- (217.87bp,20.0bp) -- cycle;
+                        \draw (216.73bp,38.0bp) node [align=center] {$\text{a}$ \\ {\tiny repeats $0$ - $\infty$}};
+                      \end{scope}
+                        % Node: 3
+                      \begin{scope}
+                        \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                        \pgfsetstrokecolor{strokecol}
+                        \draw (316.46bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                        \draw (316.46bp,34.0bp) node {$\neg \text{a}$};
+                      \end{scope}
+                      %
+                      \end{tikzpicture}}
 %        \includegraphics[scale=0.3]{examples/ex9/ex9-unsimplified.png}
-        \caption{Timeline for %un-simplified 
+        \caption{Timeline for %un-simplified
         $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$}
         \label{fig:unsimplified}
     \end{figure}
     \begin{figure}[h!]
         \centering
         \resizebox{.8\textwidth}{!}{
-        \begin{tikzpicture}
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) {\!\!\!$\lnot a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [below=0.4cm of a1] {\!\!\!$a$\!\!\!};
-  %      \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p3) [left= 1cm of p2] {\!\!\!$\lnot p$\!\!\!};
-        \node (m) at ($(a1)!0.5!(a2)$) {};
-        \node[shape=rectangle, fill=gray!30!white, style={minimum width=10.9cm, minimum height=3cm}] (g) [right= -1.1cm of m] {};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a1) {\!\!\!$\lnot a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a2) [below=0.4cm of a1] {\!\!\!$a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a3) [right= 0.75cm of a2] {\!\!\!$a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a4) [right= 0.75cm of a3] {\!\!\!$\dots$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a5) [right= 0.75cm of a4] {\!\!\!$a$\!\!\!};
-        \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (a6) [right= 0.75cm of a5] {\!\!\!$\lnot a$\!\!\!};
-        \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) [left= 2cm of m] {\!\!\!start\!\!\!};
-        \draw[thick, line width=1.25] (s) edge[-latex] (a1) (s) edge[-latex] (a2) (a2) edge[-latex] (a3) (a3) edge[-latex] (a4) (a4) edge[-latex] (a5) (a5) edge[-latex] (a6);
-        \end{tikzpicture}}
+            \begin{tikzpicture}[>=latex',line join=bevel,]
+                \pgfsetlinewidth{1bp}
+              %%
+              \begin{scope}
+                \pgfsetstrokecolor{black}
+                \definecolor{strokecol}{rgb}{0.83,0.83,0.83};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{0.83,0.83,0.83};
+                \pgfsetfillcolor{fillcol}
+                \filldraw (82.0bp,8.0bp) -- (82.0bp,114.0bp) -- (351.46bp,114.0bp) -- (351.46bp,8.0bp) -- cycle;
+              \end{scope}
+                \pgfsetcolor{black}
+                % Edge: 1 -> 2
+                \draw [->] (144.45bp,34.0bp) .. controls (151.99bp,34.0bp) and (160.43bp,34.0bp)  .. (180.08bp,34.0bp);
+                % Edge: 2 -> 3
+                \draw [->] (253.29bp,34.0bp) .. controls (261.21bp,34.0bp) and (269.63bp,34.0bp)  .. (288.96bp,34.0bp);
+                % Edge: start -> 0
+                \draw [->] (52.046bp,68.378bp) .. controls (60.971bp,71.116bp) and (71.285bp,74.281bp)  .. (91.983bp,80.631bp);
+                % Edge: start -> 1
+                \draw [->] (52.046bp,53.622bp) .. controls (60.971bp,50.884bp) and (71.285bp,47.719bp)  .. (91.983bp,41.369bp);
+                % Node: 0
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (117.0bp,88.0bp) ellipse (27.0bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (117.0bp,88.0bp) node {$\neg \text{a}$};
+              \end{scope}
+                % Node: 1
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (117.0bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (117.0bp,34.0bp) node {$\text{a}$};
+              \end{scope}
+                % Node: 2
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw (220.15bp,16.05bp) -- (222.41bp,16.15bp) -- (224.65bp,16.3bp) -- (226.86bp,16.49bp) -- (229.03bp,16.74bp) -- (231.14bp,17.03bp) -- (233.2bp,17.36bp) -- (235.19bp,17.75bp) -- (237.11bp,18.18bp) -- (238.95bp,18.65bp) -- (240.7bp,19.16bp) -- (242.35bp,19.71bp) -- (243.9bp,20.31bp) -- (245.35bp,20.94bp) -- (246.7bp,21.61bp) -- (247.93bp,22.31bp) -- (249.04bp,23.04bp) -- (250.04bp,23.8bp) -- (250.91bp,24.59bp) -- (251.67bp,25.41bp) -- (252.3bp,26.25bp) -- (252.82bp,27.11bp) -- (253.21bp,27.99bp) -- (253.49bp,28.89bp) -- (253.64bp,29.8bp) -- (253.68bp,30.72bp) -- (253.61bp,31.65bp) -- (253.44bp,32.59bp) -- (253.15bp,33.53bp) -- (252.77bp,34.47bp) -- (252.28bp,35.41bp) -- (251.71bp,36.35bp) -- (251.04bp,37.28bp) -- (250.3bp,38.2bp) -- (249.47bp,39.11bp) -- (248.57bp,40.01bp) -- (247.61bp,40.89bp) -- (246.58bp,41.75bp) -- (245.49bp,42.59bp) -- (244.35bp,43.41bp) -- (243.16bp,44.2bp) -- (241.92bp,44.96bp) -- (240.65bp,45.69bp) -- (239.34bp,46.39bp) -- (238.0bp,47.06bp) -- (236.63bp,47.69bp) -- (235.23bp,48.29bp) -- (233.82bp,48.84bp) -- (232.38bp,49.35bp) -- (230.93bp,49.82bp) -- (229.47bp,50.25bp) -- (227.99bp,50.64bp) -- (226.51bp,50.97bp) -- (225.02bp,51.26bp) -- (223.52bp,51.51bp) -- (222.01bp,51.7bp) -- (220.51bp,51.85bp) -- (219.0bp,51.95bp) -- (217.48bp,52.0bp) -- (215.97bp,52.0bp) -- (214.46bp,51.95bp) -- (212.95bp,51.85bp) -- (211.44bp,51.7bp) -- (209.94bp,51.51bp) -- (208.44bp,51.26bp) -- (206.95bp,50.97bp) -- (205.46bp,50.64bp) -- (203.99bp,50.25bp) -- (202.52bp,49.82bp) -- (201.07bp,49.35bp) -- (199.64bp,48.84bp) -- (198.22bp,48.29bp) -- (196.83bp,47.69bp) -- (195.46bp,47.06bp) -- (194.12bp,46.39bp) -- (192.81bp,45.69bp) -- (191.53bp,44.96bp) -- (190.3bp,44.2bp) -- (189.11bp,43.41bp) -- (187.97bp,42.59bp) -- (186.88bp,41.75bp) -- (185.85bp,40.89bp) -- (184.88bp,40.01bp) -- (183.98bp,39.11bp) -- (183.16bp,38.2bp) -- (182.41bp,37.28bp) -- (181.75bp,36.35bp) -- (181.17bp,35.41bp) -- (180.69bp,34.47bp) -- (180.3bp,33.53bp) -- (180.02bp,32.59bp) -- (179.84bp,31.65bp) -- (179.77bp,30.72bp) -- (179.81bp,29.8bp) -- (179.97bp,28.89bp) -- (180.24bp,27.99bp) -- (180.64bp,27.11bp) -- (181.15bp,26.25bp) -- (181.79bp,25.41bp) -- (182.54bp,24.59bp) -- (183.42bp,23.8bp) -- (184.42bp,23.04bp) -- (185.53bp,22.31bp) -- (186.76bp,21.61bp) -- (188.1bp,20.94bp) -- (189.55bp,20.31bp) -- (191.11bp,19.71bp) -- (192.76bp,19.16bp) -- (194.51bp,18.65bp) -- (196.34bp,18.18bp) -- (198.26bp,17.75bp) -- (200.25bp,17.36bp) -- (202.31bp,17.03bp) -- (204.43bp,16.74bp) -- (206.59bp,16.49bp) -- (208.8bp,16.3bp) -- (211.04bp,16.15bp) -- (213.31bp,16.05bp) -- (215.59bp,16.0bp) -- (217.87bp,16.0bp) -- cycle;
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (216.73bp,34.0bp) node [align=center] {$\text{a}$ \\ {\tiny repeats $0$ - $\infty$}};
+              \end{scope}
+                % Node: 3
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (316.46bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (316.46bp,34.0bp) node {$\neg \text{a}$};
+              \end{scope}
+                % Node: start
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (27.0bp,61.0bp) ellipse (27.0bp and 18.0bp);
+                \draw (27.0bp,61.0bp) node {start};
+              \end{scope}
+              %
+              \end{tikzpicture}}
   %      \includegraphics[scale=0.3]{examples/ex9/ex9.png}
         \caption{Timeline for simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))^{\omega}$}
         \label{fig:simplified}
@@ -599,6 +788,7 @@ To demonstrate the result of our tool, we present two examples, one from a real-
     \begin{figure}[h!]
         \centering
         \resizebox{\textwidth}{!}{
+<<<<<<< HEAD
         \begin{tikzpicture}
             \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) {\!\!\!\!start\!\!\!\!};
             \node[shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (ab1) [right= of s]{\!\!\!\!$a \tand b$\!\!\!\!};
@@ -625,6 +815,135 @@ To demonstrate the result of our tool, we present two examples, one from a real-
         \end{tikzpicture}}
         
    %    \includegraphics[scale=0.3]{examples/ex14/ex14.png}
+=======
+            \begin{tikzpicture}[>=latex',line join=bevel,]
+                \pgfsetlinewidth{1bp}
+              %%
+              \begin{scope}
+                \pgfsetstrokecolor{black}
+                \definecolor{strokecol}{rgb}{0.83,0.83,0.83};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{0.83,0.83,0.83};
+                \pgfsetfillcolor{fillcol}
+                \filldraw (105.66bp,62.0bp) -- (105.66bp,168.0bp) -- (292.33bp,168.0bp) -- (292.33bp,62.0bp) -- cycle;
+              \end{scope}
+              \begin{scope}
+                \pgfsetstrokecolor{black}
+                \definecolor{strokecol}{rgb}{0.83,0.83,0.83};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{0.83,0.83,0.83};
+                \pgfsetfillcolor{fillcol}
+                \filldraw (312.33bp,8.0bp) -- (312.33bp,60.0bp) -- (612.66bp,60.0bp) -- (612.66bp,8.0bp) -- cycle;
+              \end{scope}
+                \pgfsetcolor{black}
+                % Edge: 1 -> 2
+                \draw [->] (169.41bp,88.0bp) .. controls (184.02bp,88.0bp) and (202.45bp,88.0bp)  .. (229.83bp,88.0bp);
+                % Edge: 5 -> 6
+                \draw [->] (374.57bp,34.0bp) .. controls (382.11bp,34.0bp) and (390.67bp,34.0bp)  .. (410.91bp,34.0bp);
+                % Edge: 6 -> 7
+                \draw [->] (514.12bp,34.0bp) .. controls (522.4bp,34.0bp) and (530.86bp,34.0bp)  .. (550.25bp,34.0bp);
+                % Edge: start -> 0
+                \draw [->] (49.552bp,98.284bp) .. controls (66.247bp,106.25bp) and (89.652bp,117.42bp)  .. (118.92bp,131.39bp);
+                % Edge: start -> 1
+                \draw [->] (54.247bp,88.0bp) .. controls (68.853bp,88.0bp) and (87.288bp,88.0bp)  .. (114.67bp,88.0bp);
+                % Edge: start -> 3
+                \draw [->] (49.489bp,77.523bp) .. controls (61.408bp,71.732bp) and (76.506bp,64.429bp)  .. (90.0bp,58.0bp) .. controls (93.924bp,56.131bp) and (98.021bp,54.19bp)  .. (112.18bp,47.52bp);
+                % Edge: 3 -> 4
+                \draw [->] (193.79bp,34.0bp) .. controls (202.07bp,34.0bp) and (210.53bp,34.0bp)  .. (229.93bp,34.0bp);
+                % Edge: 4 -> 5
+                \draw [->] (284.73bp,34.0bp) .. controls (292.21bp,34.0bp) and (300.51bp,34.0bp)  .. (319.94bp,34.0bp);
+                % Node: 0
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (142.16bp,142.0bp) ellipse (28.5bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (142.16bp,142.0bp) node {$\neg \text{a} \lor \neg \text{b}$};
+              \end{scope}
+                % Node: 1
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (142.16bp,88.0bp) ellipse (27.0bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (142.16bp,88.0bp) node {$\text{a} \land \text{b}$};
+              \end{scope}
+                % Node: 2
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (257.33bp,88.0bp) ellipse (27.0bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (257.33bp,88.0bp) node {$\neg \text{b}$};
+              \end{scope}
+                % Node: 5
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (347.33bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (347.33bp,34.0bp) node {$\neg \text{b}$};
+              \end{scope}
+                % Node: 6
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw (467.33bp,16.05bp) -- (470.54bp,16.15bp) -- (473.71bp,16.3bp) -- (476.84bp,16.49bp) -- (479.91bp,16.74bp) -- (482.9bp,17.03bp) -- (485.82bp,17.36bp) -- (488.64bp,17.75bp) -- (491.35bp,18.18bp) -- (493.95bp,18.65bp) -- (496.43bp,19.16bp) -- (498.77bp,19.71bp) -- (500.97bp,20.31bp) -- (503.03bp,20.94bp) -- (504.93bp,21.61bp) -- (506.67bp,22.31bp) -- (508.24bp,23.04bp) -- (509.65bp,23.8bp) -- (510.9bp,24.59bp) -- (511.97bp,25.41bp) -- (512.86bp,26.25bp) -- (513.59bp,27.11bp) -- (514.15bp,27.99bp) -- (514.54bp,28.89bp) -- (514.76bp,29.8bp) -- (514.82bp,30.72bp) -- (514.72bp,31.65bp) -- (514.47bp,32.59bp) -- (514.07bp,33.53bp) -- (513.52bp,34.47bp) -- (512.84bp,35.41bp) -- (512.02bp,36.35bp) -- (511.08bp,37.28bp) -- (510.03bp,38.2bp) -- (508.86bp,39.11bp) -- (507.59bp,40.01bp) -- (506.22bp,40.89bp) -- (504.76bp,41.75bp) -- (503.22bp,42.59bp) -- (501.6bp,43.41bp) -- (499.92bp,44.2bp) -- (498.17bp,44.96bp) -- (496.36bp,45.69bp) -- (494.51bp,46.39bp) -- (492.61bp,47.06bp) -- (490.67bp,47.69bp) -- (488.7bp,48.29bp) -- (486.69bp,48.84bp) -- (484.66bp,49.35bp) -- (482.61bp,49.82bp) -- (480.53bp,50.25bp) -- (478.44bp,50.64bp) -- (476.34bp,50.97bp) -- (474.23bp,51.26bp) -- (472.1bp,51.51bp) -- (469.98bp,51.7bp) -- (467.84bp,51.85bp) -- (465.7bp,51.95bp) -- (463.56bp,52.0bp) -- (461.42bp,52.0bp) -- (459.28bp,51.95bp) -- (457.14bp,51.85bp) -- (455.01bp,51.7bp) -- (452.88bp,51.51bp) -- (450.76bp,51.26bp) -- (448.64bp,50.97bp) -- (446.54bp,50.64bp) -- (444.45bp,50.25bp) -- (442.38bp,49.82bp) -- (440.33bp,49.35bp) -- (438.29bp,48.84bp) -- (436.29bp,48.29bp) -- (434.31bp,47.69bp) -- (432.37bp,47.06bp) -- (430.47bp,46.39bp) -- (428.62bp,45.69bp) -- (426.82bp,44.96bp) -- (425.07bp,44.2bp) -- (423.38bp,43.41bp) -- (421.77bp,42.59bp) -- (420.23bp,41.75bp) -- (418.77bp,40.89bp) -- (417.4bp,40.01bp) -- (416.13bp,39.11bp) -- (414.96bp,38.2bp) -- (413.9bp,37.28bp) -- (412.96bp,36.35bp) -- (412.15bp,35.41bp) -- (411.46bp,34.47bp) -- (410.92bp,33.53bp) -- (410.52bp,32.59bp) -- (410.26bp,31.65bp) -- (410.16bp,30.72bp) -- (410.22bp,29.8bp) -- (410.45bp,28.89bp) -- (410.83bp,27.99bp) -- (411.39bp,27.11bp) -- (412.12bp,26.25bp) -- (413.02bp,25.41bp) -- (414.09bp,24.59bp) -- (415.33bp,23.8bp) -- (416.74bp,23.04bp) -- (418.32bp,22.31bp) -- (420.06bp,21.61bp) -- (421.96bp,20.94bp) -- (424.01bp,20.31bp) -- (426.21bp,19.71bp) -- (428.56bp,19.16bp) -- (431.03bp,18.65bp) -- (433.63bp,18.18bp) -- (436.35bp,17.75bp) -- (439.17bp,17.36bp) -- (442.08bp,17.03bp) -- (445.08bp,16.74bp) -- (448.14bp,16.49bp) -- (451.27bp,16.3bp) -- (454.44bp,16.15bp) -- (457.65bp,16.05bp) -- (460.88bp,16.0bp) -- (464.11bp,16.0bp) -- cycle;
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (462.49bp,34.0bp) node [align=center] {$\neg \text{a} \lor \neg \text{b}$ \\ {\tiny repeats $0$ - $\infty$}};
+              \end{scope}
+                % Node: 7
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (577.66bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (577.66bp,34.0bp) node {$\text{a} \land \text{b}$};
+              \end{scope}
+                % Node: start
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (27.0bp,88.0bp) ellipse (27.0bp and 18.0bp);
+                \draw (27.0bp,88.0bp) node {start};
+              \end{scope}
+                % Node: 3
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (147.01bp,16.05bp) -- (150.21bp,16.15bp) -- (153.39bp,16.3bp) -- (156.51bp,16.49bp) -- (159.58bp,16.74bp) -- (162.58bp,17.03bp) -- (165.49bp,17.36bp) -- (168.31bp,17.75bp) -- (171.03bp,18.18bp) -- (173.63bp,18.65bp) -- (176.1bp,19.16bp) -- (178.44bp,19.71bp) -- (180.64bp,20.31bp) -- (182.7bp,20.94bp) -- (184.6bp,21.61bp) -- (186.34bp,22.31bp) -- (187.92bp,23.04bp) -- (189.33bp,23.8bp) -- (190.57bp,24.59bp) -- (191.64bp,25.41bp) -- (192.54bp,26.25bp) -- (193.26bp,27.11bp) -- (193.82bp,27.99bp) -- (194.21bp,28.89bp) -- (194.43bp,29.8bp) -- (194.49bp,30.72bp) -- (194.39bp,31.65bp) -- (194.14bp,32.59bp) -- (193.74bp,33.53bp) -- (193.19bp,34.47bp) -- (192.51bp,35.41bp) -- (191.69bp,36.35bp) -- (190.75bp,37.28bp) -- (189.7bp,38.2bp) -- (188.53bp,39.11bp) -- (187.26bp,40.01bp) -- (185.89bp,40.89bp) -- (184.43bp,41.75bp) -- (182.89bp,42.59bp) -- (181.27bp,43.41bp) -- (179.59bp,44.2bp) -- (177.84bp,44.96bp) -- (176.04bp,45.69bp) -- (174.18bp,46.39bp) -- (172.28bp,47.06bp) -- (170.34bp,47.69bp) -- (168.37bp,48.29bp) -- (166.36bp,48.84bp) -- (164.33bp,49.35bp) -- (162.28bp,49.82bp) -- (160.2bp,50.25bp) -- (158.12bp,50.64bp) -- (156.01bp,50.97bp) -- (153.9bp,51.26bp) -- (151.78bp,51.51bp) -- (149.65bp,51.7bp) -- (147.51bp,51.85bp) -- (145.37bp,51.95bp) -- (143.23bp,52.0bp) -- (141.09bp,52.0bp) -- (138.95bp,51.95bp) -- (136.82bp,51.85bp) -- (134.68bp,51.7bp) -- (132.55bp,51.51bp) -- (130.43bp,51.26bp) -- (128.32bp,50.97bp) -- (126.21bp,50.64bp) -- (124.12bp,50.25bp) -- (122.05bp,49.82bp) -- (120.0bp,49.35bp) -- (117.97bp,48.84bp) -- (115.96bp,48.29bp) -- (113.99bp,47.69bp) -- (112.05bp,47.06bp) -- (110.15bp,46.39bp) -- (108.29bp,45.69bp) -- (106.49bp,44.96bp) -- (104.74bp,44.2bp) -- (103.05bp,43.41bp) -- (101.44bp,42.59bp) -- (99.9bp,41.75bp) -- (98.44bp,40.89bp) -- (97.07bp,40.01bp) -- (95.8bp,39.11bp) -- (94.63bp,38.2bp) -- (93.57bp,37.28bp) -- (92.63bp,36.35bp) -- (91.82bp,35.41bp) -- (91.14bp,34.47bp) -- (90.59bp,33.53bp) -- (90.19bp,32.59bp) -- (89.93bp,31.65bp) -- (89.84bp,30.72bp) -- (89.9bp,29.8bp) -- (90.12bp,28.89bp) -- (90.51bp,27.99bp) -- (91.06bp,27.11bp) -- (91.79bp,26.25bp) -- (92.69bp,25.41bp) -- (93.76bp,24.59bp) -- (95.0bp,23.8bp) -- (96.41bp,23.04bp) -- (97.99bp,22.31bp) -- (99.73bp,21.61bp) -- (101.63bp,20.94bp) -- (103.68bp,20.31bp) -- (105.89bp,19.71bp) -- (108.23bp,19.16bp) -- (110.7bp,18.65bp) -- (113.3bp,18.18bp) -- (116.02bp,17.75bp) -- (118.84bp,17.36bp) -- (121.75bp,17.03bp) -- (124.75bp,16.74bp) -- (127.82bp,16.49bp) -- (130.94bp,16.3bp) -- (134.12bp,16.15bp) -- (137.32bp,16.05bp) -- (140.55bp,16.0bp) -- (143.78bp,16.0bp) -- cycle;
+                \draw (142.16bp,34.0bp) node [align=center] {$\neg \text{a} \lor \neg \text{b}$ \\ {\tiny repeats $0$ - $\infty$}};
+              \end{scope}
+                % Node: 4
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (257.33bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                \draw (257.33bp,34.0bp) node {$\text{a} \land \text{b}$};
+              \end{scope}
+              %
+              \end{tikzpicture}}
+
+     %   \includegraphics[scale=0.3]{examples/ex14/ex14.png}
+>>>>>>> 29dab2cabce83c3cf6215c0346f6806615224b86
         \caption{Timeline for $\always (a \land b \limplies \nextt (\neg b))$}
         \label{fig:ex14}
     \end{figure}
@@ -639,36 +958,144 @@ To demonstrate the result of our tool, we present two examples, one from a real-
     \begin{figure}[h!]
         \centering
         \resizebox{\textwidth}{!}{
-        \begin{tikzpicture}
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) {\!\!\!\!start\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) [right= .75cm of s]{\!\!\!\!\!\!\!\!$p_2$\!\!\!\!\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p2) [right= .75cm of p1]{\!\!\!\!\!\!\!\!$\tnot p_0 \! \tand \!  p_1$\!\!\!\!\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p3) [right= .75cm of p2]{\!\!\!\!\!\!\!\!$\tnot p_0 \! \tand \!  p_1$\!\!\!\!\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p4) [right= .75cm of p3]{\!\!\!\!\!\!\!\!$\dots$\!\!\!\!\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p5) [right= .75cm of p4]{\!\!\!\!\!\!\!\!$\tnot p_0 \! \tand \!  p_1$\!\!\!\!\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p6) [right= .75cm of p5]{\!\!\!\!\!\!\!\!$p_0 \! \tand \! p_1$\!\!\!\!\!\!\!\!};
-
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p7) [above= .6cm of p1]{\!\!\!\!\!\!\!\!$p_2$\!\!\!\!\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p8) [above= .6cm of p6]{\!\!\!\!\!\!\!\!$p_0 \! \tand \! p_1$\!\!\!\!\!\!\!\!};
-            \node (m) at ($(p6)!0.5!(p8)$) {};
-            \node[shape=rectangle, fill=gray!30!white, style={minimum width=1.8cm, minimum height=1.25cm}] (g1) [right= 1cm of m] {};
-           \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (o1) [right= 1.15cm of m]{\!\!\!\!\!\!\!\!$p_1$\!\!\!\!\!\!\!\!};
-
-
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p9) [below= .6cm of p1]{\!\!\!\!\!\!\!\!$p_2$\!\!\!\!\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p10) [below= .6cm of p2]{\!\!\!\!\!\!\!\!$1$\!\!\!\!\!\!\!\!};
-	   \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p11) [below= .6cm of p3]{\!\!\!\!\!\!\!\!$1$\!\!\!\!\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p12) [below= .6cm of p4]{\!\!\!\!\!\!\!\!$\dots$\!\!\!\!\!\!\!\!};
-           \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p13) [below= .6cm of p5]{\!\!\!\!\!\!\!\!$1$\!\!\!\!\!\!\!\!};
-           \node[shape=rectangle, fill=gray!30!white, style={minimum width=1.8cm, minimum height=1.25cm}] (g2) [right= 0.6cm of p13] {};
-
-           \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p14) [below= .6cm of p6]{\!\!\!\!\!\!\!\!$p_0 \! \tand \! p_1$\!\!\!\!\!\!\!\!};
-
-           \draw[thick, line width=1.25] (s) edge[-latex] (p1) (s) edge[-latex] (p7) (s) edge[-latex] (p9) (p1) edge[-latex] (p2) (p2) edge[-latex] (p3) (p3) edge[-latex] (p4) (p4) edge[-latex] (p5) (p5) edge[-latex] (p6) (p7) edge[-latex] (p8);
-           \draw[thick, line width=1.25] (p8) edge[-latex] (o1) (p6) edge[-latex] (o1) (p9) edge[-latex] (p10) (p10) edge[-latex] (p11) (p11) edge[-latex] (p12) (p12) edge[-latex] (p13) (p13) edge[-latex] (p14);
-
-
-        \end{tikzpicture}}
+            \begin{tikzpicture}[>=latex',line join=bevel,]
+                \pgfsetlinewidth{1bp}
+              %%
+              \begin{scope}
+                \pgfsetstrokecolor{black}
+                \definecolor{strokecol}{rgb}{0.83,0.83,0.83};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{0.83,0.83,0.83};
+                \pgfsetfillcolor{fillcol}
+                \filldraw (504.59bp,89.0bp) -- (504.59bp,141.0bp) -- (574.59bp,141.0bp) -- (574.59bp,89.0bp) -- cycle;
+              \end{scope}
+              \begin{scope}
+                \pgfsetstrokecolor{black}
+                \definecolor{strokecol}{rgb}{0.83,0.83,0.83};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{0.83,0.83,0.83};
+                \pgfsetfillcolor{fillcol}
+                \filldraw (413.59bp,8.0bp) -- (413.59bp,60.0bp) -- (484.59bp,60.0bp) -- (484.59bp,8.0bp) -- cycle;
+              \end{scope}
+                \pgfsetcolor{black}
+                % Edge: start -> 0
+                \draw [->] (48.953bp,98.996bp) .. controls (60.709bp,104.68bp) and (75.823bp,111.21bp)  .. (90.0bp,115.0bp) .. controls (159.91bp,133.7bp) and (244.63bp,139.46bp)  .. (303.86bp,141.59bp);
+                % Edge: start -> 2
+                \draw [->] (54.403bp,88.0bp) .. controls (61.886bp,88.0bp) and (70.183bp,88.0bp)  .. (89.616bp,88.0bp);
+                % Edge: start -> 7
+                \draw [->] (47.53bp,76.016bp) .. controls (59.151bp,68.885bp) and (74.111bp,59.705bp)  .. (96.525bp,45.951bp);
+                % Edge: 0 -> 1
+                \draw [->] (358.57bp,142.0bp) .. controls (373.75bp,142.0bp) and (393.11bp,142.0bp)  .. (421.11bp,142.0bp);
+                % Edge: 1 -> 6
+                \draw [->] (474.27bp,134.62bp) .. controls (483.34bp,131.85bp) and (493.84bp,128.65bp)  .. (514.43bp,122.37bp);
+                % Edge: 2 -> 3
+                \draw [->] (144.47bp,88.0bp) .. controls (151.84bp,88.0bp) and (160.04bp,88.0bp)  .. (179.56bp,88.0bp);
+                % Edge: 3 -> 4
+                \draw [->] (241.48bp,88.0bp) .. controls (249.31bp,88.0bp) and (258.05bp,88.0bp)  .. (278.13bp,88.0bp);
+                % Edge: 4 -> 5
+                \draw [->] (384.77bp,88.0bp) .. controls (393.21bp,88.0bp) and (401.81bp,88.0bp)  .. (421.1bp,88.0bp);
+                % Edge: 5 -> 6
+                \draw [->] (474.27bp,95.378bp) .. controls (483.34bp,98.146bp) and (493.84bp,101.35bp)  .. (514.43bp,107.63bp);
+                % Edge: 7 -> 8
+                \draw [->] (144.47bp,34.0bp) .. controls (153.0bp,34.0bp) and (162.63bp,34.0bp)  .. (183.09bp,34.0bp);
+                % Edge: 8 -> 9
+                \draw [->] (237.86bp,34.0bp) .. controls (251.05bp,34.0bp) and (267.41bp,34.0bp)  .. (294.09bp,34.0bp);
+                % Edge: 9 -> 10
+                \draw [->] (368.61bp,34.0bp) .. controls (381.85bp,34.0bp) and (396.84bp,34.0bp)  .. (421.45bp,34.0bp);
+                % Node: 6
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (539.59bp,115.0bp) ellipse (27.0bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (539.59bp,115.0bp) node {$\text{p1}$};
+              \end{scope}
+                % Node: 10
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{1.0,1.0,1.0};
+                \pgfsetstrokecolor{strokecol}
+                \definecolor{fillcol}{rgb}{1.0,1.0,1.0};
+                \pgfsetfillcolor{fillcol}
+                \filldraw [opacity=1] (449.09bp,34.0bp) ellipse (27.5bp and 18.0bp);
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (449.09bp,34.0bp) node {$\text{p0} \land \text{p1}$};
+              \end{scope}
+                % Node: start
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (27.0bp,88.0bp) ellipse (27.0bp and 18.0bp);
+                \draw (27.0bp,88.0bp) node {start};
+              \end{scope}
+                % Node: 0
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (331.29bp,142.0bp) ellipse (27.0bp and 18.0bp);
+                \draw (331.29bp,142.0bp) node {$\text{p2}$};
+              \end{scope}
+                % Node: 2
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (117.0bp,88.0bp) ellipse (27.0bp and 18.0bp);
+                \draw (117.0bp,88.0bp) node {$\text{p2}$};
+              \end{scope}
+                % Node: 7
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (117.0bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                \draw (117.0bp,34.0bp) node {$\text{p2}$};
+              \end{scope}
+                % Node: 1
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (449.09bp,142.0bp) ellipse (27.5bp and 18.0bp);
+                \draw (449.09bp,142.0bp) node {$\text{p0} \land \text{p1}$};
+              \end{scope}
+                % Node: 3
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (210.5bp,88.0bp) ellipse (30.5bp and 18.0bp);
+                \draw (210.5bp,88.0bp) node {$\neg \text{p0} \land \text{p1}$};
+              \end{scope}
+                % Node: 4
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (336.3bp,70.05bp) -- (339.61bp,70.15bp) -- (342.89bp,70.3bp) -- (346.12bp,70.49bp) -- (349.29bp,70.74bp) -- (352.39bp,71.03bp) -- (355.4bp,71.36bp) -- (358.32bp,71.75bp) -- (361.12bp,72.18bp) -- (363.81bp,72.65bp) -- (366.37bp,73.16bp) -- (368.79bp,73.71bp) -- (371.07bp,74.31bp) -- (373.19bp,74.94bp) -- (375.15bp,75.61bp) -- (376.95bp,76.31bp) -- (378.58bp,77.04bp) -- (380.04bp,77.8bp) -- (381.32bp,78.59bp) -- (382.43bp,79.41bp) -- (383.36bp,80.25bp) -- (384.11bp,81.11bp) -- (384.69bp,81.99bp) -- (385.09bp,82.89bp) -- (385.32bp,83.8bp) -- (385.38bp,84.72bp) -- (385.28bp,85.65bp) -- (385.02bp,86.59bp) -- (384.6bp,87.53bp) -- (384.04bp,88.47bp) -- (383.33bp,89.41bp) -- (382.49bp,90.35bp) -- (381.52bp,91.28bp) -- (380.42bp,92.2bp) -- (379.22bp,93.11bp) -- (377.9bp,94.01bp) -- (376.49bp,94.89bp) -- (374.98bp,95.75bp) -- (373.39bp,96.59bp) -- (371.72bp,97.41bp) -- (369.98bp,98.2bp) -- (368.17bp,98.96bp) -- (366.3bp,99.69bp) -- (364.39bp,100.39bp) -- (362.42bp,101.06bp) -- (360.42bp,101.69bp) -- (358.38bp,102.29bp) -- (356.3bp,102.84bp) -- (354.21bp,103.35bp) -- (352.08bp,103.82bp) -- (349.94bp,104.25bp) -- (347.78bp,104.64bp) -- (345.61bp,104.97bp) -- (343.42bp,105.26bp) -- (341.23bp,105.51bp) -- (339.03bp,105.7bp) -- (336.82bp,105.85bp) -- (334.61bp,105.95bp) -- (332.4bp,106.0bp) -- (330.19bp,106.0bp) -- (327.97bp,105.95bp) -- (325.76bp,105.85bp) -- (323.56bp,105.7bp) -- (321.36bp,105.51bp) -- (319.16bp,105.26bp) -- (316.98bp,104.97bp) -- (314.81bp,104.64bp) -- (312.65bp,104.25bp) -- (310.5bp,103.82bp) -- (308.38bp,103.35bp) -- (306.28bp,102.84bp) -- (304.21bp,102.29bp) -- (302.17bp,101.69bp) -- (300.16bp,101.06bp) -- (298.2bp,100.39bp) -- (296.28bp,99.69bp) -- (294.42bp,98.96bp) -- (292.61bp,98.2bp) -- (290.87bp,97.41bp) -- (289.2bp,96.59bp) -- (287.61bp,95.75bp) -- (286.1bp,94.89bp) -- (284.68bp,94.01bp) -- (283.37bp,93.11bp) -- (282.16bp,92.2bp) -- (281.07bp,91.28bp) -- (280.1bp,90.35bp) -- (279.26bp,89.41bp) -- (278.55bp,88.47bp) -- (277.99bp,87.53bp) -- (277.57bp,86.59bp) -- (277.31bp,85.65bp) -- (277.21bp,84.72bp) -- (277.27bp,83.8bp) -- (277.5bp,82.89bp) -- (277.9bp,81.99bp) -- (278.48bp,81.11bp) -- (279.23bp,80.25bp) -- (280.16bp,79.41bp) -- (281.26bp,78.59bp) -- (282.55bp,77.8bp) -- (284.0bp,77.04bp) -- (285.63bp,76.31bp) -- (287.43bp,75.61bp) -- (289.4bp,74.94bp) -- (291.52bp,74.31bp) -- (293.8bp,73.71bp) -- (296.22bp,73.16bp) -- (298.77bp,72.65bp) -- (301.46bp,72.18bp) -- (304.27bp,71.75bp) -- (307.18bp,71.36bp) -- (310.19bp,71.03bp) -- (313.29bp,70.74bp) -- (316.46bp,70.49bp) -- (319.69bp,70.3bp) -- (322.97bp,70.15bp) -- (326.29bp,70.05bp) -- (329.62bp,70.0bp) -- (332.96bp,70.0bp) -- cycle;
+                \draw (331.29bp,88.0bp) node [align=center] {$\neg \text{p0} \land \text{p1}$ \\ {\tiny repeats $0$ - $\infty$}};
+              \end{scope}
+                % Node: 5
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (449.09bp,88.0bp) ellipse (27.5bp and 18.0bp);
+                \draw (449.09bp,88.0bp) node {$\text{p0} \land \text{p1}$};
+              \end{scope}
+                % Node: 8
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (210.5bp,34.0bp) ellipse (27.0bp and 18.0bp);
+                \draw (210.5bp,34.0bp) node {$\top$};
+              \end{scope}
+                % Node: 9
+              \begin{scope}
+                \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+                \pgfsetstrokecolor{strokecol}
+                \draw (334.77bp,16.05bp) -- (337.07bp,16.15bp) -- (339.35bp,16.3bp) -- (341.6bp,16.49bp) -- (343.8bp,16.74bp) -- (345.95bp,17.03bp) -- (348.05bp,17.36bp) -- (350.07bp,17.75bp) -- (352.02bp,18.18bp) -- (353.89bp,18.65bp) -- (355.67bp,19.16bp) -- (357.35bp,19.71bp) -- (358.93bp,20.31bp) -- (360.41bp,20.94bp) -- (361.77bp,21.61bp) -- (363.02bp,22.31bp) -- (364.15bp,23.04bp) -- (365.17bp,23.8bp) -- (366.06bp,24.59bp) -- (366.83bp,25.41bp) -- (367.47bp,26.25bp) -- (368.0bp,27.11bp) -- (368.4bp,27.99bp) -- (368.68bp,28.89bp) -- (368.84bp,29.8bp) -- (368.88bp,30.72bp) -- (368.81bp,31.65bp) -- (368.63bp,32.59bp) -- (368.34bp,33.53bp) -- (367.94bp,34.47bp) -- (367.45bp,35.41bp) -- (366.87bp,36.35bp) -- (366.19bp,37.28bp) -- (365.43bp,38.2bp) -- (364.6bp,39.11bp) -- (363.68bp,40.01bp) -- (362.7bp,40.89bp) -- (361.65bp,41.75bp) -- (360.55bp,42.59bp) -- (359.38bp,43.41bp) -- (358.17bp,44.2bp) -- (356.92bp,44.96bp) -- (355.62bp,45.69bp) -- (354.29bp,46.39bp) -- (352.93bp,47.06bp) -- (351.53bp,47.69bp) -- (350.11bp,48.29bp) -- (348.67bp,48.84bp) -- (347.21bp,49.35bp) -- (345.74bp,49.82bp) -- (344.25bp,50.25bp) -- (342.75bp,50.64bp) -- (341.24bp,50.97bp) -- (339.72bp,51.26bp) -- (338.2bp,51.51bp) -- (336.67bp,51.7bp) -- (335.13bp,51.85bp) -- (333.6bp,51.95bp) -- (332.06bp,52.0bp) -- (330.52bp,52.0bp) -- (328.99bp,51.95bp) -- (327.45bp,51.85bp) -- (325.92bp,51.7bp) -- (324.39bp,51.51bp) -- (322.86bp,51.26bp) -- (321.35bp,50.97bp) -- (319.84bp,50.64bp) -- (318.34bp,50.25bp) -- (316.85bp,49.82bp) -- (315.37bp,49.35bp) -- (313.91bp,48.84bp) -- (312.47bp,48.29bp) -- (311.05bp,47.69bp) -- (309.66bp,47.06bp) -- (308.3bp,46.39bp) -- (306.96bp,45.69bp) -- (305.67bp,44.96bp) -- (304.41bp,44.2bp) -- (303.2bp,43.41bp) -- (302.04bp,42.59bp) -- (300.93bp,41.75bp) -- (299.89bp,40.89bp) -- (298.9bp,40.01bp) -- (297.99bp,39.11bp) -- (297.15bp,38.2bp) -- (296.39bp,37.28bp) -- (295.72bp,36.35bp) -- (295.13bp,35.41bp) -- (294.64bp,34.47bp) -- (294.25bp,33.53bp) -- (293.96bp,32.59bp) -- (293.78bp,31.65bp) -- (293.71bp,30.72bp) -- (293.75bp,29.8bp) -- (293.91bp,28.89bp) -- (294.19bp,27.99bp) -- (294.59bp,27.11bp) -- (295.11bp,26.25bp) -- (295.76bp,25.41bp) -- (296.53bp,24.59bp) -- (297.42bp,23.8bp) -- (298.43bp,23.04bp) -- (299.56bp,22.31bp) -- (300.81bp,21.61bp) -- (302.18bp,20.94bp) -- (303.65bp,20.31bp) -- (305.24bp,19.71bp) -- (306.92bp,19.16bp) -- (308.7bp,18.65bp) -- (310.56bp,18.18bp) -- (312.51bp,17.75bp) -- (314.54bp,17.36bp) -- (316.63bp,17.03bp) -- (318.78bp,16.74bp) -- (320.99bp,16.49bp) -- (323.23bp,16.3bp) -- (325.51bp,16.15bp) -- (327.82bp,16.05bp) -- (330.13bp,16.0bp) -- (332.45bp,16.0bp) -- cycle;
+                \draw (331.29bp,34.0bp) node [align=center] {$\top$ \\ {\tiny repeats $0$ - $\infty$}};
+              \end{scope}
+              %
+              \end{tikzpicture}}
 
    %     \includegraphics[scale=0.3]{examples/ex13/ex13.png}
         \caption{Timeline for $p_2 \land (\eventually \always p_0 \weakrelease \nextt(\always p_1 \land ((p_0 \limplies p_2 \land p_2 \limplies p_0) \stronguntil \eventually p_0)))$}
@@ -788,15 +1215,14 @@ Based on our results, we propose the following questions for discussions and fut
 
 Going forward, it will become important to conduct a user survey to gather data from a representative audience of system engineers regarding what timeline visualizations help most with formula validation. Specifically, we list the following questions regarding the intuitive aesthetics of timelines.
 \begin{itemize}
-\item {\bf Can lines in timelines be curved or do they need to be straight?} If a timeline has a curved line is that still visually, intuitively a line? Does the placement of the line matter as to whether it is intuitive for the line to be straight or curved (e.g., to save space or reduce possible visual clutter)? 
+\item {\bf Can lines in timelines be curved or do they need to be straight?} If a timeline has a curved line is that still visually, intuitively a line? Does the placement of the line matter as to whether it is intuitive for the line to be straight or curved (e.g., to save space or reduce possible visual clutter)?
 
-\item {\bf Can there be back edges in a limited fashion (i.e., to simplify formulas) in timelines?} Most of our formulas have star-height of 1, so if we limit the back-edge representation to only surrounding a single node, that would simplify most formulas. We can then use the expanded notation for stared formulas larger than a single proposition, thus navigating a trade-off between small representation and limiting the visual complication. Do the back edges in a limited capacity cause confusion between timeline and automata representatins?
+\item {\bf Can there be back edges in a limited fashion (i.e., to simplify formulas) in timelines?} Most of our formulas have star-height of 1, so if we limit the back-edge representation to only surrounding a single node, that would simplify most formulas. We can then use the expanded notation for stared formulas larger than a single proposition, thus navigating a trade-off between small representation and limiting the visual complication. The criticism of this approach may be that back edges cause confusion between timeline and automata representations, and that with back edges timelines stop being intuitive about linearity of time.
 
-\item {\bf What are intuitive representations of star-formulas and do they change depending on the formula?} There are two ways to represent stars in regular expressions \cite{Runming where did you find these?}. We can represent a stared formula inside a box \cite{where?} or with a back edge \cite{where?}. Does using the box cause confusion with respect to the LTL $\Box$ operator? What is the most intuitive way to remind users of the corner case where the starred formula occurs zero times? 
+\item {\bf What are intuitive representations of star-formulas and do they change depending on the formula?} Common regular expression visualizers use two ways to represent stars in regular expressions. We can represent a stared formula inside a box \cite{B22} with related caption to indicate the repetition (similar to the design decision we made in \tool); or with back edges \cite{A20}. Does using the box cause confusion with respect to the LTL $\Box$ operator? What is the most intuitive way to remind users of the corner case where the starred formula occurs zero times?
 
 \item {\bf When do we choose to unroll for clarity? When do we merge parallel parts of timelines?} To merge parts of lines, we have to check for logical equivalence of the parts of the timelines we want to merge. By our algorithm, we generate parallel lines only when the formulas are not syntactically equivalent, so we would be guaranteed to run the more complex check for logical equivalence. In some cases, this could provide a clarifying simplification, with the cost of a repetitive computationally expensive check. Would it make sense to offer an ``optimizing'' compilation option to users that takes longer to create a timeline representation but checks for smaller representations via logical equivalence?
 \end{itemize}
-KYR note: we should include a figure here with the different visual options we brainstormed and reference it in the bullets above.
 
 
 \section{Conclusion}
