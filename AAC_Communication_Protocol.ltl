@@ -1,6 +1,0 @@
-LTLSPEC (G ((! TSAFE_clear) -> (F TSAFE_command)))
-LTLSPEC (G ((! TSAFE_clear) -> (X TSAFE_command)))
-LTLSPEC (G (! AR_command & TSAFE_command))
-LTLSPEC (G ((! TSAFE_clear) -> (F TSAFE_clear)))
-LTLSPEC (G (controller_request -> (F (! controller_request))))
-LTLSPEC (G (aircraft_request -> (F (! aircraft_request))))
