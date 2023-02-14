@@ -96,7 +96,7 @@ plt.xlabel('Length of LTL Formula')
 plt.ylabel('Timeline lengths')
 
 for idx in range(len(ltls)-2):
-    if tllens[idx] > 50000:
+    if tllens[idx] > 5000:
         tllens.pop(idx)
         ltllens.pop(idx)
         # use log or other scaling instead
