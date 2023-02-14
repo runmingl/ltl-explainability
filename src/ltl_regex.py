@@ -76,7 +76,7 @@ def regex_tllen(regex: Regex) -> int:
         case Union(r1, r2):
             return max(regex_tllen(r1), regex_tllen(r2))
         case Star(r):
-            return 2 * regex_tllen(r) + 1
+            return regex_tllen(r) 
         case _:
             raise TypeError(f'Unknown regex type: {type(regex)}')
 
