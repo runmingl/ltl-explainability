@@ -118,7 +118,7 @@
 %        \node (p0) [left= 0.5cm of p1] {};
 %        \node (p2) [right= 0.5cm of p1] {};
 %        \draw[-latex, thick] (p0) edge (p1) (p1) edge (p2);
-%          
+%
 %%        \draw[thick, black, -latex] (0,0) [partial ellipse=180:90:0.75cm and 0.5cm];
 %%        \draw[thick, black, -] (0,0) [partial ellipse=90:0:0.75cm and 0.5cm];
 %%
@@ -132,7 +132,7 @@
 %        \node (p0) [left= 0.5cm of p1] {};
 %        \node (p2) [right= 0.5cm of p1] {};
 %        \draw[-latex, thick] (p0) edge (p1) (p1) edge (p2);
-%          
+%
 %%        \draw[thick, black, -latex] (0,0) [partial ellipse=180:90:0.75cm and 0.5cm];
 %%        \draw[thick, black, -] (0,0) [partial ellipse=90:0:0.75cm and 0.5cm];
 %
@@ -146,7 +146,7 @@
 %        \node (p0) [left= 0.5cm of p1] {};
 %        \node (p2) [right= 0.5cm of p1] {};
 %        \draw[-latex, thick] (p0) edge (p1) (p1) edge (p2);
-%          
+%
 %        \draw[thick, black, -latex] (-0.05cm,0) [partial ellipse=180:90:1cm and 0.7cm];
 %        \draw[thick, black, -] (-0.05cm,0) [partial ellipse=90:0:1cm and 0.7cm];
 %
@@ -812,7 +812,7 @@ To demonstrate the result of our tool, we present two examples, one from a real-
 %        \draw[thick, line width=1.25] (ab6) edge[-latex] (ab7) (ab6) edge[-latex] (ab7) (ab7) edge[-latex] (ab8) (ab8) edge[-latex] (ab9) (ab9) edge[-latex] (ab10) (ab10) edge[-latex] (ab11);
 %
 %        \end{tikzpicture}}
-%        
+%
    %    \includegraphics[scale=0.3]{examples/ex14/ex14.png}
 
             \begin{tikzpicture}[>=latex',line join=bevel,]
@@ -1128,7 +1128,7 @@ We use timeline length, defined below, to capture the length of our timeline vis
         \tllen(a)           &= 1\\
         \tllen(A_1 A_2)     &= \tllen(A_1) + \tllen(A_2)\\
         \tllen(A_1 + A_2)   &= \max(\tllen(A_1), \tllen(A_2))\\
-        \tllen(A^*)         &= \tllen(A) 
+        \tllen(A^*)         &= \tllen(A)
     \end{align*}
     We also extend this definition to $\omega$-regular expressions as follows
     \begin{align*}
@@ -1178,7 +1178,7 @@ In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which poin
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.6]{img/scale.png}
+    \includegraphics[scale=0.6]{img/binary.png}
     \caption{Scalability measured with binary counter examples from Rozier and Vardi \cite{RV10}}
     \label{fig:scalability}
 \end{figure}
