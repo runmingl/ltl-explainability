@@ -1,11 +1,15 @@
-# ltl-explainability
+# Overview
 
-# What's in a Name? Linear Temporal Logic Literally Represents Time Lines
-(because Shakespeare...)
+LTL2TL is a tool which generates timeline visualizations for Linear temporal logic (LTL) formulas. It provides two utilities:
+- `ltl2timeline`, for translating LTL formulas to timeline graphic images; and
+- `ltl2regex`, for translating LTL formulas to regular expressions representing the solution set of the formula. 
 
-Linear Temporal Logic (LTL) is widely used to specify requirements in safety- critical systems. However, like many formal verification techniques, it is known to be unintuitive and error-prone for human practitioners to specify and validate. In this paper, we provide a new timeline tool for visualizing LTL-based specifications, which is effective at intuitively representing a wide range of formulas. Our tool generates timeline visualizations by translating LTL formulae to intermediate representations as Buchi automata and then ω-regular expressions, and finally simplifying and visualizing the expressions. We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
+The tool works by transforming LTL formulae to Büchi automata (provided by [SPOT](https://spot.lre.epita.fr/)) and subsequently to $\omega$-regular expressions and timeline graphics. It is intended for validating software system specification formulas written in LTL. 
 
-# Dependencies
+Installation, usage and examples are provided below.
+
+# Installation
+## Dependencies
 - SPOT (https://spot.lre.epita.fr/install.html)
 ```
 ./configure --prefix ~/.local && make && sudo make install
@@ -20,13 +24,13 @@ brew install graphviz
 pip install -r requirements.txt
 ```
 
-# Usage
-Before running the tool, make sure that all dependencies are properly installed. Then update git submodule via
+After installing dependencies, update git submodule via
 ```bash
 $ git submodule init
 $ git submodule update
 ```
 
+# Usage
 We provide 2 command-line tools:
 - ltl2regex
 ```
@@ -60,4 +64,10 @@ FLAGS
         Type: str
         Default: 'pdf'
         Supported values: ['pdf', 'png', 'svg', 'latex']
+```
+
+# Examples
+
+```
+python3 main.py ltl2timeline 'G(p xor X p)'
 ```
