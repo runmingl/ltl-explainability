@@ -10,18 +10,18 @@ Installation, usage and examples are provided below.
 
 # Installation
 ## Dependencies
-- SPOT (https://spot.lre.epita.fr/install.html)
+- SPOT (Download [here](https://spot.lre.epita.fr/install.html) and use the following command in the root directory of your installation)
 ```
-./configure --prefix ~/.local && make && sudo make install
+$ ./configure --prefix ~/.local && make && sudo make install
 ```
 - Graphviz
 ```
-brew install graphviz
+$ brew install graphviz
 ```
 - Python 3.10+
 - Other packages
 ```
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 After installing dependencies, update git submodule via
@@ -67,7 +67,9 @@ FLAGS
 ```
 
 # Examples
+LTL Formulas are inputted following the same syntax as [SPOT](https://spot.lre.epita.fr/app/). For example,
 
 ```
 python3 main.py ltl2timeline 'G(p xor X p)'
 ```
+generates the following [timeline](paper/examples/ex2/ex2.png)
