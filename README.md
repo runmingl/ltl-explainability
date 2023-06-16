@@ -72,4 +72,5 @@ LTL Formulas are inputted following the same syntax as [SPOT](https://spot.lre.e
 ```
 python3 main.py ltl2timeline 'G(p xor X p)'
 ```
-generates the following ![timeline](paper/examples/ex2/ex2.png)
+generates the following timeline
+![timeline](paper/examples/ex2/ex2.png)
