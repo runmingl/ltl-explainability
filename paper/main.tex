@@ -1,5 +1,4 @@
-\documentclass[preprint,12pt]{elsarticle}
-\journal{Journal of Computer Languages}
+\documentclass[conference]{IEEEtran}
 \usepackage[x11names, svgnames, rgb]{xcolor}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath, amssymb, amsthm,tikz, subfig}
@@ -55,127 +54,64 @@
 
 \begin{document}
 
-\begin{frontmatter}
-    \title{What's in a Name? Linear Temporal Logic Literally Represents Time Lines}
 
-	\author[inst1]{Runming Li\corref{cor1}}
-    \ead{runmingl@andrew.cmu.edu}
+\title{What's in a Name? Linear Temporal Logic Literally Represents Time Lines}
 
-	\author[inst1]{Keerthana Gurushankar\corref{cor1}}
-    \ead{kgurusha@andrew.cmu.edu}
+\author{\IEEEauthorblockN{Runming Li}
+\IEEEauthorblockA{\textit{Carnegie Mellon University}\\
+Pittsburgh, USA \\
+runmingl@andrew.cmu.edu}
+\and
+\IEEEauthorblockN{Keerthana Gurushankar}
+\IEEEauthorblockA{\textit{Carnegie Mellon University}\\
+Pittsburgh, USA \\
+kgurusha@andrew.cmu.edu}
+\and
+\IEEEauthorblockN{Marijn~J.H.~Heule}
+\IEEEauthorblockA{\textit{Carnegie Mellon University}\\
+Pittsburgh, USA \\
+marijn@cmu.edu}
+\and
+\IEEEauthorblockN{Kristin~Y.~Rozier}
+\IEEEauthorblockA{\textit{Iowa State University} \\
+Ames, USA \\
+ekyrozier@iastate.edu}
+}
 
-    \author[inst1]{Marijn~J.H.~Heule\corref{cor2}}
-    \ead{marijn@cmu.edu}
+\maketitle
 
-    \author[inst2]{Kristin~Y.~Rozier}
-    \ead{kyrozier@iastate.edu}
+\thispagestyle{plain}
+\pagestyle{plain}
 
-    \affiliation[inst1]{organization={Carnegie Mellon University},%Department and Organization
-                %addressline={5000 Forbes Ave},
-                city={Pittsburgh},
-                %postcode={15213},
-                state={PA},
-                country={USA}}
 
-    \affiliation[inst2]{organization={Iowa State University},%Department and Organization
-                %addressline={Address Two},
-                city={Ames},
-                %postcode={50010},
-                state={IA},
-                country={USA}}
+\begin{abstract}
+  Linear Temporal Logic (LTL) is widely used to specify requirements in safety-critical systems.
+  However, like many formal verification techniques, it is known to be unintuitive and error-prone for human practitioners to specify and validate.
+  In this paper, we provide a new timeline tool for visualizing LTL-based specifications, which is effective at intuitively representing a wide range of formulas.
+  Our tool generates timeline visualizations by translating LTL formulas to intermediate representations as B\"{u}chi automata and then regular expressions, and finally simplifying and visualizing the expressions.
+  We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
+\end{abstract}
 
-	\cortext[cor1]{These authors contributed equally to this work}
-    \cortext[cor2]{Corresponding author}
-
-    \begin{abstract}
-        Linear Temporal Logic (\ltl) is widely used to specify requirements in safety-critical systems.
-        However, like many formal verification techniques, it is known to be unintuitive and error-prone for human practitioners to specify and validate.
-        In this paper, we provide a new timeline tool for visualizing \ltl-based specifications, which is effective at intuitively representing a wide range of formulas.
-        Our tool generates timeline visualizations by translating \ltl\ formulae to intermediate representations as \Buchi automata and then $\omega$-regular expressions, and finally simplifying and visualizing the expressions.
-        We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
-    \end{abstract}
-
-    \begin{highlights}
-        \item We transform Linear Temporal Logic (\ltl) formulas to timeline visualizations for the set of satisfying traces.
-        \item We translate \ltl\ formulas to \Buchi automata, then to $\omega$-regular expressions, then simplify them and use graph visualization tools to draw timelines.
-        \item Our algorithm is sound and complete.
-        \item Our tool, \tool, effectively constructs small timeline visualizations for a range of \ltl\ formulas.
-    \end{highlights}
-
-    \begin{keyword}
-        Modal and Temporal Logics
-        \sep Logic and Verification
-        \sep Regular languages
-    \end{keyword}
-\end{frontmatter}
+\begin{IEEEkeywords}
+Modal and Temporal Logics, Logic and Verification, Regular languages
+\end{IEEEkeywords}
 
 \section{Introduction}
-
-%\begin{figure}[h]
-%  \centering
-%  \begin{tikzpicture}
-%        \node[fill=white!50!gray, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) {\!\!\!$p$\!\!\!};
-%        \node (p0) [left= 0.5cm of p1] {};
-%        \node (p2) [right= 0.5cm of p1] {};
-%        \draw[-latex, thick] (p0) edge (p1) (p1) edge (p2);
-%
-%%        \draw[thick, black, -latex] (0,0) [partial ellipse=180:90:0.75cm and 0.5cm];
-%%        \draw[thick, black, -] (0,0) [partial ellipse=90:0:0.75cm and 0.5cm];
-%%
-%%        \draw[thick, black, -latex] (0,0) [partial ellipse=360:270:0.75cm and 0.5cm];
-%%        \draw[thick, black, -] (0,0) [partial ellipse=270:180:0.75cm and 0.5cm];
-%
-%   \end{tikzpicture}
-%   ~~~~~
-%    \begin{tikzpicture}
-%        \node[fill=white!50!gray, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) {\!\!\!$p$\!\!\!};
-%        \node (p0) [left= 0.5cm of p1] {};
-%        \node (p2) [right= 0.5cm of p1] {};
-%        \draw[-latex, thick] (p0) edge (p1) (p1) edge (p2);
-%
-%%        \draw[thick, black, -latex] (0,0) [partial ellipse=180:90:0.75cm and 0.5cm];
-%%        \draw[thick, black, -] (0,0) [partial ellipse=90:0:0.75cm and 0.5cm];
-%
-%        \draw[thick, black, -latex] (-0.15,0) [partial ellipse=360:270:1cm and 0.7cm];
-%        \draw[thick, black, -] (-0.15,0) [partial ellipse=270:180:1cm and 0.7cm];
-%
-%  \end{tikzpicture}
-%  ~~~~~~
-%  \begin{tikzpicture}
-%        \node[fill=white!50!gray, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) {\!\!\!$p$\!\!\!};
-%        \node (p0) [left= 0.5cm of p1] {};
-%        \node (p2) [right= 0.5cm of p1] {};
-%        \draw[-latex, thick] (p0) edge (p1) (p1) edge (p2);
-%
-%        \draw[thick, black, -latex] (-0.05cm,0) [partial ellipse=180:90:1cm and 0.7cm];
-%        \draw[thick, black, -] (-0.05cm,0) [partial ellipse=90:0:1cm and 0.7cm];
-%
-%        \draw[thick, black, -latex] (-0.15,0) [partial ellipse=360:270:1cm and 0.7cm];
-%        \draw[thick, black, -] (-0.15,0) [partial ellipse=270:180:1cm and 0.7cm];
-%
-%%        \draw[thick, black, -latex] (0,0) [partial ellipse=360:270:0.75cm and 0.5cm];
-%%        \draw[thick, black, -] (0,0) [partial ellipse=270:180:0.75cm and 0.5cm];
-%
-%  \end{tikzpicture}
-%\end{figure}
-
-
-
 Requirement specification is a central step in the development of safety-critical systems. As a first step, requirements are typically written in natural language. For example, here is a real-world requirement specification from an air traffic control system ~\cite{ZR14}
 \begin{center}
     ``If a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft''
 \end{center}
 Such natural language requirements are often ambiguous and not amenable to formal analysis, so requirements must often be specified using rigorous formalized semantics for the purpose of verification and validation. The above requirement, when translated to Linear Temporal Logic (detailed in \cref{sec:ltl}), may be expressed as follows:
 \begin{align*}
-    \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \\
-    \limplies \nextt (\neg \texttt{controller.CTR\_control\_1}))
+    \always & (\texttt{tsafe.TSAFE\_command1} \land \\ & \texttt{controller.CTR\_control\_1} \\
+    \limplies & \nextt (\neg \texttt{controller.CTR\_control\_1}))
 \end{align*}
 Several tools have been developed to reason about formal specifications written with such \ltl\ formulas, like R2U2 and FRET \cite{GPMS20}. However, these formalized semantics are unintuitive and error-prone for human practitioners, and the tools are much less useful when system designers can't validate input specifications.
 Thus, a significant hurdle remains: how can we convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the desired system requirements? % quote MLTL paper?
 
 We take a simple idiomatic approach to address this problem. As Linear Temporal Logic formulas are temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the \ltl\ formula, and thereby represent the specified behavior in a more natural human-intelligible form.
 
-Our tool, \tool, uses a remarkably simple algorithm: transforming an input \ltl\ formula through a sequence of automaton and regular expression-based intermediate representations, and is surprisingly effective at providing small representations for a range of \ltl\ formulas. It would visualize the above air traffic control requirement behavior with the timeline shown in \cref{example:air}.
+Our tool, \tool, uses a remarkably simple algorithm: transforming an input \ltl\ formula through a sequence of automata and regular expression-based intermediate representations, and is surprisingly effective at providing small representations for a range of \ltl\ formulas. It would visualize the above air traffic control requirement behavior with the timeline shown in \cref{example:air}.
 
 We make the following contributions in our paper:
 \begin{itemize}
@@ -189,13 +125,13 @@ We make the following contributions in our paper:
 We must begin by setting up the prerequisite definitions involved in our work.
 First, we provide the definition and semantics for \ltl. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFAs) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines.
 
-\subsection{Linear temporal logic (LTL)} \label{sec:ltl}
+\subsection{Linear temporal logic (\ltl)} \label{sec:ltl}
 
-\begin{definition}[Linear Temporal Logic (LTL)]
+\begin{definition}[Linear Temporal Logic (\ltl)]
     % cite Kristin's survey paper
     The syntax of an \ltl\ formula over a set of atomic propositions $\AP$, where $p\in\AP$ is a propositional variable, is given by the following grammar:
     \begin{align*}
-        \Phi ::= p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
+        \Phi ::= & p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \\ & \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
     \end{align*}\label{ltl-defn}
 \end{definition}
 
@@ -208,7 +144,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \end{remark}
 
 \begin{definition}[Semantics of \ltl\ formula]
-    The semantics of \ltl\ formula is defined via judgment $\pi, i \models \Phi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from Rozier~\cite{Roz11}.
+    The semantics of \ltl\ formula is defined via  $\pi, i \models \Phi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from Rozier~\cite{Roz11}.
 \end{definition}
 
 \subsection{State-based \Buchi automata (BA)}
@@ -222,13 +158,13 @@ First, we provide the definition and semantics for \ltl. In the following subsec
         \item a finite alphabet of input symbols called the alphabet $\Sigma$
         \item a partial function $\delta : Q\times \Sigma \to Q$, called the transition function
         \item an initial or start state called $s\in Q$
-        \item a set of accept states $F \subseteq Q$
+        \item a set of accepting states $F \subseteq Q$
     \end{enumerate}
     $G$ accepts an infinite run iff at least one of its infinitely visited states is in $F$
 \end{definition}
 
 \subsection{$\omega$-regular expression}
-\begin{definition}[Regular expression]
+\begin{definition}[Regular expression]\label{def:regex}
     For word $a \in \Sigma$, regular expression is defined by the following grammar:
     \begin{align*}
         A ::= \emptyset \mid \epsilon \mid a \mid AA \mid A + A \mid A^*
@@ -249,13 +185,13 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \end{definition}
 
 \begin{remark}
-    For the purpose of our tool, $\Sigma$ is the set of propositional logic formula defined as
+    For the purpose of our tool, $\Sigma$ is the set of propositional logic formulas defined as
     \[
-    \Psi ::= p \mid \neg \Psi \mid \Psi \land \Psi \mid \Psi \lor \Psi \mid \Psi \limplies \Psi
+    \Psi ::= p \mid \top \mid \bot \mid \neg \Psi \mid \Psi \land \Psi \mid \Psi \lor \Psi \mid \Psi \limplies \Psi
     \]
 \end{remark}
 
-\begin{definition}[$\omega$-regular expression]
+\begin{definition}[$\omega$-regular expression]\label{def:omega-regex}
     Regular expression concerns only finite-length strings. However, since \ltl\ formulas reason about events that happen over an infinite-length timeline, we need to model it using infinite regular expressions (i.e. $\omega$-regular expression). $\omega$-regular expression is defined by the following grammar:
     \begin{align*}
         B ::= A^{\omega} \mid AB \mid B + B
@@ -264,27 +200,35 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \begin{definition}[Semantics of $\omega$-regular expression]\label{def:omega-semantics}
     Let $\Sigma^{\omega}$ denote the set of infinite-length string over fixed alphabet $\Sigma$. Let $L_{\omega}(B)$ denote the $\omega$-language accepted by $\omega$-regular expression $B$. Then $L_{\omega}(B)$ is inductively defined as
     \begin{align*}
-        L_{\omega}(A^{\omega}) & = \{s_1s_2s_3\cdots \mid s_i \in L(A) \text{ and } i \ge 1\} \\
+        L_{\omega}(A^{\omega}) & = \{s_1s_2s_3\cdots \mid s_i \in L(A) \text{ and } i \ge 1\} \tag{$\epsilon
+         \not\in L(A)$} \\
         L_{\omega}(AB) & = \{s_1s_2 \mid s_1 \in L(A) \text{ and } s_2 \in L_{\omega}(B)\} \\
         L_{\omega}(B_1 + B_2) &= L_{\omega}(B_1) \cup L_{\omega}(B_2)
     \end{align*}
 \end{definition}
 
-\subsection{Timeline}
+\begin{remark}
+  \Cref{def:regex,def:omega-regex} are the standard definitions of regular expressions and $\omega$-regular expressions, respectively. We include them here for completeness.
+\end{remark}
+
+\subsection{Timeline}\label{sec:timeline}
 We present timelines as graphic visualizations. It contains the following features:
 \begin{itemize}
     \item Every timeline starts with a node named ``start''.
     \item Every node represents one time step, and each node has a propositional logic formula $\Psi$, which specifies the behavior of atomic propositions at that time step. The formula $\Psi$ must be true at that time step. If $\Psi = 1$, that means all atomic propositions can behave arbitrarily.
-    \item A node in egg shake with a caption ``repeats $0$ - $\infty$'' means to repeat the (one time step) current node for arbitrarily finitely many times.
+    \item A node in egg shape with a caption ``repeats $0$ - $\infty$'' means to repeat the (one time step) current node for arbitrarily finitely many times.
     \item A node with label ``$\cdots$'' means to repeat the pattern prior to it and after it arbitrarily finitely many times.
-    \item The grey box means repeat infinitely. Once we reach the end of a timeline in the grey box, we must reenter the same grey box from any of its starting point.
+    \item The grey box means repeat infinitely. Once we reach the end of a timeline in the grey box, we must reenter the same grey box from any of its (left) starting point.
+    \item Timelines can be in parallel, signifying that either of the parallel timeline could happen.
 \end{itemize}
+
+The definition of timeline we use here are specifically what we devised for the purpose of visualizing \ltl\ formulas. We show how to construct such timelines from \ltl\ formulas in \cref{sec:correctness-timeline}.
 
 \begin{example}
     In \cref{fig:ex2}, one can reason about two parallel timelines: the upper timeline starts with $p$ at the first time step, followed by entering the grey box with one step of $\lnot p$ and one step of $p$. Then at the end of the grey box, we reenter the box, with the next time step being $\lnot p$, and so on. The lower timeline starts with one step of $\lnot p$ and one step of $p$ outside the grey box, and then enter the infinite run of $\lnot p$ and $p$ repeating.
     \begin{figure}[!h]
         \centering
-        \begin{tikzpicture}
+        \begin{tikzpicture}[scale=0.7, transform shape]
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) {\!\!\!$p$\!\!\!};
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p2) [below=0.4cm of p1] {\!\!\!$p$\!\!\!};
         \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p3) [left= 1cm of p2] {\!\!\!$\lnot p$\!\!\!};
@@ -307,7 +251,7 @@ We present timelines as graphic visualizations. It contains the following featur
     In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by the second node (could also be zero time step); followed by one node with $a$ which substantiates the specification of ``$a$ eventually true''; once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $\top$ (true) in the grey box.
     \begin{figure}[!h]
         \centering
-        \begin{tikzpicture}[>=latex',line join=bevel,]
+        \begin{tikzpicture}[>=latex',line join=bevel, scale=0.7, transform shape]
             \pgfsetlinewidth{1bp}
           %%
           \begin{scope}
@@ -366,16 +310,17 @@ We present timelines as graphic visualizations. It contains the following featur
 \end{example}
 
 \section{Algorithm}
-On a high level, our algorithm of converting \ltl\ formulas into timeline visualization works as follows:
+On a high level, our algorithm of converting \ltl\ formulas into timeline visualizations works as follows:
 \begin{enumerate}
-    \item Convert the given \ltl\ formula to its corresponding \Buchi automata % (as detailed in \cref{ltl2aut})
-    \item Derive the $\omega$-regular expression corresponding to the \Buchi automata % (in \cref{aut2regex})
-    \item Simplify the derived $\omega$-regular expression % (in \cref{regex-simplify})
-    \item Visualize the $\omega$-regular expression according to its structure %(in \cref{regex2timeline})
+    \item Convert the given \ltl\ formula to its corresponding \Buchi automaton. % (as detailed in \cref{ltl2aut})
+    \item Derive the $\omega$-regular expression corresponding to the \Buchi automaton. % (in \cref{aut2regex})
+    \item Simplify the derived $\omega$-regular expression. % (in \cref{regex-simplify})
+    \item Visualize the $\omega$-regular expression according to its structure. %(in \cref{regex2timeline})
 \end{enumerate}
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=\textwidth]{img/algorithm_outline.pdf}
+    % \includegraphics[width=\textwidth, scale=0.3]{img/algorithm_outline.pdf}
+    TODO
     \caption{Algorithm outline}
     \label{fig:algo}
 \end{figure}
@@ -445,10 +390,12 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 
 \subsection{$\omega$-regex simplification} \label{regex-simplify}
 
-The $\omega$-regular expression generated in \cref{aut2regex} may not be the ``simplest'' for the purpose of visualizing the timeline. We have observed multiple patterns in the resulting $\omega$-regular expression that could be simplified. For example, an $\omega$-regular expression in the form of $r^*r^{\omega}$ represents the same timeline as $r^{\omega}$, but the latter is more intuitive. For this purpose, we devised some simplification rules in our tool, based on our observation of common patterns in the generated $\omega$-regular expression.
+The $\omega$-regular expression generated in \cref{aut2regex} may not be the ``simplest'' for the purpose of visualizing the timeline. We have observed multiple patterns in the resulting $\omega$-regular expression that could be simplified. For example, an $\omega$-regular expression in the form of $r^*r^{\omega}$ represents the same timeline as $r^{\omega}$, but the latter is more intuitive and concise. For this purpose, we devised some simplification rules in our tool, based on our observation of common patterns in the generated $\omega$-regular expression.
+
+There is no agreed upon canonical form for regular expression, hence we do not hope to find the simplest regular expression for visualization. Regular expression simplification comes down to regular expression equivalence checking, which is computationally hard \cite{MNS04}. For purpose of simplification, one could perform a search over equivalent regular expressions and decide which one is simpler to use. However, this strategy is expensive in terms of the running time, and for the purpose of visualization, we did not use this strategy in our tool. We consider this approach as future work.
 
 \paragraph*{Rule-based simplification}
-Here we show a demonstrating subset of simplification rules we encoded.
+Here we show a demonstrating subset of simplification rules we encoded. In theory one could add more rules to the tool, so long as they are sound; here we only choose to encode the rules that represent common patterns we have observed in the generated $\omega$-regular expression.
 \begin{alignat*}{2}
         & r_1 + r_1r_2^* && \Longrightarrow r_1r_2^* \\
         & r + r && \Longrightarrow r \\
@@ -464,8 +411,8 @@ Here we show a demonstrating subset of simplification rules we encoded.
 Those simplification rules lead to more intuitive representation of timelines. Here we demonstrate their effects using an example.
 
 \begin{example}
-    The formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which corresponds to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
-    \begin{figure}[h!]
+    Using our algorithm, the \ltl\ formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which corresponds to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
+    \begin{figure*}[h!]
         \centering
                 \resizebox{\textwidth}{!}{
                     \begin{tikzpicture}[>=latex',line join=bevel,]
@@ -582,11 +529,11 @@ Those simplification rules lead to more intuitive representation of timelines. H
                       %
                       \end{tikzpicture}}
 %        \includegraphics[scale=0.3]{examples/ex9/ex9-unsimplified.png}
-        \caption{Timeline for %un-simplified
+        \caption{Timeline visualization for %un-simplified
         $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$}
         \label{fig:unsimplified}
-    \end{figure}
-    \begin{figure}[h!]
+    \end{figure*}
+    \begin{figure*}[h!]
         \centering
         \resizebox{.8\textwidth}{!}{
             \begin{tikzpicture}[>=latex',line join=bevel,]
@@ -663,9 +610,9 @@ Those simplification rules lead to more intuitive representation of timelines. H
               %
               \end{tikzpicture}}
   %      \includegraphics[scale=0.3]{examples/ex9/ex9.png}
-        \caption{Timeline for simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))^{\omega}$}
+        \caption{Timeline visualization for simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))^{\omega}$}
         \label{fig:simplified}
-    \end{figure}
+    \end{figure*}
 \end{example}
 
 \begin{remark}
@@ -677,7 +624,7 @@ Our tool uses Graphviz~\cite{Ellson2001GraphvizO} to achieve the timeline visual
 \[
     A_1A_2^{\omega} + A_3A_4^{\omega} + \cdots + A_{2n-1}A_{2n}^{\omega}
 \]
-where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a high level, for each of regular expression $A_i$, we visualize it as a set of accepted input. We view each union operator as parallel timelines, and each $A_{2i-1}$ is concatenated with $A_{2i}$ repeated infinitely many times, as represented in the grey box. \cref{fig:timeline} presents a generic timeline resulting from this form of construction.
+where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsilon \not\in L(A_{2i})$. On a high level, for each of regular expression $A_i$, we visualize it as a set of accepted input. We view each union operator as parallel timelines, and each $A_{2i-1}$ is concatenated with $A_{2i}$ repeated infinitely many times, as represented in the grey box. \cref{fig:timeline} presents a generic timeline resulting from this form of construction.
 \begin{figure}[h!]
     \centering
     \begin{tikzpicture}
@@ -771,21 +718,39 @@ where $A_i$ are regular expressions, and $A_{2i-1}$ could be $\epsilon$. On a hi
 
 The soundness of each of these translations can be proven by reasoning about the  semantics detailed in \cref{def:omega-semantics}. A full proof is not provided here.
 
+\subsection{Correctness of Timeline Visualization}\label{sec:correctness-timeline}
+Inductively, we show how to construct each form of regular and $\omega$-regular expression into a timeline representation.
+\paragraph{Regular expression}
+\begin{enumerate}
+  \item $A = \emptyset$. Visualized as no timeline. An empty regular expression signifies nothing is true at any time.
+  \item $A = \epsilon$. Omitted in the visualization.
+  \item $A = a$. Visualized as a single timeline node with $a$. A regular expression of an propositional logic formula signifies that the atomic proposition is true at the current time step.
+  \item $A = A_1A_2$. Visualized as the timeline of $A_1$ followed by the timeline of $A_2$. A concatenation of two regular expressions signifies that the first regular expression must be true before the second regular expression can be true in the time step.
+  \item $A = A_1 + A_2$. Visualized as the timelines of $A_1$ and $A_2$ in parallel. A union of two regular expressions signifies that either of the regular expressions can be true, which is represented by the parallel timelines.
+  \item $A = A_1^*$. If $A_1$ is a propositional logic formula, then it is visualized as an egg shape node with caption ``repeats 0 - $\infty$''. If $A_1$ is a regular expression involving concatenation, star, etc, then it is visualized as the timeline of $A_1$ followed by a node with label ``$\cdots$'', and that timeline pattern again. A Kleene star of a regular expression signifies that the regular expression can be repeated any number of times, including 0 times, which matches the meaning of our representation of egg shape node and ``$\cdots$''  node as described in \cref{sec:timeline}.
+\end{enumerate}
+\paragraph{$\omega$-regular repression}
+\begin{enumerate}
+  \item $B = A^\omega$. Visualized as a grey box enclosed with the timeline of $A$. An $\omega$ of a regular expression signifies that the regular expression is to be repeated infinitely many times, which matches the meaning of our representation of grey box, because every time it reach the end of the grey box, it must reenter the same grey box again, hence infinite repeat.
+  \item $B = AB$. Visualized as the timeline of $A$ followed by the timeline of $B$. A concatenation of a regular expression and an $\omega$-regular expression signifies that the first must be true before the second $\omega$-regular expression can be true in the time step.
+  \item $B = B + B$. Visualized as the timelines of $B$ and $B$ in parallel. A union of two $\omega$-regular expressions signifies that either of the $\omega$-regular expressions can be true, which is represented by the parallel timelines.
+\end{enumerate}
+
 \section{Tool showcase} \label{sec:tool-showcase}
-To demonstrate the result of our tool, we present two examples, one from a real-world model checking example from Zhao and Rozier~\cite{ZR14} and one from a randomly generated \ltl\ formula.
+To demonstrate the result of our tool, we present three examples, one from a real-world model checking example from Zhao and Rozier~\cite{ZR14}, one from a randomly generated \ltl\ formula, and one specifically demonstrates the use of our tool in specification verification.
 
 \begin{example} \label{example:air}
     Zhao and Rozier~\cite{ZR14} presents a model verification specification says ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft'' which corresponds to \ltl\ formula
     \begin{align*}
-        \always (\texttt{tsafe.TSAFE\_command1} \land \texttt{controller.CTR\_control\_1} \\
-        \limplies \nextt (\neg \texttt{controller.CTR\_control\_1}))
+        \always & (\texttt{tsafe.TSAFE\_command1} \land  \\ & \texttt{controller.CTR\_control\_1} \\
+        \limplies & \nextt (\neg \texttt{controller.CTR\_control\_1}))
     \end{align*}
     For simplicity, we swap the concrete atomic proposition to $a,b$ and get
     \[
         \always (a \land b \limplies \nextt (\neg b))
     \]
     For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex14}.
-    \begin{figure}[h!]
+    \begin{figure*}[h!]
         \centering
         \resizebox{\textwidth}{!}{
 %        \begin{tikzpicture}
@@ -944,16 +909,16 @@ To demonstrate the result of our tool, we present two examples, one from a real-
      %   \includegraphics[scale=0.3]{examples/ex14/ex14.png}
         \caption{Timeline for $\always (a \land b \limplies \nextt (\neg b))$}
         \label{fig:ex14}
-    \end{figure}
+    \end{figure*}
 \end{example}
 
 \begin{example}
     Spot~\cite{SPOT-online} presents command-line tool for random \ltl\ formula generator \texttt{randltl}~\cite{duret.13.atva}. The following \ltl\ formula is generated from this tool.
     \[
-    p_2 \land (\eventually \always p_0 \weakrelease \nextt(\always p_1 \land ((p_0 \limplies p_2 \land p_2 \limplies p_0) \stronguntil \eventually p_0)))
+    p_2 \land (\eventually \always p_0 \stronguntil \nextt(\always p_1 \land (((p_0 \limplies p_2) \land (p_2 \limplies p_0)) \stronguntil \eventually p_0)))
     \]
     This formula is reasonably complicated, and hard for human to reason about directly. For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex13}.
-    \begin{figure}[h!]
+    \begin{figure*}[h!]
         \centering
         \resizebox{\textwidth}{!}{
             \begin{tikzpicture}[>=latex',line join=bevel,]
@@ -1096,13 +1061,59 @@ To demonstrate the result of our tool, we present two examples, one from a real-
               \end{tikzpicture}}
 
    %     \includegraphics[scale=0.3]{examples/ex13/ex13.png}
-        \caption{Timeline for $p_2 \land (\eventually \always p_0 \weakrelease \nextt(\always p_1 \land ((p_0 \limplies p_2 \land p_2 \limplies p_0) \stronguntil \eventually p_0)))$}
+        \caption{Timeline for $p_2 \land (\eventually \always p_0 \stronguntil \nextt(\always p_1 \land (((p_0 \limplies p_2) \land (p_2 \limplies p_0)) \stronguntil \eventually p_0)))$}
         \label{fig:ex13}
-    \end{figure}
+    \end{figure*}
 \end{example}
 \begin{remark}
     These two examples show that our tool can generate reasonably clear diagrams for both real-world formula and randomly generated formula.
 \end{remark}
+
+\begin{example}
+  Suppose we have a specification ``$p$ oscillates every time step''. It is common to come up with the following two \ltl\ formulas to describe this specification.
+  \begin{itemize}
+    \item $\always ((p \land \nextt (\lnot p)) \lor ((\lnot p) \land \nextt p))$
+    \item $\always ((p \land \nextt (\lnot p)) \land ((\lnot p) \land \nextt p))$
+  \end{itemize}
+  It may be hard, without rigorous analysis, to distinguish which one is correct for the specification. However, our tool can generate the following two timelines for these two formulas as shown in \cref{fig:oscillates1,fig:oscillates2}, which clearly show the first formula is correct and the second formula is equivalent to $\bot$.
+\begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[scale=0.7, transform shape]
+  \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p1) {\!\!\!$p$\!\!\!};
+  \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p2) [below=0.4cm of p1] {\!\!\!$p$\!\!\!};
+  \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p3) [left= 1cm of p2] {\!\!\!$\lnot p$\!\!\!};
+  \node (m) at ($(p1)!0.5!(p2)$) {};
+  \node[shape=rectangle, fill=gray!30!white, style={minimum width=4.3cm, minimum height=1.25cm}] (g) [right= 1.35cm of m] {};
+
+  \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p4) [right= 1.5cm of m] {\!\!\!$\lnot p$\!\!\!};
+  \node[fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (p5) [right= 1cm of p4] {\!\!\!$p$\!\!\!};
+  \node[draw, thick, fill=white, shape=ellipse, style={minimum width=1.5cm, minimum height=1cm}] (s) [left= 4cm of m] {\!\!\!start\!\!\!};
+  \draw[thick, line width=1.25] (s) edge[-latex] (p1) (s) edge[-latex] (p3) (p3) edge[-latex] (p2) (p1) edge[-latex] (p4) (p2) edge[-latex] (p4) (p4) edge[-latex] (p5);
+
+  \end{tikzpicture}
+%     \includegraphics[scale=0.4]{examples/ex2/ex2.png}
+  \caption{Timeline for $\always ((p \land \nextt (\lnot p)) \lor ((\lnot p) \land \nextt p))$}
+  \label{fig:oscillates1}
+\end{figure}
+\begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[>=latex',line join=bevel, scale=0.7, transform shape]
+    \pgfsetlinewidth{1bp}
+  %%
+  \pgfsetcolor{black}
+    % Node: start
+  \begin{scope}
+    \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+    \pgfsetstrokecolor{strokecol}
+    \draw (27.0bp,18.0bp) ellipse (27.0bp and 18.0bp);
+    \draw (27.0bp,18.0bp) node {start};
+  \end{scope}
+  %
+  \end{tikzpicture}
+  \caption{Timeline for $\always ((p \land \nextt (\lnot p)) \land ((\lnot p) \land \nextt p))$ (a single ``start'' means every time step is $\bot$)}
+  \label{fig:oscillates2}
+\end{figure}
+\end{example}
 
 \section{Playing it out} \label{sec:playing}%KYR: may swap order with the next section on artifact availability?
 
@@ -1235,7 +1246,7 @@ Future extensions of this work include optimizations to the algorithm and implem
 \section{Concrete Syntax of \tool} \label{sec:concrete-syntax}
 Recall from \ref{ltl-defn} that we define \ltl\ formula as
 \begin{align*}
-    \Phi ::= p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
+    \Phi ::= & p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \\ & \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
 \end{align*}
 where $p \in \AP$. In our tool \tool, we use the following concrete syntax to represent \ltl\ formulae.
 \[
@@ -1254,7 +1265,7 @@ where $p \in \AP$. In our tool \tool, we use the following concrete syntax to re
     \end{array}
 \]
 %\nocite{*}
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{IEEEtran}
 \bibliography{RelatedWork}
 
 
