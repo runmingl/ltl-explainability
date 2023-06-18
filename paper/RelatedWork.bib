@@ -113,7 +113,7 @@
 @article {RV10,
      author      =   "K.Y. Rozier and M.Y. Vardi",
      title       =   "{LTL} Satisfiability Checking",
-     journal     =   "International Journal on Software Tools for 
+     journal     =   "International Journal on Software Tools for
 Technology Transfer (STTT)",
      volume      =   "12",
      number      =   "2",
@@ -122,7 +122,6 @@ Technology Transfer (STTT)",
      month       =   "March",
      year        =   "2010",
      doi         =   "DOI 10.1007/s10009-010-0140-3",
-     url         =   "http://dx.doi.org/10.1007/s10009-010-0140-3",
 }
 
 
@@ -212,6 +211,27 @@ year = {2023},
 }
 
 
+@inproceedings{NR22,
+  title={Expanding the Horizon of Linear Temporal Logic Inference for Explainability},
+  author={Neider, Daniel and Roy, Rajarshi},
+  booktitle={2022 IEEE 30th International Requirements Engineering Conference Workshops (REW)},
+  pages={103--107},
+  year={2022},
+  organization={IEEE}
+}
+
+
+@inproceedings{ZHMBLU19,
+  title={AutoTap: synthesizing and repairing trigger-action programs using LTL properties},
+  author={Zhang, Lefan and He, Weijia and Martinez, Jesse and Brackenbury, Noah and Lu, Shan and Ur, Blase},
+  booktitle={2019 IEEE/ACM 41st international conference on software engineering (ICSE)},
+  pages={281--291},
+  year={2019},
+  organization={IEEE}
+}
+
+
+
 %%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
 %%%%% Papers that support this being a problem %%%%%
 %%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
@@ -231,4 +251,113 @@ year = {2023},
   author={John Ellson and Emden R. Gansner and Eleftherios Koutsofios and Stephen C. North and Gordon Woodhull},
   booktitle={International Symposium Graph Drawing and Network Visualization},
   year={2001}
+}
+
+%ltl2ba
+@InProceedings{DGV99,
+  author="Daniele, Marco and Giunchiglia, Fausto and Vardi, Moshe Y.",
+  editor="Halbwachs, Nicolas and Peled, Doron",
+  title="Improved Automata Generation for Linear Temporal Logic",
+  booktitle="Computer Aided Verification",
+  year="1999",
+  publisher="Springer Berlin Heidelberg",
+  address="Berlin, Heidelberg",
+  pages="249--260",
+  abstract="We improve the state-of-the-art algorithm for obtaining an automaton from a linear temporal logic formula. The automaton is intended to be used for model checking, as well as for satisfiability checking. Therefore, the algorithm is mainly concerned with keeping the automaton as small as possible. The experimental results show that our algorithm outperforms the previous one, with respect to both the size of the generated automata and computation time. The testing is performed following a newly developed methodology based on the use of randomly generated formulas.",
+  isbn="978-3-540-48683-1"
+}
+
+@InProceedings{F03,
+  author="Fritz, Carsten",
+  editor="Ibarra, Oscar H.
+  and Dang, Zhe",
+  title="Constructing B{\"u}chi Automata from Linear Temporal Logic Using Simulation Relations for Alternating B{\"u}chi Automata",
+  booktitle="Implementation and Application of Automata",
+  year="2003",
+  publisher="Springer Berlin Heidelberg",
+  address="Berlin, Heidelberg",
+  pages="35--48",
+  abstract="We present a new procedure for the translation of propositional linear-time temporal logic (LTL) formulas to equivalent nondeterministic B{\"u}chi automata. Our procedure is based on simulation relations for alternating B{\"u}chi automata. Whereas most of the procedures that have been described in the past compute simulation relations in the last step of the translation (after a nondeterministic B{\"u}chi automaton has already been constructed), our procedure computes simulation relations for alternating B{\"u}chi automata in an early stage and uses them in an on-the- fly fashion. This decreases the time and space consumption without sacrificing the potential of simulation relations.",
+  isbn="978-3-540-45089-4"
+}
+
+@inproceedings{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b,
+	author = {Vardi, Moshe Y and Wolper, Pierre},
+	TITLE = {An Automata-Theoretic Approach to Automatic Program Verification},
+	LANGUAGE = {English},
+	YEAR = {1986},
+	PUBLISHER = {IEEE Computer Society},
+	BOOKTITLE = {Proceedings of the First Symposium on Logic in Computer Science},
+	LOCATION = {Cambridge, United States - Massachusetts},
+	ABSTRACT = {We describe an automata-theoretic  approach to the automatic verification of concurrent finite-state programs by
+		model checking.The basic idea underlying this approach is that for any temporal formula we can construct an automaton that accepts precisely the computations that satisfy the formula. The model-checking algorithm that results from this approach is much simpler and cleaner than tableau-based algorithms. We use this approach to extend model checking to probabilistic concurrent finite-state programs.
+		concurrent finite-state programs.}
+}
+
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+%%%%% Papers that state LTL is important in real life  %%%%%
+%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%-----%%%%%
+
+
+@inproceedings{DBR21,
+  title={Adding a verification view for an autonomous real-time system architecture},
+  author={Dabney, James B and Badger, Julia M and Rajagopal, Pavan},
+  booktitle={{AIAA SciTech Forum}},
+  pages={0566},
+  publisher = {{AIAA}},
+  year={2021}
+}
+
+
+@inproceedings{HDWF21,
+  title={Formal specification and analysis of spacecraft collision avoidance run time assurance requirements},
+  author={Hobbs, Kerianne L and Davis, Jennifer and Wagner, Lucas and Feron, Eric},
+  booktitle={2021 IEEE Aerospace Conference (50100)},
+  pages={1--16},
+  year={2021},
+  organization={IEEE}
+}
+
+@incollection{ILLTV13,
+  title={Deployment in the space sector},
+  author={Ili{\'c}, Dubravka and Laibinis, Linas and Latvala, Timo and Troubitsyna, Elena and Varpaaniemi, Kimmo},
+  booktitle={Industrial Deployment of System Engineering Methods},
+  pages={45--62},
+  year={2013},
+  publisher={Springer}
+}
+
+@inproceedings{CDRWRWL22,
+  title={Onboard Scheduling and Execution to Address Uncertainty for a Planetary Lander},
+  author={Chien, Steve and de la Croix, Jean-Pierre and Russino, Joe and Wagner, Caleb and Rabideau, Gregg and Wang, Daniel and Lim, Grace},
+  booktitle = {Proceedings of 16th Symposium on Advanced Space Technologies in Robotics and Automation},
+  publisher = {European Space Agency},
+  year = {2022},
+}
+
+
+@misc{B22,
+  author       = {Bowen},
+  title        = {Regex visualizer and editor},
+  year         = {2022},
+  publisher    = {GitHub},
+  journal      = {GitHub repository},
+  howpublished = {\url{https://github.com/Bowen7/regex-vis}},
+}
+@misc{A20,
+  author = {Jeff Avallone},
+  title = {regexper-static},
+  year = {2020},
+  publisher = {GitLab},
+  journal = {GitLab repository},
+  howpublished = {\url{https://gitlab.com/javallone/regexper-static}},
+}
+
+@article{MNS04,
+  author          = {Wim Martens, Frank Neven, Thomas Schwentick},
+  journal         = {International Symposium on Mathematical Foundations of Computer Science},
+  pages           = {889-900},
+  title           = {Complexity of decision problems for simple regular expressions},
+  year            = {2004},
+  publisher       = {Springer, Berlin, Heidelberg},
 }
