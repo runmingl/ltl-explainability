@@ -85,9 +85,9 @@ ekyrozier@iastate.edu}
 
 
 \begin{abstract}
-  Linear Temporal Logic (LTL) is widely used to specify requirements in safety-critical systems.
-  However, like many formal verification techniques, it is known to be unintuitive and error-prone for human practitioners to specify and validate.
-  In this paper, we provide a new timeline tool for visualizing LTL-based specifications, which is effective at intuitively representing a wide range of formulas.
+  Linear Temporal Logic (LTL) is arguably the most popular specification language for formal verification of safety-critical systems.
+  However, LTL formulas can be unintuitive and error-prone for human practitioners to specify and validate. Meanwhile, drawing timelines remains one of the most popular methods for specifying and validating requriements for industrial system designs, such as in aerospace operational concepts. 
+  Therefore, we provide a new timeline tool for visualizing LTL specifications as timelines, providing provably-correct, intuitive equivalents between these two specification formats.
   Our tool generates timeline visualizations by translating LTL formulas to intermediate representations as B\"{u}chi automata and then regular expressions, and finally simplifying and visualizing the expressions.
   We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
 \end{abstract}
