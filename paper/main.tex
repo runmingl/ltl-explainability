@@ -57,16 +57,16 @@
 
 \title{What's in a Name? Linear Temporal Logic Literally Represents Time Lines}
 
-\author{\IEEEauthorblockN{Runming Li}
+\author{\IEEEauthorblockN{Runming Li\IEEEauthorrefmark{1}}
 \IEEEauthorblockA{\textit{Carnegie Mellon University}\\
 Pittsburgh, USA \\
 runmingl@andrew.cmu.edu}
 \and
-\IEEEauthorblockN{Keerthana Gurushankar}
+\IEEEauthorblockN{Keerthana Gurushankar\IEEEauthorrefmark{1}}
 \IEEEauthorblockA{\textit{Carnegie Mellon University}\\
 Pittsburgh, USA \\
 kgurusha@andrew.cmu.edu}
-\and
+\and 
 \IEEEauthorblockN{Marijn~J.H.~Heule}
 \IEEEauthorblockA{\textit{Carnegie Mellon University}\\
 Pittsburgh, USA \\
@@ -79,15 +79,18 @@ ekyrozier@iastate.edu}
 }
 
 \maketitle
+\begingroup\renewcommand\thefootnote{\textsection}
+\footnotetext{These authors contributed equally to this work}
+\endgroup
 
 \thispagestyle{plain}
 \pagestyle{plain}
 
 
 \begin{abstract}
-  Linear Temporal Logic (LTL) is widely used to specify requirements in safety-critical systems.
-  However, like many formal verification techniques, it is known to be unintuitive and error-prone for human practitioners to specify and validate.
-  In this paper, we provide a new timeline tool for visualizing LTL-based specifications, which is effective at intuitively representing a wide range of formulas.
+  Linear Temporal Logic (LTL) is arguably the most popular specification language for formal verification of safety-critical systems.
+  However, LTL formulas can be unintuitive and error-prone for human practitioners to specify and validate. Meanwhile, drawing timelines remains one of the most popular methods for specifying and validating requriements for industrial system designs, such as in aerospace operational concepts. 
+  Therefore, we provide a new timeline tool for visualizing LTL specifications as timelines, providing provably-correct, intuitive equivalents between these two specification formats.
   Our tool generates timeline visualizations by translating LTL formulas to intermediate representations as B\"{u}chi automata and then regular expressions, and finally simplifying and visualizing the expressions.
   We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
 \end{abstract}
@@ -317,13 +320,12 @@ On a high level, our algorithm of converting \ltl\ formulas into timeline visual
     \item Simplify the derived $\omega$-regular expression. % (in \cref{regex-simplify})
     \item Visualize the $\omega$-regular expression according to its structure. %(in \cref{regex2timeline})
 \end{enumerate}
-\begin{figure}[!h]
+\begin{figure*}[!t]
     \centering
-    % \includegraphics[width=\textwidth, scale=0.3]{img/algorithm_outline.pdf}
-    TODO
+    \includegraphics[width=\textwidth, scale=0.3]{img/algorithm_outline.pdf}
     \caption{Algorithm outline}
     \label{fig:algo}
-\end{figure}
+\end{figure*}
 
 \subsection{LTL to BA} \label{ltl2aut}
 The automata-theoretic approach \cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e. reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as \cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from \ltl\ formulas to \Buchi automata.
@@ -334,9 +336,9 @@ We translate \Buchi automata to $\omega$-regular expressions by first finding th
 The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 
 \begin{algorithm}[h!]
-    \caption{reduce\_dfa}
+    \caption{reduce\_nfa}
     \begin{algorithmic}
-        \Require ($G, v$), a DFA with state $v$ that is not initial or final
+        \Require ($G, v$), an NFA with state $v$ that is not initial or final
         \Ensure Deletes state $v$ from $G$ while ensuring the same language is recognized
         \For{ every $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ }
             \If {$v$ has a self-edge  $v\xrightarrow{r_\mathrm{loop}}v$}
@@ -351,13 +353,13 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 \end{algorithm}
 
 \begin{algorithm}[h!]
-    \caption{dfa2regex}
+    \caption{nfa2regex}
     \begin{algorithmic}
-        \Require ($G, s, f$), a DFA with initial state $s$ and final state $f$
+        \Require ($G, s, f$), an NFA with initial state $s$ and final state $f$
         \Ensure The regular expression corresponding to all paths from $s$ to $f$
         % WHile there exists any edge except r_sf
         \While{ there exists an interior vertex $v$ }
-            \State reduce\_dfa($G, v$)
+            \State reduce\_nfa($G, v$)
             \State combine multiedges, i.e. $r1 : u \to w, r2 : u \to w$  to $r1 | r2 : u \to w$
         \EndWhile
         \State \Return $(r_\mathrm{ss}| r_\mathrm{sf} r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$
@@ -369,12 +371,12 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 \end{algorithm}
 
 \begin{algorithm}[h!]
-    \caption{dfa2regex\_firstvisit}
+    \caption{nfa2regex\_firstvisit}
     \begin{algorithmic}
-        \Require ($G, s, f$), a DFA with initial state $s$ and final state $f$
+        \Require ($G, s, f$), an NFA with initial state $s$ and final state $f$
         \Ensure The regular expression of all paths from $s$ reaching $f$ for the first time
         \State delete all out edges from $f$ in $G$
-        \State \Return dfa2regex($G, s, f$)
+        \State \Return nfa2regex($G, s, f$)
     \end{algorithmic}
 \end{algorithm}
 
@@ -384,7 +386,7 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
     \begin{algorithmic}
         \Require $G$, a \Buchi automaton
         \Ensure The $\omega$-regular expression recognized by $G$
-        \State \Return $\bigcup_{f \in F}\left(\text{dfa2regex\_firstvisit}(G, s, f)\text{\^{}dfa2regex}(G, f, f) \right) $
+        \State \Return $\bigcup_{f \in F}\left(\text{nfa2regex\_firstvisit}(G, s, f)\text{\^{}nfa2regex}(G, f, f) \right) $
     \end{algorithmic}
 \end{algorithm}
 
@@ -651,11 +653,11 @@ where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsil
 \section{Theoretical Analyses} \label{sec:analysis}
 \subsection{Correctness of Regex Translation}
 \begin{lemma}
-    % reduce_dfa does its input to output behaviour
-    For any DFA $G$ and any state $v$ in $G$ that is neither a start state or a final state, \textbf{reduce\_dfa}$(G, v)$ preserves the regular language accepted by $G$
+    % reduce_nfa does its input to output behaviour
+    For any NFA $G$ and any state $v$ in $G$ that is neither a start state or a final state, \textbf{reduce\_nfa}$(G, v)$ preserves the regular language accepted by $G$
 \end{lemma}
 \begin{proof}
-    Let $G'$ be the graph of $G$ post reduction by the application of \textbf{reduce\_dfa}$(G, v)$. We show that the trace of every path accepted by $G$ is also accepted by $G'$. Suppose a path accepted by $G$ does not pass through $v$, clearly this is true. Else, suppose it passes through $v$, since $v$ is an interior node, $v$ cannot be the first or last in the path. Thus, for every pass through $v$, let $u\neq v$ be the last node passed before entering $v$, and likewise $w$ be the first node after exiting $v$. We show that the regular language of sub-traces from $u$ to $w$ in $G$ (shown in \cref{fig:uvw-dfa}) is identical to that in $G'$.
+    Let $G'$ be the graph of $G$ post reduction by the application of \textbf{reduce\_nfa}$(G, v)$. We show that the trace of every path accepted by $G$ is also accepted by $G'$. Suppose a path accepted by $G$ does not pass through $v$, clearly this is true. Else, suppose it passes through $v$, since $v$ is an interior node, $v$ cannot be the first or last in the path. Thus, for every pass through $v$, let $u\neq v$ be the last node passed before entering $v$, and likewise $w$ be the first node after exiting $v$. We show that the regular language of sub-traces from $u$ to $w$ in $G$ (shown in \cref{fig:uvw-dfa}) is identical to that in $G'$.
     \begin{figure}[h!]
         \centering
         \begin{tikzpicture}
@@ -672,14 +674,14 @@ where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsil
 \end{proof}
 
 \begin{lemma}
-    For any DFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{dfa2regex}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$ (i.e., the language accepted by $G$)
+    For any NFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{nfa2regex}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$ (i.e., the language accepted by $G$)
 \end{lemma}
 \begin{proof}
-    The while loop clearly terminates since the number of interior nodes is strictly decreasing, and upon termination, $G$ is a DFA containing only the nodes $s$ and $f$. Now, every non-terminal visit from $s$ to $f$ and back to $s$, can be replaced by an edge $s\xrightarrow{r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs}} s$, instead of the edge $f\to s$. This DFA yields the regular language $(r_\mathrm{ss}|r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$, as outputted by the algorithm.
+    The while loop clearly terminates since the number of interior nodes is strictly decreasing, and upon termination, $G$ is an NFA containing only the nodes $s$ and $f$. Now, every non-terminal visit from $s$ to $f$ and back to $s$, can be replaced by an edge $s\xrightarrow{r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs}} s$, instead of the edge $f\to s$. This NFA yields the regular language $(r_\mathrm{ss}|r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$, as outputted by the algorithm.
 \end{proof}
 
 \begin{lemma}
-    For any DFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{dfa2regex\_firstvisit}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$, visiting $f$ for the first time.
+    For any NFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{nfa2regex\_firstvisit}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$, visiting $f$ for the first time.
 \end{lemma}
 \begin{proof}
     Let $G'$ be $G$ with all out-edge (including loops) from $f$ deleted. We claim that $L(G')$ is equal to the language $L'$ of all paths from $s$ reaching $f$ for the first time.
@@ -695,11 +697,11 @@ where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsil
 \begin{proof}
     We show that
     \[
-        L = \bigcup_{f\in F} \textbf{dfa2regex}(G, s, f) \verb|^| \left(\textbf{dfa2regex\_firstvisit}(G, f, f)\right)^\omega
+        L = \bigcup_{f\in F} \textbf{nfa2regex}(G, s, f) \verb|^| \left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega
     \]
     and the $\omega$-language accepted by $G$, $L_\omega(G)$ are identical.
 
-    First, $L\subseteq L_\omega(G)$ since for every infinite run in $L$, clearly by definition of $L$, there is some $f\in F$ such that passes through $f$ infinitely often. The converse is true as well: for every infinite run $q_0, q_1, \dots$ accepted by $G$, then $q_0 = s$ and by definition of the accepting language, there is some accepting state $f$, passed through infinitely often, thus the run is in $\textbf{dfa2regex}(G, s, f)$ \verb|^| $\left(\textbf{dfa2regex\_firstvisit}(G, f, f)\right)^\omega$
+    First, $L\subseteq L_\omega(G)$ since for every infinite run in $L$, clearly by definition of $L$, there is some $f\in F$ such that passes through $f$ infinitely often. The converse is true as well: for every infinite run $q_0, q_1, \dots$ accepted by $G$, then $q_0 = s$ and by definition of the accepting language, there is some accepting state $f$, passed through infinitely often, thus the run is in $\textbf{nfa2regex}(G, s, f)$ \verb|^| $\left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega$
 \end{proof}
 \subsection{Correctness of Rewrite Rules}
 \begin{lemma}
