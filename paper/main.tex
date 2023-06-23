@@ -159,7 +159,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
     \begin{enumerate}
         \item a finite set of states $Q$
         \item a finite alphabet of input symbols called the alphabet $\Sigma$
-        \item a partial function $\delta : Q\times \Sigma \to Q$, called the transition function
+        \item a relation $\delta \subseteq (Q\times \Sigma) \times Q$, called the transition relation
         \item an initial or start state called $s\in Q$
         \item a set of accepting states $F \subseteq Q$
     \end{enumerate}
