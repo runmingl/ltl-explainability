@@ -89,7 +89,7 @@ ekyrozier@iastate.edu}
 
 \begin{abstract}
   Linear Temporal Logic (LTL) is arguably the most popular specification language for formal verification of safety-critical systems.
-  However, LTL formulas can be unintuitive and error-prone for human practitioners to specify and validate. Meanwhile, drawing timelines remains one of the most popular methods for specifying and validating requriements for industrial system designs, such as in aerospace operational concepts. 
+  However, LTL formulas can be unintuitive and error-prone for human practitioners to specify and validate. Meanwhile, drawing timelines remains one of the most popular methods for specifying and validating requirements for industrial system designs, such as in aerospace operational concepts. 
   Therefore, we provide a new timeline tool for visualizing LTL specifications as timelines, providing provably-correct, intuitive equivalents between these two specification formats.
   Our tool generates timeline visualizations by translating LTL formulas to intermediate representations as B\"{u}chi automata and then regular expressions, and finally simplifying and visualizing the expressions.
   We provide an algorithm for this visualization, a theoretical soundness analysis, and an implementation.
@@ -651,7 +651,7 @@ where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsil
 \end{figure}
 
 \section{Theoretical Analyses} \label{sec:analysis}
-In the following section, we prove the correctness of our translation pipeline. The currectness of the translation from LTL formulas to \Buchi automata is provided by SPOT~\cite{Dur22}. Below, we prove the correctness of (i) the translation from \Buchi automata to $\omega$-regular expressions, (ii) the ($\omega$-)regular expression rewrite rules we apply, and lastly, we outline the correctness of our timeline visualizations. 
+In the following section, we prove the correctness of our translation pipeline. The correctness of the translation from LTL formulas to \Buchi automata is provided by SPOT~\cite{Dur22}. Below, we prove the correctness of (i) the translation from \Buchi automata to $\omega$-regular expressions, (ii) the ($\omega$-)regular expression rewrite rules we apply, and lastly, we outline the correctness of our timeline visualizations. 
 \subsection{Correctness of Regex Translation}
 \begin{lemma}
     % reduce_nfa does its input to output behaviour
@@ -735,7 +735,7 @@ Inductively, we show how to construct each form of regular and $\omega$-regular 
 \paragraph{$\omega$-regular repression}
 \begin{enumerate}
   \item $B = A^\omega$. Visualized as a grey box enclosed with the timeline of $A$. An $\omega$ of a regular expression signifies that the regular expression is to be repeated infinitely many times, which matches the meaning of our representation of grey box, because every time it reach the end of the grey box, it must reenter the same grey box again, hence infinite repeat.
-  \item $B = AB$. Visualized as the timeline of $A$ followed by the timeline of $B$. A concatenation of a regular expression and an $\omega$-regular expression signifies that the first must be true before the second $\omega$-regular expression can be true in the following timesteps.
+  \item $B = AB$. Visualized as the timeline of $A$ followed by the timeline of $B$. A concatenation of a regular expression and an $\omega$-regular expression signifies that the first must be true before the second $\omega$-regular expression can be true in the following time steps.
   \item $B = B + B$. Visualized as the timelines of $B$ and $B$ in parallel. A union of two $\omega$-regular expressions signifies that either of the $\omega$-regular expressions can be true, which is represented by the parallel timelines.
 \end{enumerate}
 
