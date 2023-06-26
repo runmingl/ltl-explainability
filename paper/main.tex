@@ -168,13 +168,13 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 
 \subsection{$\omega$-regular expression}
 \begin{definition}[Regular expression]\label{def:regex}
-    For word $a \in \Sigma$, regular expression is defined by the following grammar:
+    For symbol $a \in \Sigma$, regular expression is defined by the following grammar:
     \begin{align*}
         A ::= \emptyset \mid \epsilon \mid a \mid AA \mid A + A \mid A^*
     \end{align*}
 \end{definition}
 \begin{definition}[Semantics of regular expression]
-    Let $L(A)$ denote the language accepted by regular expression $A$. Then $L(A)$ is inductively defined as
+    Let $L(A)$ denote the set of propositional formulas accepted by regular expression $A$. Then $L(A)$ is inductively defined as
     \begin{align*}
         L(\emptyset) & = \emptyset \\
         L(\epsilon) & = \{\epsilon\} \tag{$\epsilon$ denotes the empty string}\\
@@ -201,7 +201,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
     \end{align*}
 \end{definition}
 \begin{definition}[Semantics of $\omega$-regular expression]\label{def:omega-semantics}
-    Let $\Sigma^{\omega}$ denote the set of infinite-length string over fixed alphabet $\Sigma$. Let $L_{\omega}(B)$ denote the $\omega$-language accepted by $\omega$-regular expression $B$. Then $L_{\omega}(B)$ is inductively defined as
+    Let $\Sigma^{\omega}$ denote the set of infinite-length strings over fixed alphabet $\Sigma$. Let $L_{\omega}(B)$ denote the $\omega$-language accepted by $\omega$-regular expression $B$. Then $L_{\omega}(B)$ is inductively defined as
     \begin{align*}
         L_{\omega}(A^{\omega}) & = \{s_1s_2s_3\cdots \mid s_i \in L(A) \text{ and } i \ge 1\} \tag{$\epsilon
          \not\in L(A)$} \\
@@ -211,7 +211,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \end{definition}
 
 \begin{remark}
-  \Cref{def:regex,def:omega-regex} are the standard definitions of regular expressions and $\omega$-regular expressions, respectively. We include them here for completeness.
+  \Cref{def:regex,def:omega-regex} are the standard definitions of regular expressions and $\omega$-regular expressions, respectively.  We include them here for completeness. For the remainder of the paper, we denote arbitrary regular expressions using $A$ and $\omega$-regular expressions by $B$. 
 \end{remark}
 
 \subsection{Timeline}\label{sec:timeline}
@@ -331,7 +331,7 @@ On a high level, our algorithm of converting \ltl\ formulas into timeline visual
 The automata-theoretic approach \cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e. reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as \cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from \ltl\ formulas to \Buchi automata.
 
 \subsection{BA to $\omega$-regex} \label{aut2regex}
-We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths for looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in digraph of the automaton.
+We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in the digraph of the automaton.
 
 The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 
@@ -386,7 +386,7 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
     \begin{algorithmic}
         \Require $G$, a \Buchi automaton
         \Ensure The $\omega$-regular expression recognized by $G$
-        \State \Return $\bigcup_{f \in F}\left(\text{nfa2regex\_firstvisit}(G, s, f)\text{\^{}nfa2regex}(G, f, f) \right) $
+        \State \Return $\bigcup_{f \in F}\left(\text{nfa2regex\_firstvisit}(G, s, f)\text{nfa2regex}(G, f, f) \right) $
     \end{algorithmic}
 \end{algorithm}
 
@@ -651,6 +651,7 @@ where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsil
 \end{figure}
 
 \section{Theoretical Analyses} \label{sec:analysis}
+In the following section, we prove the correctness of our translation pipeline. The currectness of the translation from LTL formulas to \Buchi automata is provided by SPOT~\cite{Dur22}. Below, we prove the correctness of (i) the translation from \Buchi automata to $\omega$-regular expressions, (ii) the ($\omega$-)regular expression rewrite rules we apply, and lastly, we outline the correctness of our timeline visualizations. 
 \subsection{Correctness of Regex Translation}
 \begin{lemma}
     % reduce_nfa does its input to output behaviour
