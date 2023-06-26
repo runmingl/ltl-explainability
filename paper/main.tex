@@ -100,7 +100,7 @@ Modal and Temporal Logics, Logic and Verification, Regular languages
 \end{IEEEkeywords}
 
 \section{Introduction}
-Requirement specification is a central step in the development of safety-critical systems. As a first step, requirements are typically written in natural language. For example, here is a real-world requirement specification from an air traffic control system ~\cite{ZR14}
+Requirement specification is a central step in the development of safety-critical systems. As a first step, requirements are typically written in natural language. For example, here is a real-world requirement specification from an air traffic control system~\cite{ZR14}
 \begin{center}
     ``If a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft''
 \end{center}
@@ -109,7 +109,7 @@ Such natural language requirements are often ambiguous and not amenable to forma
     \always & (\texttt{tsafe.TSAFE\_command1} \land \\ & \texttt{controller.CTR\_control\_1} \\
     \limplies & \nextt (\neg \texttt{controller.CTR\_control\_1}))
 \end{align*}
-Several tools have been developed to reason about formal specifications written with such \ltl\ formulas, like R2U2 and FRET \cite{GPMS20}. However, these formalized semantics are unintuitive and error-prone for human practitioners, and the tools are much less useful when system designers can't validate input specifications.
+Several tools have been developed to reason about formal specifications written with such \ltl\ formulas, like R2U2 and FRET~\cite{GPMS20}. However, these formalized semantics are unintuitive and error-prone for human practitioners, and the tools are much less useful when system designers can't validate input specifications.
 Thus, a significant hurdle remains: how can we convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the desired system requirements? % quote MLTL paper?
 
 We take a simple idiomatic approach to address this problem. As Linear Temporal Logic formulas are temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the \ltl\ formula, and thereby represent the specified behavior in a more natural human-intelligible form.
@@ -143,7 +143,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \end{remark}
 
 \begin{remark}
-    The tool we provide in this paper uses a set of concrete syntax to represent those logical connectives, in order to avoid the difficulty of typesetting connectives such as $\always$ and $\eventually$. The concrete syntax is defined in \ref{sec:concrete-syntax}.
+    The tool we provide in this paper uses a set of concrete syntax to represent those logical connectives, in order to avoid the difficulty of typesetting connectives such as $\always$ and $\eventually$. The concrete syntax is defined in~\ref{sec:concrete-syntax}.
 \end{remark}
 
 \begin{definition}[Semantics of \ltl\ formula]
@@ -328,7 +328,7 @@ On a high level, our algorithm of converting \ltl\ formulas into timeline visual
 \end{figure*}
 
 \subsection{LTL to BA} \label{ltl2aut}
-The automata-theoretic approach \cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e. reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as \cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from \ltl\ formulas to \Buchi automata.
+The automata-theoretic approach~\cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e. reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as~\cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from \ltl\ formulas to \Buchi automata.
 
 \subsection{BA to $\omega$-regex} \label{aut2regex}
 We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in the digraph of the automaton.
@@ -394,7 +394,7 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 
 The $\omega$-regular expression generated in \cref{aut2regex} may not be the ``simplest'' for the purpose of visualizing the timeline. We have observed multiple patterns in the resulting $\omega$-regular expression that could be simplified. For example, an $\omega$-regular expression in the form of $r^*r^{\omega}$ represents the same timeline as $r^{\omega}$, but the latter is more intuitive and concise. For this purpose, we devised some simplification rules in our tool, based on our observation of common patterns in the generated $\omega$-regular expression.
 
-There is no agreed upon canonical form for regular expression, hence we do not hope to find the simplest regular expression for visualization. Regular expression simplification comes down to regular expression equivalence checking, which is computationally hard \cite{MNS04}. For purpose of simplification, one could perform a search over equivalent regular expressions and decide which one is simpler to use. However, this strategy is expensive in terms of the running time, and for the purpose of visualization, we did not use this strategy in our tool. We consider this approach as future work.
+There is no agreed upon canonical form for regular expression, hence we do not hope to find the simplest regular expression for visualization. Regular expression simplification comes down to regular expression equivalence checking, which is computationally hard~\cite{MNS04}. For purpose of simplification, one could perform a search over equivalent regular expressions and decide which one is simpler to use. However, this strategy is expensive in terms of the running time, and for the purpose of visualization, we did not use this strategy in our tool. We consider this approach as future work.
 
 \paragraph*{Rule-based simplification}
 Here we show a demonstrating subset of the simplification rules we encoded. In theory one could add more rules to the tool, so long as they are sound; here we only choose to encode the rules that represent common patterns we have observed in the generated $\omega$-regular expressions.
@@ -1171,7 +1171,7 @@ We use timeline length, defined below, to capture the length of our timeline vis
 %KYR: Here we nicely show (with pictures as much as possible) all of the individual statistics and results we gathered (note aggregation occurs below).
 \paragraph{Real-world datasets} We study the feasibility of our tool on a benchmark suite of \ltl\ formulas gathered from real world use cases.
 
-We gather a test suite of 91 formulas used in real-world requirement specification. We take $6$ specifications from NASA's Automated Airspace Concept (AAC)\cite{GCMTR16}. We also collect formulas from the Acacia suite of examples \cite{RV10}. We reap $85$ formulas from the suite of $23$ examples, by generating separate visualizations for each line of specification. We choose to visualize each formula specifically, rather than complete specifications, as complete specifications may describe large complex systems, and we only intend the use case of validating individual specification formulas. % We choose to visualize each formula specifically, rather than complete specifications, as
+We gather a test suite of 91 formulas used in real-world requirement specification. We take $6$ specifications from NASA's Automated Airspace Concept (AAC)~\cite{GCMTR16}. We also collect formulas from the Acacia suite of examples~\cite{RV10}. We reap $85$ formulas from the suite of $23$ examples, by generating separate visualizations for each line of specification. We choose to visualize each formula specifically, rather than complete specifications, as complete specifications may describe large complex systems, and we only intend the use case of validating individual specification formulas. % We choose to visualize each formula specifically, rather than complete specifications, as
 
 We run \texttt{ltl2regex} on these $91$ examples, the tool completes execution (within timeout of $20$s) on $87$. Within the $87$, two examples have regular expressions of star height $8$ and are intractable to generate graph visualizations of. We are able to generate tractable visualization on the remaining $85$, or over $93\%$ of benchmarks tested. The plots of visualization complexity on these formula are provided below in \cref{fig:real-world}.
 
@@ -1181,23 +1181,23 @@ We run \texttt{ltl2regex} on these $91$ examples, the tool completes execution (
     \subfloat{{\includegraphics[width=6.5cm]{img/tllens-graph.png} }}%
     \quad % [\centering label 1]
     \subfloat{{\includegraphics[width=6.5cm]{img/star-height-graph.png}}}
-    \caption{Visualization complexity metrics for formulas collected from Acacia \cite{RV10} and NASA's  AAC \cite{GCMTR16}}
+    \caption{Visualization complexity metrics for formulas collected from Acacia~\cite{RV10} and NASA's  AAC~\cite{GCMTR16}}
     \label{fig:real-world}
 \end{figure}
 
 \paragraph{Scalability}
-We measure the scalability of our tool by running it against a set of scalable \ltl\ formulas. We define a scalable \ltl\ formula as one that describes an $n$-bit number using a binary counter \cite{RV10}. As $n$ gets larger, the \ltl\ formula used to encode the $n$-bit counter scales in size, but it remains practical. The result is shown in \cref{fig:scalability}. In this analysis, the timeline length grows approximately exponentially with the number of bits in the counter, which matches the result in Rozier and Vardi \cite{RV10}.
+We measure the scalability of our tool by running it against a set of scalable \ltl\ formulas. We define a scalable \ltl\ formula as one that describes an $n$-bit number using a binary counter~\cite{RV10}. As $n$ gets larger, the \ltl\ formula used to encode the $n$-bit counter scales in size, but it remains practical. The result is shown in \cref{fig:scalability}. In this analysis, the timeline length grows approximately exponentially with the number of bits in the counter, which matches the result in Rozier and Vardi~\cite{RV10}.
 
 In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which point it hits the $30$ seconds timeout we set, as the timeline length grows exponentially fast.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=6.5cm]{img/binary.png}
-    \caption{Scalability measured with binary counter examples from Rozier and Vardi \cite{RV10}}
+    \caption{Scalability measured with binary counter examples from Rozier and Vardi~\cite{RV10}}
     \label{fig:scalability}
 \end{figure}
 
-% KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter \ltl\ formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real \ltl\ formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from \cite{RV10}.
+% KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter \ltl\ formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real \ltl\ formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from~\cite{RV10}.
 
 
 %\paragraph{Denouement}
@@ -1220,7 +1220,7 @@ The set of \ltl\ formulas we used to evaluate our tool in \cref{sec:playing} can
 \section{Discussion}
 Based on our results, we propose the following questions for discussions and future works:
 \begin{itemize}
-    \item Can there be more simplifications methods as described in Section \ref{regex-simplify}? The answer is definitely positive. On one hand, more rule-based simplifications can be discovered by finding more patterns in the generated $\omega$-regular expressions. On the other hand, other simplification are possible: for example, if the generated $\omega$-regular expression is $r_1 + r_2$ where $r_1, r_2$ are not syntactically equivalent (or equivalent up to algebraic rules) $\omega$-regular expressions, but they accepts the same set of infinite-length strings, then we can simplify this down to just $r_1$. This reduce the problem to equivalence test on $\omega$-regular expressions, which is decidable. In the similar vein, many more simplifications can be used, but the question is how efficient are they? In the end, one have to balance trade-off between the efficiency of the tool and the simplicity of the result.
+    \item Can there be more simplifications methods as described in Section~\ref{regex-simplify}? The answer is definitely positive. On one hand, more rule-based simplifications can be discovered by finding more patterns in the generated $\omega$-regular expressions. On the other hand, other simplification are possible: for example, if the generated $\omega$-regular expression is $r_1 + r_2$ where $r_1, r_2$ are not syntactically equivalent (or equivalent up to algebraic rules) $\omega$-regular expressions, but they accepts the same set of infinite-length strings, then we can simplify this down to just $r_1$. This reduce the problem to equivalence test on $\omega$-regular expressions, which is decidable. In the similar vein, many more simplifications can be used, but the question is how efficient are they? In the end, one have to balance trade-off between the efficiency of the tool and the simplicity of the result.
     %\item Our tool is effective at translating a wide range of LTL formulas. Even with LTL formulae with complex nesting structure are represented by relatively readable timeline visualizations.
     \item Can we define timeline more formally so that one can do this process reversely (i.e. a tool that converts timeline representation to its corresponding \ltl\ formula)? That would be a very useful tool in practice. However, a direct reverse of the algorithm we presented in this paper may not be viable.
 \end{itemize}
@@ -1231,14 +1231,14 @@ Going forward, it will become important to conduct a user survey to gather data 
 
 \item {\bf Can there be back edges in a limited fashion (i.e., to simplify formulas) in timelines?} Most of our formulas have star-height of 1, so if we limit the back-edge representation to only surrounding a single node, that would simplify most formulas. We can then use the expanded notation for stared formulas larger than a single proposition, thus navigating a trade-off between small representation and limiting the visual complication. The criticism of this approach may be that back edges cause confusion between timeline and automata representations, and that with back edges timelines stop being intuitive about linearity of time.
 
-\item {\bf What are intuitive representations of star-formulas and do they change depending on the formula?} Common regular expression visualizers use two ways to represent stars in regular expressions. We can represent a stared formula inside a box \cite{B22} with related caption to indicate the repetition (similar to the design decision we made in \tool); or with back edges \cite{A20}. Does using the box cause confusion with respect to the LTL $\Box$ operator? What is the most intuitive way to remind users of the corner case where the starred formula occurs zero times?
+\item {\bf What are intuitive representations of star-formulas and do they change depending on the formula?} Common regular expression visualizers use two ways to represent stars in regular expressions. We can represent a stared formula inside a box~\cite{B22} with related caption to indicate the repetition (similar to the design decision we made in \tool); or with back edges~\cite{A20}. Does using the box cause confusion with respect to the LTL $\Box$ operator? What is the most intuitive way to remind users of the corner case where the starred formula occurs zero times?
 
 \item {\bf When do we choose to unroll for clarity? When do we merge parallel parts of timelines?} To merge parts of lines, we have to check for logical equivalence of the parts of the timelines we want to merge. By our algorithm, we generate parallel lines only when the formulas are not syntactically equivalent, so we would be guaranteed to run the more complex check for logical equivalence. In some cases, this could provide a clarifying simplification, with the cost of a repetitive computationally expensive check. Would it make sense to offer an ``optimizing'' compilation option to users that takes longer to create a timeline representation but checks for smaller representations via logical equivalence?
 \end{itemize}
 
 
 \section{Conclusion}
-The Achilles heel of formal verification is specification; formal methods are only as effective at verification as their specifications are at describing the essential properties to verify. Yet, specification remains the biggest bottleneck to the use of formal methods \cite{Roz16}. \ltl\ is one of the most popular specification logics for industrial-scale critical systems; in the space domain alone, it is currently encapsulating specifications for the development of the NASA Lunar Gateway \cite{DBR21}, the Air Force Research Laboratory/Collins Aerospace Spacecraft Collision Avoidance system \cite{HDWF21}, Space Systems Finland's Attitude and Orbit Control Systems (AOCS) \cite{ILLTV13}, and NASA/JPL's Europa Lander Mission Concept \cite{CDRWRWL22} just to name a few.
+The Achilles heel of formal verification is specification; formal methods are only as effective at verification as their specifications are at describing the essential properties to verify. Yet, specification remains the biggest bottleneck to the use of formal methods~\cite{Roz16}. \ltl\ is one of the most popular specification logics for industrial-scale critical systems; in the space domain alone, it is currently encapsulating specifications for the development of the NASA Lunar Gateway~\cite{DBR21}, the Air Force Research Laboratory/Collins Aerospace Spacecraft Collision Avoidance system~\cite{HDWF21}, Space Systems Finland's Attitude and Orbit Control Systems (AOCS)~\cite{ILLTV13}, and NASA/JPL's Europa Lander Mission Concept~\cite{CDRWRWL22} just to name a few.
  %
 Yet the humans that need to use formal verification tools and deeply understand their results struggle to validate that \ltl\ formulas capture the specifications they are meant to capture. A major contributor to \ltl's popularity is the propensity of humans to think of requirements in terms of timelines. This inspired the creation of \ltl\ in the first place, as a logic that ``intuitively'' represents timelines. Our work serves to reinforce that connection, enabling visualization of most realistic \ltl\ formulas as timelines. By releasing \tool, we contribute to better validation capabilities for \ltl\ specifications and aid the effort to make formal verification more accessible and wide-spread.
 %We hope that this will assist system designers in formulating error-free specifications and thus improve the effectiveness of verification tools for \ltl.
@@ -1247,7 +1247,7 @@ Future extensions of this work include optimizations to the algorithm and implem
 
 \appendix
 \section{Concrete Syntax of \tool} \label{sec:concrete-syntax}
-Recall from \ref{ltl-defn} that we define \ltl\ formula as
+Recall from~\ref{ltl-defn} that we define \ltl\ formula as
 \begin{align*}
     \Phi ::= & p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \\ & \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
 \end{align*}
@@ -1255,7 +1255,7 @@ where $p \in \AP$. In our tool \tool, we use the following concrete syntax to re
 \[
     \begin{array}{c r l l l@{\qquad} l}
          &      & \textit{abstract syntax}              & \textit{concrete syntax}                       & \textit{description} \\
-    \Phi & ::=  & p                                     & \texttt{p}                                     & \text{atomic proposition} \\
+    \Phi & ::=  & p                                     & \texttt{p}                                     & \text{atomic prop.} \\
          & \mid & \neg \Phi                             & \texttt{!} \Phi                                & \text{negation} \\
          & \mid & \Phi \land \Phi                       & \Phi \texttt{ \& } \Phi                        & \text{conjunction} \\
          & \mid & \Phi \lor \Phi                        & \Phi \texttt{ | } \Phi                         & \text{disjunction} \\
@@ -1287,13 +1287,13 @@ Given the tremendous popularity of \ltl\ as a specification language for industr
   \hline
   Purpose & \# formulas & Source \\
   \hline
-  Design space for NASA's AAC (Automated Airspace Concept) & 20,250 & \cite{GCMTR16} \\
+  Design space for NASA's AAC (Automated Airspace Concept) & 20,250 &~\cite{GCMTR16} \\
   \hline
-  Safety specifications for Boeing's AIR6110 wheel brake system & & \cite{BCFJKPRT15} \\
+  Safety specifications for Boeing's AIR6110 wheel brake system & &~\cite{BCFJKPRT15} \\
   \hline
-  Requirements for model checking NASA's AAC high-level architecture & 6 & \cite{ZR14} \\
+  Requirements for model checking NASA's AAC high-level architecture & 6 &~\cite{ZR14} \\
   \hline
-  Real formulas collected from all publicly-available, pre-2011 case studies & 63 & \cite{RV11} \\
+  Real formulas collected from all publicly-available, pre-2011 case studies & 63 &~\cite{RV11} \\
   \hline
 \end{tabular}
 \end{table}
