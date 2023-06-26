@@ -125,7 +125,7 @@ We make the following contributions in our paper:
 
 \section{Setting the stage}
 
-We must begin by setting up the prerequisite definitions involved in our work.
+We begin by setting up the prerequisite definitions involved in our work.
 First, we provide the definition and semantics for \ltl. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFAs) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines.
 
 \subsection{Linear temporal logic (\ltl)} \label{sec:ltl}
@@ -360,7 +360,7 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
         % WHile there exists any edge except r_sf
         \While{ there exists an interior vertex $v$ }
             \State reduce\_nfa($G, v$)
-            \State combine multiedges, i.e. $r1 : u \to w, r2 : u \to w$  to $r1 | r2 : u \to w$
+            \State combine multi-edges, i.e. $r1 : u \to w, r2 : u \to w$  to $r1 | r2 : u \to w$
         \EndWhile
         \State \Return $(r_\mathrm{ss}| r_\mathrm{sf} r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$
         % if called by first visit, this is r_\mathrm{ss}* r_\mathrm{sf}
@@ -537,7 +537,7 @@ These simplification rules lead to more intuitive representation of timelines. H
     \end{figure*}
     \begin{figure*}[h!]
         \centering
-        \resizebox{.8\textwidth}{!}{
+        \resizebox{.55\textwidth}{!}{
             \begin{tikzpicture}[>=latex',line join=bevel,]
                 \pgfsetlinewidth{1bp}
               %%
@@ -1192,7 +1192,7 @@ In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which poin
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.6]{img/binary.png}
+    \includegraphics[width=6.5cm]{img/binary.png}
     \caption{Scalability measured with binary counter examples from Rozier and Vardi \cite{RV10}}
     \label{fig:scalability}
 \end{figure}
