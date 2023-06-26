@@ -221,7 +221,7 @@ We present timelines as graphic visualizations. It contains the following featur
     \item Every node represents one time step, and each node has a propositional logic formula $\Psi$, which specifies the behavior of atomic propositions at that time step. The formula $\Psi$ must be true at that time step. If $\Psi = 1$, that means all atomic propositions can behave arbitrarily.
     \item A node in egg shape with a caption ``repeats $0$ - $\infty$'' means to repeat the (one time step) current node for arbitrarily finitely many times.
     \item A node with label ``$\cdots$'' means to repeat the pattern prior to it and after it arbitrarily finitely many times.
-    \item The grey box means repeat infinitely. Once we reach the end of a timeline in the grey box, we must reenter the same grey box from any of its (left) starting point.
+    \item The grey box means repeat infinitely. Once we reach the end of a timeline in the grey box, we must reenter the same grey box from any of its (left) starting points.
     \item Timelines can be in parallel, signifying that either of the parallel timeline could happen.
 \end{itemize}
 
@@ -313,7 +313,7 @@ The definition of timeline we use here are specifically what we devised for the 
 \end{example}
 
 \section{Algorithm}
-On a high level, our algorithm of converting \ltl\ formulas into timeline visualizations works as follows:
+On a high level, our algorithm of converting \ltl\ formulas into timeline visualizations (depicted in \Cref{fig:algo}) works as follows:
 \begin{enumerate}
     \item Convert the given \ltl\ formula to its corresponding \Buchi automaton. % (as detailed in \cref{ltl2aut})
     \item Derive the $\omega$-regular expression corresponding to the \Buchi automaton. % (in \cref{aut2regex})
@@ -397,7 +397,7 @@ The $\omega$-regular expression generated in \cref{aut2regex} may not be the ``s
 There is no agreed upon canonical form for regular expression, hence we do not hope to find the simplest regular expression for visualization. Regular expression simplification comes down to regular expression equivalence checking, which is computationally hard \cite{MNS04}. For purpose of simplification, one could perform a search over equivalent regular expressions and decide which one is simpler to use. However, this strategy is expensive in terms of the running time, and for the purpose of visualization, we did not use this strategy in our tool. We consider this approach as future work.
 
 \paragraph*{Rule-based simplification}
-Here we show a demonstrating subset of simplification rules we encoded. In theory one could add more rules to the tool, so long as they are sound; here we only choose to encode the rules that represent common patterns we have observed in the generated $\omega$-regular expression.
+Here we show a demonstrating subset of the simplification rules we encoded. In theory one could add more rules to the tool, so long as they are sound; here we only choose to encode the rules that represent common patterns we have observed in the generated $\omega$-regular expressions.
 \begin{alignat*}{2}
         & r_1 + r_1r_2^* && \Longrightarrow r_1r_2^* \\
         & r + r && \Longrightarrow r \\
@@ -410,10 +410,10 @@ Here we show a demonstrating subset of simplification rules we encoded. In theor
 \end{alignat*}
 
 \paragraph*{Result of simplification}
-Those simplification rules lead to more intuitive representation of timelines. Here we demonstrate their effects using an example.
+These simplification rules lead to more intuitive representation of timelines. Here we demonstrate their effects using an example.
 
 \begin{example}
-    Using our algorithm, the \ltl\ formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which corresponds to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
+    Using our algorithm, the \ltl\ formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates the un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and the simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which correspond to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
     \begin{figure*}[h!]
         \centering
                 \resizebox{\textwidth}{!}{
@@ -618,7 +618,7 @@ Those simplification rules lead to more intuitive representation of timelines. H
 \end{example}
 
 \begin{remark}
-    Both simplified and un-simplified $\omega$-regular expression would generate correct timeline representations. Correct as they faithfully represent the set of satisfying traces of the original \ltl\ formula $\Phi$. Nonetheless, we, as human users, oftentimes find the simplified version more intuitive to reason about.
+    Both simplified and un-simplified $\omega$-regular expressions would generate correct timeline representations. Correct as they faithfully represent the set of satisfying traces of the original \ltl\ formula $\Phi$. Nonetheless, we, as human users, oftentimes find the simplified version more intuitive to reason about.
 \end{remark}
 
 \subsection{$\omega$-regex to timeline} \label{regex2timeline}
@@ -626,7 +626,7 @@ Our tool uses Graphviz~\cite{Ellson2001GraphvizO} to achieve the timeline visual
 \[
     A_1A_2^{\omega} + A_3A_4^{\omega} + \cdots + A_{2n-1}A_{2n}^{\omega}
 \]
-where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsilon \not\in L(A_{2i})$. On a high level, for each of regular expression $A_i$, we visualize it as a set of accepted input. We view each union operator as parallel timelines, and each $A_{2i-1}$ is concatenated with $A_{2i}$ repeated infinitely many times, as represented in the grey box. \cref{fig:timeline} presents a generic timeline resulting from this form of construction.
+where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsilon \not\in L(A_{2i})$. At a high level, for each of regular expression $A_i$, we visualize it as a set of accepted input. We view each union operator as parallel timelines, and each $A_{2i-1}$ is concatenated with $A_{2i}$ repeated infinitely many times, as represented in the grey box. \cref{fig:timeline} presents a generic timeline resulting from this form of construction.
 \begin{figure}[h!]
     \centering
     \begin{tikzpicture}
@@ -734,7 +734,7 @@ Inductively, we show how to construct each form of regular and $\omega$-regular 
 \paragraph{$\omega$-regular repression}
 \begin{enumerate}
   \item $B = A^\omega$. Visualized as a grey box enclosed with the timeline of $A$. An $\omega$ of a regular expression signifies that the regular expression is to be repeated infinitely many times, which matches the meaning of our representation of grey box, because every time it reach the end of the grey box, it must reenter the same grey box again, hence infinite repeat.
-  \item $B = AB$. Visualized as the timeline of $A$ followed by the timeline of $B$. A concatenation of a regular expression and an $\omega$-regular expression signifies that the first must be true before the second $\omega$-regular expression can be true in the time step.
+  \item $B = AB$. Visualized as the timeline of $A$ followed by the timeline of $B$. A concatenation of a regular expression and an $\omega$-regular expression signifies that the first must be true before the second $\omega$-regular expression can be true in the following timesteps.
   \item $B = B + B$. Visualized as the timelines of $B$ and $B$ in parallel. A union of two $\omega$-regular expressions signifies that either of the $\omega$-regular expressions can be true, which is represented by the parallel timelines.
 \end{enumerate}
 
@@ -919,7 +919,7 @@ To demonstrate the result of our tool, we present three examples, one from a rea
     \[
     p_2 \land (\eventually \always p_0 \stronguntil \nextt(\always p_1 \land (((p_0 \limplies p_2) \land (p_2 \limplies p_0)) \stronguntil \eventually p_0)))
     \]
-    This formula is reasonably complicated, and hard for human to reason about directly. For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex13}.
+    This formula is reasonably complicated, and hard for humans to reason about directly. For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex13}.
     \begin{figure*}[h!]
         \centering
         \resizebox{\textwidth}{!}{
