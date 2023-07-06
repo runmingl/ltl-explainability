@@ -3,4 +3,3 @@ graphviz>=0.20.1
 dot2tex>=2.11.3
 lark>=1.1.5
 lark-parser>=0.11.3
-pylogics>=0.2.1

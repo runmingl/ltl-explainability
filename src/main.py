@@ -19,7 +19,7 @@ class Ltl2Regex(object):
     def ltl2timeline(self, formula: str, filename: str = "ltl", output_format: str = "pdf"):
         g = make_graph(aut_to_regex(aut_to_graph(
             ltl_to_aut(formula))), filename, output_format)
-        g.view()
+        g.render()
         if output_format == 'latex':
             gv_file = open(f"{filename}1.gv", "w")
             tex_file = open(f"{filename}.tex", "w")
@@ -30,6 +30,7 @@ class Ltl2Regex(object):
             clean_up(f"{filename}.gv.pdf")
             clean_up(f"{filename}1.gv")
             post_process_latex(filename)
+        print(f"Image file `{filename}` generated.")
 
 
 if __name__ == '__main__':
