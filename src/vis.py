@@ -79,7 +79,7 @@ def make_graph(regex: OmegaRegex, filename: str, format: str) -> Digraph:
                         if latex:
                             tex = parse(s)
                             s1 = s.replace("&", "&amp;")
-                            g.node(node_name, label=f"<{s1}<BR /> <FONT POINT-SIZE=\"10\">repeats 0-∞</FONT>>", texlbl=f"${tex}$ \\\\ {{\\tiny repeats $0$ - $\infty$}}", shape='egg')
+                            g.node(node_name, label=f"<{s1}<BR /> <FONT POINT-SIZE=\"10\">repeats 0-∞</FONT>>", texlbl=f"${tex}$ \\\\ {{\\small \emph{{repeats $0$ - $\infty$}}}}", shape='egg')
                         else:
                             s1 = s.replace("&", "&amp;")
                             g.node(node_name, label=f"<{s1}<BR /> <FONT POINT-SIZE=\"10\">repeats 0-∞</FONT>>", shape='egg')
