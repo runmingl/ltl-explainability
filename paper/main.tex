@@ -73,7 +73,7 @@ kgurusha@andrew.cmu.edu}
 Pittsburgh, PA, USA \\
 marijn@cmu.edu}
 \and
-\IEEEauthorblockN{Kristin~Y.~Rozier}
+\IEEEauthorblockN{Kristin~Yvonne~Rozier}
 \IEEEauthorblockA{\textit{Iowa State University} \\
 Ames, IA, USA \\
 kyrozier@iastate.edu}
@@ -102,16 +102,25 @@ Modal and Temporal Logics, Logic and Verification, Regular languages
 \end{IEEEkeywords}
 
 \section{Introduction}
-Requirement specification is a central step in the development of safety-critical systems. As a first step, requirements are typically written in natural language. For example, here is a real-world requirement specification from an air traffic control system~\cite{ZR14}
+Requirement specification is a central step in the development of safety-critical systems. %As a first step, requirements are typically written in natural language.
+For example, here is a real-world requirement specification from an air traffic control system~\cite{ZR14}
 \begin{center}
     ``If a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft''
 \end{center}
-Such natural language requirements are often ambiguous and not amenable to formal analysis, so requirements must often be specified using rigorous formalized semantics for the purpose of verification and validation. The above requirement, when translated to Linear Temporal Logic (detailed in \cref{sec:ltl}), may be expressed as follows:
+Such natural language requirements are often ambiguous and not amenable to formal analysis, so we must instead specify such requirements using rigorous formalized semantics for the purpose of verification and validation. The above requirement, when translated to Linear Temporal Logic (detailed in \cref{sec:ltl}), may be expressed as follows:
 \begin{align*}
     \always & (\texttt{tsafe.TSAFE\_command1} \land \\ & \texttt{controller.CTR\_control\_1} \\
     \limplies & \nextt (\neg \texttt{controller.CTR\_control\_1}))
 \end{align*}
-Several tools have been developed to reason about formal specifications written with such \ltl\ formulas, like R2U2 and FRET~\cite{GPMS20}. However, these formalized semantics are unintuitive and error-prone for human practitioners, and the tools are much less useful when system designers can't validate input specifications.
+Though, as \cite{ZR14} demonstrates, validating that the resulting formula represents the intended requirement is difficult, even for professionals; in this case study a subtle misconception in the initial formalization of a requirement hid an important safety concern present in the early design-stage requirements. Using the play-on-words "Little Tricky Logic," \cite{GSNK22} points to endemic misconceptions in the understanding of LTL.
+
+The need for validation of requirements formalizations has been widely recognized, and tools for several different formalisms have contributed strategies for breaking up the formalisms into patterns and adding GUIs to make validation easier. For example, the web-based modeling tool piStar-ext adds a GUI with text, symbols, and diagrams to enable users to better validate iStar-language models \cite{GRMPAC20}. Hanfor, a GUI, web-based tool supported formalization of system requirements into an LTL-like structured natural language patterns for several industry projects in the automotive and railway domains \cite{BDHHLPW21}.
+The ForeMoSt framework enables validation of safety assurance cases by translating structured arguments into formal strategies and validating them automatically using the Lean theorem prover \cite{VMDMSC22}.
+AutoTap provides users with a GUI utilizing structured English to write and edit LTL formulas representing Trigger-Action Programs (another form of assume-guarantee contracts) for smart devices and cloud services \cite{ZHMBLU19}.
+
+There has been a recent boom in validation capabilities for the related, but arguably simpler, specification logic Mission-time LTL \cite{LVR19}, which adds finite, integer-bounded, closed intervals to the temporal operators of LTL. The runtime verification engine R2U2 includes a web-based GUI enabling specifiers to visualize properties of (sets of) MLTL runtime monitors, such as their shared subformulas and resource usage on embedded systems \cite{JJKRZ23}. The FRET tool's GUI color-codes segments of structured natural language to elicit more accurate MLTL formulas from system designers \cite{GPMS20}. The WEST tool provides an interactive GUI for MLTL formula validation via regular expressions and truth-table-like visualizations \cite{EGSTWR23}. Now we need tools like these for LTL.
+
+The common and intuitive technique of validating LTL formulas via sets of positive and negative examples (i.e., demonstrating traces that both satisfy and violate a given LTL formula) is insufficient for understanding and explainability of LTL specification \cite{NR22}.
 Thus, a significant hurdle remains: how can we convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the desired system requirements? % quote MLTL paper?
 
 We take a simple idiomatic approach to address this problem. As Linear Temporal Logic formulas are temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the \ltl\ formula, and thereby represent the specified behavior in a more natural human-intelligible form.
