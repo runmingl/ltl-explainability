@@ -43,7 +43,7 @@
 \newcommand{\liff}{\leftrightarrow}
 
 %\newcommand{\tool}{\hspace{0.1cm}\texttt{ltl2timeline}\hspace{0.1cm}}
-\newcommand{\tool}{\hspace{0.1cm}\texttt{ltl2timeline}}
+\newcommand{\tool}{\texttt{ltl2timeline}}
 
 \newcommand{\tllen}{\text{tllen}}
 
@@ -101,7 +101,8 @@ kyrozier@iastate.edu}
 Modal and Temporal Logics, Logic and Verification, Regular languages
 \end{IEEEkeywords}
 
-\section{Introduction}
+%\section{Introduction}
+\section{Prologue} %going full Shakespeare on this...
 Requirement specification is a central step in the development of safety-critical systems. %As a first step, requirements are typically written in natural language.
 For example, here is a real-world requirement specification from an air traffic control system~\cite{ZR14}
 \begin{center}
@@ -118,20 +119,20 @@ The need for validation of requirements formalizations has been widely recognize
 The ForeMoSt framework enables validation of safety assurance cases by translating structured arguments into formal strategies and validating them automatically using the Lean theorem prover \cite{VMDMSC22}.
 AutoTap provides users with a GUI utilizing structured English to write and edit LTL formulas representing Trigger-Action Programs (another form of assume-guarantee contracts) for smart devices and cloud services \cite{ZHMBLU19}.
 
-There has been a recent boom in validation capabilities for the related, but arguably simpler, specification logic Mission-time LTL \cite{LVR19}, which adds finite, integer-bounded, closed intervals to the temporal operators of LTL. The runtime verification engine R2U2 includes a web-based GUI enabling specifiers to visualize properties of (sets of) MLTL runtime monitors, such as their shared subformulas and resource usage on embedded systems \cite{JJKRZ23}. The FRET tool's GUI color-codes segments of structured natural language to elicit more accurate MLTL formulas from system designers \cite{GPMS20}. The WEST tool provides an interactive GUI for MLTL formula validation via regular expressions and truth-table-like visualizations \cite{EGSTWR23}. Now we need tools like these for LTL.
+There has been a recent boom in validation capabilities for the related, but arguably simpler, specification logic Mission-time LTL (MLTL) \cite{LVR19}, which adds finite, integer-bounded, closed intervals to the temporal operators of LTL. The runtime verification engine R2U2 includes a web-based GUI enabling specifiers to visualize properties of (sets of) MLTL runtime monitors, such as their shared subformulas and resource usage on embedded systems \cite{JJKRZ23}. The FRET tool's GUI color-codes segments of structured natural language to elicit more accurate MLTL formulas from system designers \cite{GPMS20}. The WEST tool provides an interactive GUI for MLTL formula validation via regular expressions and truth-table-like visualizations \cite{EGSTWR23}. Now we need tools like these for LTL.
 
 The common and intuitive technique of validating LTL formulas via sets of positive and negative examples (i.e., demonstrating traces that both satisfy and violate a given LTL formula) is insufficient for understanding and explainability of LTL specification \cite{NR22}.
 Thus, a significant hurdle remains: how can we convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the desired system requirements? % quote MLTL paper?
 
-We take a simple idiomatic approach to address this problem. As Linear Temporal Logic formulas are temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the \ltl\ formula, and thereby represent the specified behavior in a more natural human-intelligible form.
+We take a simple idiomatic approach to address this problem. Since Linear Temporal Logic formulas differentiate temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the \ltl\ formula, and thereby represent the specified behavior in a more natural, human-intelligible form.
 
-Our tool, \tool, uses a remarkably simple algorithm: transforming an input \ltl\ formula through a sequence of automata and regular expression-based intermediate representations, and is surprisingly effective at providing small representations for a range of \ltl\ formulas. It would visualize the above air traffic control requirement behavior with the timeline shown in \cref{example:air}.
+Our tool, \tool, uses a remarkably simple algorithm: transforming an input \ltl\ formula through a sequence of automata and regular expression-based intermediate representations. Yet, it is surprisingly effective at providing small representations for a range of \ltl\ formulas. It visualizes the above air traffic control requirement behavior with the timeline shown in \cref{example:air}.
 
 We make the following contributions in our paper:
 \begin{itemize}
     \item We provide the tool, \tool, which takes \ltl\ formulas and synthesizes timeline visualizations for them.
     \item We prove correctness in \cref{sec:analysis}. We show that for every \ltl\ formula, the timeline outputted indeed represents the set of satisfying traces.
-    \item We showcase the results of our tool on a range of example formulas in \cref{sec:tool-showcase} and \cref{sec:playing}, including discussing the air traffic example above.
+    \item We showcase the results of our tool on a range of example formulas in \cref{sec:tool-showcase} and \cref{sec:playing}, including discussing the air traffic control example above.
 \end{itemize}
 
 \section{Setting the stage}
@@ -139,7 +140,7 @@ We make the following contributions in our paper:
 We begin by setting up the prerequisite definitions involved in our work.
 First, we provide the definition and semantics for \ltl. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFAs) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines.
 
-\subsection{Linear temporal logic (\ltl)} \label{sec:ltl}
+\subsection{Linear Temporal Logic (\ltl)} \label{sec:ltl}
 
 \begin{definition}[Linear Temporal Logic (\ltl)]
     % cite Kristin's survey paper
@@ -386,7 +387,10 @@ The definition of timeline we use here are specifically what we devised for the 
     \end{figure}
 \end{example}
 
-\section{Algorithm}
+\section{Algorithm: ``Though she be but little, she is fierce$^*$''}
+\begingroup\renewcommand\thefootnote{\textsection}
+\footnotetext{William Shakespeare, \emph{A Midsummer Night's Dream}}
+\endgroup
 On a high level, our algorithm of converting \ltl\ formulas into timeline visualizations (depicted in \Cref{fig:algo}) works as follows:
 \begin{enumerate}
     \item Convert the given \ltl\ formula to its corresponding \Buchi automaton. % (as detailed in \cref{ltl2aut})
@@ -724,8 +728,14 @@ where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsil
     \label{fig:timeline}
 \end{figure}
 
-\section{Theoretical Analyses} \label{sec:analysis}
-In the following section, we prove the correctness of our translation pipeline. The correctness of the translation from LTL formulas to \Buchi automata is provided by SPOT~\cite{Dur22}. Below, we prove the correctness of (i) the translation from \Buchi automata to $\omega$-regular expressions, (ii) the ($\omega$-)regular expression rewrite rules we apply, and lastly, we outline the correctness of our timeline visualizations.
+%\section{Theoretical Analyses} \label{sec:analysis}
+\section{``If we are true to ourselves, we can not be false to anyone$^*$''}
+\label{sec:analysis}
+\begingroup\renewcommand\thefootnote{\textsection}
+\footnotetext{William Shakespeare, \emph{Hamlet}}
+\endgroup
+
+We prove the correctness of our translation pipeline. The correctness of the translation from LTL formulas to \Buchi automata is provided by SPOT~\cite{Dur22}. Below, we prove the correctness of (i) the translation from \Buchi automata to $\omega$-regular expressions, (ii) the ($\omega$-)regular expression rewrite rules we apply, and lastly, we outline the correctness of our timeline visualizations.
 \subsection{Correctness of Regex Translation}
 \begin{lemma}
     % reduce_nfa does its input to output behaviour
@@ -813,7 +823,12 @@ Inductively, we show how to construct each form of regular and $\omega$-regular 
   \item $B = B + B$. Visualized as the timelines of $B$ and $B$ in parallel. A union of two $\omega$-regular expressions signifies that either of the $\omega$-regular expressions can be true, which is represented by the parallel timelines.
 \end{enumerate}
 
-\section{Tool showcase} \label{sec:tool-showcase}
+%\section{Tool showcase}
+\section{``Be great in act, as you have been in thought$^*$''}
+\label{sec:tool-showcase}
+\begingroup\renewcommand\thefootnote{\textsection}
+\footnotetext{William Shakespeare, \emph{King John}}
+\endgroup
 To demonstrate the result of our tool, we present three examples, one from a real-world model checking example from Zhao and Rozier~\cite{ZR14}, one from a randomly generated \ltl\ formula, and one specifically demonstrates the use of our tool in specification verification.
 
 \begin{example} \label{example:air}
@@ -1345,7 +1360,10 @@ In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which poin
 
 
 
-\section{Artifact availability}
+\section{Thought is free$^*$: Artifact availability}
+\begingroup\renewcommand\thefootnote{\textsection}
+\footnotetext{William Shakespeare, \emph{The Tempest}}
+\endgroup
 The tool we present in this paper is available at
 \[
     \texttt{\url{https://github.com/EULIR/ltl-explainability}}
@@ -1354,7 +1372,7 @@ which comes with two command-line tools, \texttt{ltl2regex} and \tool. The speci
 
 The set of \ltl\ formulas we used to evaluate our tool in \cref{sec:playing} can be found \href{https://github.com/EULIR/ltl-explainability/tree/main/ltl-formulas}{here}.
 
-\section{Discussion}
+\section{Denouement}
 Based on our results, we propose the following questions for discussions and future work:
 \begin{itemize}
     \item Can there be more simplifications methods as described in Section~\ref{regex-simplify}? The answer is definitely positive. On one hand, more rule-based simplifications can be discovered by finding more patterns in the generated $\omega$-regular expressions. On the other hand, other simplification are possible: for example, if the generated $\omega$-regular expression is $r_1 + r_2$ where $r_1, r_2$ are not syntactically equivalent (or equivalent up to algebraic rules) $\omega$-regular expressions, but they accept the same set of infinite-length strings, then we can simplify this down to just $r_1$. This reduces the problem to equivalence test on $\omega$-regular expressions, which is decidable. In a similar vein, many more simplifications may apply, but the question is how \emph{useful} are they? In the end, we have to balance the efficiency, simplicity, and understandabillity of the visualization.
@@ -1374,7 +1392,7 @@ Going forward, it will become important to conduct a user survey to gather data 
 \end{itemize}
 
 
-\section{Conclusion}
+\section{Epilogue}
 The Achilles heel of formal verification is specification; formal methods are only as effective at verification as their specifications are at describing the essential properties to verify. Yet, specification remains the biggest bottleneck to the use of formal methods~\cite{Roz16}. \ltl\ is one of the most popular specification logics for industrial-scale critical systems; in the space domain alone, it is currently encapsulating specifications for the development of the NASA Lunar Gateway~\cite{DBR21,DBR23}, the Air Force Research Laboratory/Collins Aerospace Spacecraft Collision Avoidance system~\cite{HDWF21}, Space Systems Finland's Attitude and Orbit Control Systems (AOCS)~\cite{ILLTV13}, and NASA/JPL's Europa Lander Mission Concept~\cite{CDRWRWL22} just to name a few.
  %
 Yet the humans that need to use formal verification tools and deeply understand their results struggle to validate that \ltl\ formulas capture the specifications they are meant to capture. A major contributor to \ltl's popularity is the propensity of humans to think of requirements in terms of timelines. This inspired the creation of \ltl\ in the first place, as a logic that ``intuitively'' represents timelines. Our work serves to reinforce that connection, enabling visualization of most realistic \ltl\ formulas as timelines. By releasing \tool, we contribute to better validation capabilities for \ltl\ specifications and aid the effort to make formal verification more accessible and wide-spread.
