@@ -206,7 +206,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \end{remark}
 
 \begin{definition}[$\omega$-regular expression]\label{def:omega-regex}
-    Regular expression concerns only finite-length strings. However, since \ltl\ formulas reason about events that happen over an infinite-length timeline, we need to model it using infinite regular expressions (i.e. $\omega$-regular expression). $\omega$-regular expression is defined by the following grammar:
+    Regular expression concerns only finite-length strings. However, since \ltl\ formulas reason about events that happen over an infinite-length timeline, we need to model it using infinite regular expressions (i.e., $\omega$-regular expression). $\omega$-regular expression is defined by the following grammar:
     \begin{align*}
         B ::= A^{\omega} \mid AB \mid B + B
     \end{align*}
@@ -402,7 +402,7 @@ On a high level, our algorithm of converting \ltl\ formulas into timeline visual
 \end{figure*}
 
 \subsection{LTL to BA} \label{ltl2aut}
-The automata-theoretic approach~\cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e. reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as~\cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from \ltl\ formulas to \Buchi automata.
+The automata-theoretic approach~\cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e., reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as~\cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from \ltl\ formulas to \Buchi automata.
 
 \subsection{BA to $\omega$-regex} \label{aut2regex}
 We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in the digraph of the automaton.
@@ -434,7 +434,7 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
         % WHile there exists any edge except r_sf
         \While{ there exists an interior vertex $v$ }
             \State reduce\_nfa($G, v$)
-            \State combine multi-edges, i.e. $r1 : u \to w, r2 : u \to w$  to $r1 | r2 : u \to w$
+            \State combine multi-edges, i.e., $r1 : u \to w, r2 : u \to w$  to $r1 | r2 : u \to w$
         \EndWhile
         \State \Return $(r_\mathrm{ss}| r_\mathrm{sf} r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$
         % if called by first visit, this is r_\mathrm{ss}* r_\mathrm{sf}
@@ -1355,11 +1355,11 @@ which comes with two command-line tools, \texttt{ltl2regex} and \tool. The speci
 The set of \ltl\ formulas we used to evaluate our tool in \cref{sec:playing} can be found \href{https://github.com/EULIR/ltl-explainability/tree/main/ltl-formulas}{here}.
 
 \section{Discussion}
-Based on our results, we propose the following questions for discussions and future works:
+Based on our results, we propose the following questions for discussions and future work:
 \begin{itemize}
-    \item Can there be more simplifications methods as described in Section~\ref{regex-simplify}? The answer is definitely positive. On one hand, more rule-based simplifications can be discovered by finding more patterns in the generated $\omega$-regular expressions. On the other hand, other simplification are possible: for example, if the generated $\omega$-regular expression is $r_1 + r_2$ where $r_1, r_2$ are not syntactically equivalent (or equivalent up to algebraic rules) $\omega$-regular expressions, but they accepts the same set of infinite-length strings, then we can simplify this down to just $r_1$. This reduce the problem to equivalence test on $\omega$-regular expressions, which is decidable. In the similar vein, many more simplifications can be used, but the question is how efficient are they? In the end, one have to balance trade-off between the efficiency of the tool and the simplicity of the result.
+    \item Can there be more simplifications methods as described in Section~\ref{regex-simplify}? The answer is definitely positive. On one hand, more rule-based simplifications can be discovered by finding more patterns in the generated $\omega$-regular expressions. On the other hand, other simplification are possible: for example, if the generated $\omega$-regular expression is $r_1 + r_2$ where $r_1, r_2$ are not syntactically equivalent (or equivalent up to algebraic rules) $\omega$-regular expressions, but they accept the same set of infinite-length strings, then we can simplify this down to just $r_1$. This reduces the problem to equivalence test on $\omega$-regular expressions, which is decidable. In a similar vein, many more simplifications may apply, but the question is how \empu{useful} are they? In the end, we have to balance the efficiency, simplicity, and understandabillity of the visualization.
     %\item Our tool is effective at translating a wide range of LTL formulas. Even with LTL formulae with complex nesting structure are represented by relatively readable timeline visualizations.
-    \item Can we define timeline more formally so that one can do this process reversely (i.e. a tool that converts timeline representation to its corresponding \ltl\ formula)? That would be a very useful tool in practice. However, a direct reverse of the algorithm we presented in this paper may not be viable.
+    \item Can we define timeline more formally so that one can do this process reversely (i.e., a tool that converts timeline representation to its corresponding \ltl\ formula)? That would be a very useful tool in practice. However, a direct reverse of the algorithm we presented in this paper may not be viable.
 \end{itemize}
 
 Going forward, it will become important to conduct a user survey to gather data from a representative audience of system engineers regarding what timeline visualizations help most with formula validation. Specifically, we list the following questions regarding the intuitive aesthetics of timelines.
