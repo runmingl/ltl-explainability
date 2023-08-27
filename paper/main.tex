@@ -23,6 +23,7 @@
 \usepackage[strings]{underscore} % fixes doi underscores
 \usepackage{hyperref} % brings up so many errors
 \usepackage[capitalise, noabbrev]{cleveref}
+\usepackage{mathrsfs} %for mathscr
 
 \newcommand{\AP}{\mathcal{AP}}
 \newcommand{\always}{\Box}
@@ -46,6 +47,10 @@
 \newcommand{\tool}{\texttt{ltl2timeline}}
 
 \newcommand{\tllen}{\text{tllen}}
+
+\renewcommand{\phi}{\varphi}
+
+\renewcommand{\L}{\mathscr{L}}
 
 \tikzset{
     partial ellipse/.style args={#1:#2:#3}{
@@ -132,77 +137,78 @@ We make the following contributions in our paper:
 \begin{itemize}
     \item We provide the tool, \tool, which takes \ltl\ formulas and synthesizes timeline visualizations for them.
     \item We prove correctness in \cref{sec:analysis}. We show that for every \ltl\ formula, the timeline outputted indeed represents the set of satisfying traces.
-    \item We showcase the results of our tool on a range of example formulas in \cref{sec:tool-showcase} and \cref{sec:playing}, including discussing the air traffic control example above.
+    \item We showcase the results of our tool on a range of example formulas from real-life industrial verification efforts in \cref{sec:tool-showcase} and \cref{sec:playing}, including discussing the air traffic control example above.
 \end{itemize}
 
 \section{Setting the stage}
 
 We begin by setting up the prerequisite definitions involved in our work.
-First, we provide the definition and semantics for \ltl. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFAs) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines.
+First, we provide the definition and semantics for \ltl. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFA) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines.
 
 \subsection{Linear Temporal Logic (\ltl)} \label{sec:ltl}
 
 \begin{definition}[Linear Temporal Logic (\ltl)]
     % cite Kristin's survey paper
-    The syntax of an \ltl\ formula over a set of atomic propositions $\AP$, where $p\in\AP$ is a propositional variable, is given by the following grammar:
+    The syntax of an \ltl\ formula over a set of atomic propositions $\AP$, where $p\in\AP$ is a propositional variable, consists of the following grammar:
     \begin{align*}
-        \varphi ::= & p \mid \neg \varphi \mid \varphi \land \varphi \mid \varphi \lor \varphi \mid \varphi \limplies \varphi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \varphi \mid \varphi \weakrelease \varphi
+        \varphi ::= & p \mid \neg \varphi \mid \varphi \land \psi \mid \varphi \lor \psi \mid \varphi \limplies \psi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \psi \mid \varphi \weakrelease \psi
     \end{align*}\label{ltl-defn}
 \end{definition}
 
 \begin{remark}
-    Intuitively, $\always \varphi$ says that formula $\varphi$ is true at every time step; $\eventually \varphi$ says that formula $\varphi$ is true either now or at sometime in the future time step; and $\nextt \varphi$ says formula $\varphi$ is true at the next time step immediately after the current one; $\varphi \stronguntil \Psi$ says that formula $\varphi$ is true \textit{until} such time formula $\Psi$ becomes true; $\varphi \weakrelease \Psi$ says that formula $\Psi$ must be true now and remain true until formula $\varphi$ becomes true, after which point \textit{release} $\Psi$ (if formula $\varphi$ is never true, then formula $\Psi$ must remain true at all time).
+    Intuitively, $\always \varphi$ says that formula $\varphi$ is true at every time step; $\eventually \varphi$ says that formula $\varphi$ is true either now or at some time in the future; $\nextt \varphi$ says formula $\varphi$ is true at the next time step immediately after the current one; $\varphi \stronguntil \psi$ says that formula $\varphi$ is true \textit{until} (strictly before) such time formula $\psi$ becomes true (and $\psi$ is either true now or in the future); and $\varphi \weakrelease \psi$ says that formula $\psi$ must be true now and remain true unless formula $\varphi$ becomes true, after which point we can \textit{release} $\psi$ (if formula $\phi$ is never true, then formula $\psi$ must remain true at all times).
 \end{remark}
 
 \begin{remark}
-    The tool we provide in this paper uses a set of concrete syntax to represent those logical connectives, in order to avoid the difficulty of typesetting connectives such as $\always$ and $\eventually$. The concrete syntax is defined in~\ref{sec:concrete-syntax}.
+    The \tool tool uses a concrete input syntax of ASCII symbols to represent those logical connectives, in order to simplify typesetting connectives such as $\always$ and $\eventually$. For reference, the concrete syntax appears in Appendix ~\ref{sec:concrete-syntax}.
 \end{remark}
 
-\begin{definition}[Semantics of \ltl\ formula]
-    The semantics of \ltl\ formula is defined via  $\pi, i \models \varphi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from Rozier~\cite{Roz11}.
+\begin{definition}[Semantics of \ltl\ ]
+    Let $\pi : \omega \rightarrow 2^{\AP}$ be a \emph{computation} or trace that stores the truthhood and falsehood of every atomic proposition at every time step, where $\omega$ is the set of natural numbers that label the time step.
+    Then we say $\pi, i \models \varphi$, that is, computation $\pi$ starting from time $i \in \omega$ models LTL formula $\phi$ whenever the result of this evaluation satisfies $\phi$; see Rozier~\cite{Roz11} for the full LTL semantics. 
 \end{definition}
 
 \subsection{State-based \Buchi automata (BA)}
 \begin{definition}[$\omega$-word]
-    An $\omega$-word or infinite run of $\Sigma$, is an infinite string $s = (s_0, s_1, s_2, \dots)$ where each $s_i\in \Sigma$
+    Let $\Sigma$ be an alphabet. An $\omega$-word or infinite run of $\Sigma$, is an infinite string $s = (s_0, s_1, s_2, \dots)$ where each $s_i\in \Sigma$.
 \end{definition}
 \begin{definition}[\Buchi automaton]
-    A \Buchi automaton is a $5$-tuple, $G = (Q, \Sigma, \delta, s, F)$ consisting of
+    A \Buchi automaton is a $5$-tuple, $B = (Q, \Sigma, \delta, s, F)$ consisting of
     \begin{enumerate}
         \item a finite set of states $Q$
-        \item a finite alphabet of input symbols called the alphabet $\Sigma$
-        \item a relation $\delta \subseteq (Q\times \Sigma) \times Q$, called the transition relation
+        \item a finite alphabet of input symbols $\Sigma$
+        \item a transition relation $\delta \subseteq (Q\times \Sigma) \times Q$
         \item an initial or start state called $s\in Q$
         \item a set of accepting states $F \subseteq Q$
     \end{enumerate}
-    $G$ accepts an infinite run iff at least one of its infinitely visited states is in $F$
+    $B$ accepts an infinite run iff at least one of its infinitely visited states is in $F$.
 \end{definition}
 
-\subsection{$\omega$-regular expression}
+\subsection{$\omega$-regular expressions}
 \begin{definition}[Regular expression]\label{def:regex}
-    For symbol $a \in \Sigma$, regular expression is defined by the following grammar:
+    Let $a$ be a symbol in $\Sigma$, $A$ be a regular expression, and $\epsilon$ be the empty expression. We define regular expressions using the following grammar:
     \begin{align*}
         A ::= \emptyset \mid \epsilon \mid a \mid AA \mid A + A \mid A^*
     \end{align*}
 \end{definition}
-\begin{definition}[Semantics of regular expression]
-    Let $L(A)$ denote the set of propositional formulas accepted by regular expression $A$. Then $L(A)$ is inductively defined as
+\begin{definition}[Semantics of regular expressions]
+    Let $\L(A)$ denote the set of propositional formulas accepted by regular expression $A$, also called the language accepted by $A$. We define $\L(A)$, inductively as:
     \begin{align*}
-        L(\emptyset) & = \emptyset \\
-        L(\epsilon) & = \{\epsilon\} \tag{$\epsilon$ denotes the empty string}\\
-        L(a) & = \{a\} \\
-        L(A_1A_2) & = \{s_1s_2 \mid s_1 \in L(A_1) \text{ and } s_2 \in L(A_2)\} \\
-        L(A_1 + A_2) & = L(A_1) \cup L(A_2) \\
-        L^{(0)}(A) & = \{\epsilon\} \\
-        L^{(i + 1)}(A) & = \{s_1s_2 \mid s_1 \in L(A) \text{ and } s_2 \in L^{(i)}(A)\} \\\
-        L(A^*) & = \bigcup_{i \ge 0} L^{(i)}(A)
+        \L(\emptyset) & = \emptyset \\
+        \L(\epsilon) & = \{\epsilon\} \tag{$\epsilon$ denotes the empty string}\\
+        \L(a) & = \{a\} \\
+        \L(A_1A_2) & = \{s_1s_2 \mid s_1 \in L(A_1) \text{ and } s_2 \in L(A_2)\} \\
+        \L(A_1 + A_2) & = L(A_1) \cup L(A_2) \\
+        \L^{(0)}(A) & = \{\epsilon\} \\
+        \L^{(i + 1)}(A) & = \{s_1s_2 \mid s_1 \in L(A) \text{ and } s_2 \in L^{(i)}(A)\} \\\
+        \L(A^*) & = \bigcup_{i \ge 0} L^{(i)}(A)
     \end{align*}
 \end{definition}
 
 \begin{remark}
-    For the purpose of our tool, $\Sigma$ is the set of propositional logic formulas defined as
+    For the purpose of our tool, we define $\Sigma$ as the set of propositional logic formulas:
     \[
-    \Psi ::= p \mid \top \mid \bot \mid \neg \Psi \mid \Psi \land \Psi \mid \Psi \lor \Psi \mid \Psi \limplies \Psi
+    a \in \Sigma ::= p \mid \top \mid \bot \mid \neg \phi \mid \phi \land \psi \mid \phi \lor \psi \mid \phi \limplies \psi
     \]
 \end{remark}
 
@@ -230,7 +236,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 We present timelines as graphic visualizations. It contains the following features:
 \begin{itemize}
     \item Every timeline starts with a node named ``start''.
-    \item Every node represents one time step, and each node has a propositional logic formula $\Psi$, which specifies the behavior of atomic propositions at that time step. The formula $\Psi$ must be true at that time step. If $\Psi = 1$, that means all atomic propositions can behave arbitrarily.
+    \item Every node represents one time step, and each node has a propositional logic formula $\psi$, which specifies the behavior of atomic propositions at that time step. The formula $\psi$ must be true at that time step. If $\psi = 1$, that means all atomic propositions can behave arbitrarily.
     \item A node in egg shape with a caption ``repeats $0$ - $\infty$'' means to repeat the (one time step) current node for arbitrarily finitely many times.
     \item A node with label ``$\cdots$'' means to repeat the pattern prior to it and after it arbitrarily finitely many times.
     \item The grey box means repeat infinitely. Once we reach the end of a timeline in the grey box, we must reenter the same grey box from any of its (left) starting points.
@@ -1408,22 +1414,22 @@ This work was partially supported by the National Science Foundation (NSF) under
 \section{Concrete Syntax of \tool} \label{sec:concrete-syntax}
 Recall from~\ref{ltl-defn} that we define an \ltl\ formula as
 \begin{align*}
-    \varphi ::= & p \mid \neg \varphi \mid \varphi \land \varphi \mid \varphi \lor \varphi \mid \varphi \limplies \varphi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \varphi \mid \varphi \weakrelease \varphi
+    \varphi ::= & p \mid \neg \varphi \mid \varphi \land \psi \mid \varphi \lor \psi \mid \varphi \limplies \psi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \psi \mid \varphi \weakrelease \psi
 \end{align*}
-where $p \in \AP$. In our tool \tool, we use the following concrete syntax to represent \ltl\ formulas.
+where $p \in \AP$ and $\varphi$ and $\psi$ are LTL formulas. In our tool \tool, we use the following concrete input syntax to represent \ltl\ formulas in ASCII text.
 \[
     \begin{array}{c r l l l@{\qquad} l}
          &      & \textit{abstract syntax}              & \textit{concrete syntax}                       & \textit{description} \\
     \varphi & ::=  & p                                     & \texttt{p}                                     & \text{atomic prop.} \\
          & \mid & \neg \varphi                             & \texttt{!} \varphi                                & \text{negation} \\
-         & \mid & \varphi \land \varphi                       & \varphi \texttt{ \& } \varphi                        & \text{conjunction} \\
-         & \mid & \varphi \lor \varphi                        & \varphi \texttt{ | } \varphi                         & \text{disjunction} \\
-         & \mid & \varphi \limplies \varphi                   & \varphi \texttt{ -> } \varphi                        & \text{implication} \\
+         & \mid & \varphi \land \psi                       & \varphi \texttt{ \& } \psi                        & \text{conjunction} \\
+         & \mid & \varphi \lor \psi                        & \varphi \texttt{ | } \psi                         & \text{disjunction} \\
+         & \mid & \varphi \limplies \psi                   & \varphi \texttt{ -> } \psi                        & \text{implication} \\
          & \mid & \always \varphi                          & \texttt{G} \varphi                                & \text{globally} \\
-         & \mid & \eventually \varphi                      & \texttt{F} \varphi                                & \text{finally} \\
+         & \mid & \eventually \varphi                      & \texttt{F} \varphi                                & \text{in the future} \\
          & \mid & \nextt \varphi                           & \texttt{X} \varphi                                & \text{next} \\
-         & \mid & \varphi \stronguntil \varphi                & \varphi \texttt{ U } \varphi                         & \text{until} \\
-         & \mid & \varphi \weakrelease \varphi                & \varphi \texttt{ R } \varphi                         & \text{release} \\
+         & \mid & \varphi \stronguntil \psi                & \varphi \texttt{ U } \psi                         & \text{until} \\
+         & \mid & \varphi \weakrelease \psi                & \varphi \texttt{ R } \psi                         & \text{release} \\
     \end{array}
 \]
 %\nocite{*}
