@@ -1358,7 +1358,7 @@ The set of \ltl\ formulas we used to evaluate our tool in \cref{sec:playing} can
 Based on our results, we propose the following questions for discussions and future work:
 \begin{itemize}
     \item Can there be more simplifications methods as described in Section~\ref{regex-simplify}? The answer is definitely positive. On one hand, more rule-based simplifications can be discovered by finding more patterns in the generated $\omega$-regular expressions. On the other hand, other simplification are possible: for example, if the generated $\omega$-regular expression is $r_1 + r_2$ where $r_1, r_2$ are not syntactically equivalent (or equivalent up to algebraic rules) $\omega$-regular expressions, but they accept the same set of infinite-length strings, then we can simplify this down to just $r_1$. This reduces the problem to equivalence test on $\omega$-regular expressions, which is decidable. In a similar vein, many more simplifications may apply, but the question is how \emph{useful} are they? In the end, we have to balance the efficiency, simplicity, and understandabillity of the visualization.
-    %\item Our tool is effective at translating a wide range of LTL formulas. Even with LTL formulae with complex nesting structure are represented by relatively readable timeline visualizations.
+    %\item Our tool is effective at translating a wide range of LTL formulas. Even with LTL formulas with complex nesting structure are represented by relatively readable timeline visualizations.
     \item Can we define timelines more formally so that one can do this process reversely (i.e., a tool that converts timeline representation to its corresponding \ltl\ formula)? That would be very useful in practice. However, a direct reverse of the algorithm we presented in this paper may not be viable.
 \end{itemize}
 
@@ -1392,7 +1392,7 @@ Recall from~\ref{ltl-defn} that we define an \ltl\ formula as
 \begin{align*}
     \varphi ::= & p \mid \neg \varphi \mid \varphi \land \varphi \mid \varphi \lor \varphi \mid \varphi \limplies \varphi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \varphi \mid \varphi \weakrelease \varphi
 \end{align*}
-where $p \in \AP$. In our tool \tool, we use the following concrete syntax to represent \ltl\ formulae.
+where $p \in \AP$. In our tool \tool, we use the following concrete syntax to represent \ltl\ formulas.
 \[
     \begin{array}{c r l l l@{\qquad} l}
          &      & \textit{abstract syntax}              & \textit{concrete syntax}                       & \textit{description} \\
