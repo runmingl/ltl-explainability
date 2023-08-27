@@ -42,7 +42,8 @@
 \newcommand{\weakrelease}{\hspace{0.1cm} \mathcal{R} \hspace{0.1cm}}
 \newcommand{\liff}{\leftrightarrow}
 
-\newcommand{\tool}{\hspace{0.1cm}\texttt{ltl2timeline}\hspace{0.1cm}}
+%\newcommand{\tool}{\hspace{0.1cm}\texttt{ltl2timeline}\hspace{0.1cm}}
+\newcommand{\tool}{\hspace{0.1cm}\texttt{ltl2timeline}}
 
 \newcommand{\tllen}{\text{tllen}}
 
@@ -55,26 +56,26 @@
 \begin{document}
 
 
-\title{What's in a Name? Linear Temporal Logic Literally Represents Time Lines}
+\title{What's in a Name? \\ Linear Temporal Logic \\ Literally Represents Time Lines}
 
 \author{\IEEEauthorblockN{Runming Li\IEEEauthorrefmark{1}}
 \IEEEauthorblockA{\textit{Carnegie Mellon University}\\
-Pittsburgh, USA \\
+Pittsburgh, PA, USA \\
 runmingl@andrew.cmu.edu}
 \and
 \IEEEauthorblockN{Keerthana Gurushankar\IEEEauthorrefmark{1}}
 \IEEEauthorblockA{\textit{Carnegie Mellon University}\\
-Pittsburgh, USA \\
+Pittsburgh, PA, USA \\
 kgurusha@andrew.cmu.edu}
 \and
 \IEEEauthorblockN{Marijn~J.H.~Heule}
 \IEEEauthorblockA{\textit{Carnegie Mellon University}\\
-Pittsburgh, USA \\
+Pittsburgh, PA, USA \\
 marijn@cmu.edu}
 \and
 \IEEEauthorblockN{Kristin~Y.~Rozier}
 \IEEEauthorblockA{\textit{Iowa State University} \\
-Ames, USA \\
+Ames, IA, USA \\
 kyrozier@iastate.edu}
 }
 
@@ -134,12 +135,12 @@ First, we provide the definition and semantics for \ltl. In the following subsec
     % cite Kristin's survey paper
     The syntax of an \ltl\ formula over a set of atomic propositions $\AP$, where $p\in\AP$ is a propositional variable, is given by the following grammar:
     \begin{align*}
-        \Phi ::= & p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \\ & \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
+        \varphi ::= & p \mid \neg \varphi \mid \varphi \land \varphi \mid \varphi \lor \varphi \mid \varphi \limplies \varphi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \varphi \mid \varphi \weakrelease \varphi
     \end{align*}\label{ltl-defn}
 \end{definition}
 
 \begin{remark}
-    Intuitively, $\always \Phi$ says that formula $\Phi$ is true at every time step; $\eventually \Phi$ says that formula $\Phi$ is true either now or at sometime in the future time step; and $\nextt \Phi$ says formula $\Phi$ is true at the next time step immediately after the current one; $\Phi \stronguntil \Psi$ says that formula $\Phi$ is true \textit{until} such time formula $\Psi$ becomes true; $\Phi \weakrelease \Psi$ says that formula $\Psi$ must be true now and remain true until formula $\Phi$ becomes true, after which point \textit{release} $\Psi$ (if formula $\Phi$ is never true, then formula $\Psi$ must remain true at all time).
+    Intuitively, $\always \varphi$ says that formula $\varphi$ is true at every time step; $\eventually \varphi$ says that formula $\varphi$ is true either now or at sometime in the future time step; and $\nextt \varphi$ says formula $\varphi$ is true at the next time step immediately after the current one; $\varphi \stronguntil \Psi$ says that formula $\varphi$ is true \textit{until} such time formula $\Psi$ becomes true; $\varphi \weakrelease \Psi$ says that formula $\Psi$ must be true now and remain true until formula $\varphi$ becomes true, after which point \textit{release} $\Psi$ (if formula $\varphi$ is never true, then formula $\Psi$ must remain true at all time).
 \end{remark}
 
 \begin{remark}
@@ -147,7 +148,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \end{remark}
 
 \begin{definition}[Semantics of \ltl\ formula]
-    The semantics of \ltl\ formula is defined via  $\pi, i \models \Phi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from Rozier~\cite{Roz11}.
+    The semantics of \ltl\ formula is defined via  $\pi, i \models \varphi$ where $\pi : \omega \rightarrow 2^{\AP}$ is the computation that stores the truthhood and falsehood of every atomic proposition at every time step, and $\omega$ is the set of natural numbers that denote the time step. The semantics follows exactly from Rozier~\cite{Roz11}.
 \end{definition}
 
 \subsection{State-based \Buchi automata (BA)}
@@ -476,7 +477,7 @@ Here we show a demonstrating subset of the simplification rules we encoded. In t
 These simplification rules lead to more intuitive representation of timelines. Here we demonstrate their effects using an example.
 
 \begin{example}
-    Using our algorithm, the \ltl\ formula $\Phi = \always (a \limplies \eventually (\neg a))$ generates the un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and the simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which correspond to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
+    Using our algorithm, the \ltl\ formula $\varphi = \always (a \limplies \eventually (\neg a))$ generates the un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and the simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which correspond to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
     \begin{figure*}[h!]
         \centering
                 \resizebox{\textwidth}{!}{
@@ -681,7 +682,7 @@ These simplification rules lead to more intuitive representation of timelines. H
 \end{example}
 
 \begin{remark}
-    Both simplified and un-simplified $\omega$-regular expressions would generate correct timeline representations. Correct as they faithfully represent the set of satisfying traces of the original \ltl\ formula $\Phi$. Nonetheless, we, as human users, oftentimes find the simplified version more intuitive to reason about.
+    Both simplified and un-simplified $\omega$-regular expressions would generate correct timeline representations. Correct as they faithfully represent the set of satisfying traces of the original \ltl\ formula $\varphi$. Nonetheless, we, as human users, oftentimes find the simplified version more intuitive to reason about.
 \end{remark}
 
 \subsection{$\omega$-regex to timeline} \label{regex2timeline}
@@ -1304,9 +1305,9 @@ We run \texttt{ltl2regex} on these $91$ examples, the tool completes execution (
 
 \begin{figure}[h!]
     \centering
-    \subfloat{{\includegraphics[width=6.5cm]{img/tllens-graph.png} }}%
+    \subfloat{{\includegraphics[width=0.49\textwidth]{img/tllens-graph.png} }}%
     \quad % [\centering label 1]
-    \subfloat{{\includegraphics[width=6.5cm]{img/star-height-graph.png}}}
+    \subfloat{{\includegraphics[width=0.49\textwidth]{img/star-height-graph.png}}}
     \caption{Visualization complexity metrics for formulas collected from Acacia~\cite{RV10} and NASA's  AAC~\cite{GCMTR16}}
     \label{fig:real-world}
 \end{figure}
@@ -1318,7 +1319,7 @@ In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which poin
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=6.5cm]{img/binary.png}
+    \includegraphics[width=0.49\textwidth]{img/binary.png}
     \caption{Scalability measured with binary counter examples from Rozier and Vardi~\cite{RV10}}
     \label{fig:scalability}
 \end{figure}
@@ -1377,24 +1378,24 @@ This work was partially supported by the National Science Foundation (NSF) under
 
 \appendix
 \section{Concrete Syntax of \tool} \label{sec:concrete-syntax}
-Recall from~\ref{ltl-defn} that we define \ltl\ formula as
+Recall from~\ref{ltl-defn} that we define an \ltl\ formula as
 \begin{align*}
-    \Phi ::= & p \mid \neg \Phi \mid \Phi \land \Phi \mid \Phi \lor \Phi \mid \Phi \limplies \Phi \mid \always \Phi \mid \eventually \Phi \mid \nextt \Phi \\ & \mid \Phi \stronguntil \Phi \mid \Phi \weakrelease \Phi
+    \varphi ::= & p \mid \neg \varphi \mid \varphi \land \varphi \mid \varphi \lor \varphi \mid \varphi \limplies \varphi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \varphi \mid \varphi \weakrelease \varphi
 \end{align*}
 where $p \in \AP$. In our tool \tool, we use the following concrete syntax to represent \ltl\ formulae.
 \[
     \begin{array}{c r l l l@{\qquad} l}
          &      & \textit{abstract syntax}              & \textit{concrete syntax}                       & \textit{description} \\
-    \Phi & ::=  & p                                     & \texttt{p}                                     & \text{atomic prop.} \\
-         & \mid & \neg \Phi                             & \texttt{!} \Phi                                & \text{negation} \\
-         & \mid & \Phi \land \Phi                       & \Phi \texttt{ \& } \Phi                        & \text{conjunction} \\
-         & \mid & \Phi \lor \Phi                        & \Phi \texttt{ | } \Phi                         & \text{disjunction} \\
-         & \mid & \Phi \limplies \Phi                   & \Phi \texttt{ -> } \Phi                        & \text{implication} \\
-         & \mid & \always \Phi                          & \texttt{G} \Phi                                & \text{globally} \\
-         & \mid & \eventually \Phi                      & \texttt{F} \Phi                                & \text{finally} \\
-         & \mid & \nextt \Phi                           & \texttt{X} \Phi                                & \text{next} \\
-         & \mid & \Phi \stronguntil \Phi                & \Phi \texttt{ U } \Phi                         & \text{until} \\
-         & \mid & \Phi \weakrelease \Phi                & \Phi \texttt{ R } \Phi                         & \text{release} \\
+    \varphi & ::=  & p                                     & \texttt{p}                                     & \text{atomic prop.} \\
+         & \mid & \neg \varphi                             & \texttt{!} \varphi                                & \text{negation} \\
+         & \mid & \varphi \land \varphi                       & \varphi \texttt{ \& } \varphi                        & \text{conjunction} \\
+         & \mid & \varphi \lor \varphi                        & \varphi \texttt{ | } \varphi                         & \text{disjunction} \\
+         & \mid & \varphi \limplies \varphi                   & \varphi \texttt{ -> } \varphi                        & \text{implication} \\
+         & \mid & \always \varphi                          & \texttt{G} \varphi                                & \text{globally} \\
+         & \mid & \eventually \varphi                      & \texttt{F} \varphi                                & \text{finally} \\
+         & \mid & \nextt \varphi                           & \texttt{X} \varphi                                & \text{next} \\
+         & \mid & \varphi \stronguntil \varphi                & \varphi \texttt{ U } \varphi                         & \text{until} \\
+         & \mid & \varphi \weakrelease \varphi                & \varphi \texttt{ R } \varphi                         & \text{release} \\
     \end{array}
 \]
 %\nocite{*}
