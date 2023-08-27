@@ -151,7 +151,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
     % cite Kristin's survey paper
     The syntax of an \ltl\ formula over a set of atomic propositions $\AP$, where $p\in\AP$ is a propositional variable, consists of the following grammar:
     \begin{align*}
-        \varphi ::= & p \mid \neg \varphi \mid \varphi \land \psi \mid \varphi \lor \psi \mid \varphi \limplies \psi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \psi \mid \varphi \weakrelease \psi
+        \varphi = & p \mid \neg \varphi \mid \varphi \land \psi \mid \varphi \lor \psi \mid \varphi \limplies \psi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \psi \mid \varphi \weakrelease \psi
     \end{align*}\label{ltl-defn}
 \end{definition}
 
@@ -172,8 +172,8 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \begin{definition}[$\omega$-word]
     Let $\Sigma$ be an alphabet. An $\omega$-word or infinite run of $\Sigma$, is an infinite string $s = (s_0, s_1, s_2, \dots)$ where each $s_i\in \Sigma$.
 \end{definition}
-\begin{definition}[\Buchi automaton]
-    A \Buchi automaton is a $5$-tuple, $B = (Q, \Sigma, \delta, s, F)$ consisting of
+\begin{definition}[\Buchi automaton (BA)]
+    A \Buchi automaton is a $5$-tuple, $(Q, \Sigma, \delta, s, F)$ consisting of
     \begin{enumerate}
         \item a finite set of states $Q$
         \item a finite alphabet of input symbols $\Sigma$
@@ -181,14 +181,14 @@ First, we provide the definition and semantics for \ltl. In the following subsec
         \item an initial or start state called $s\in Q$
         \item a set of accepting states $F \subseteq Q$
     \end{enumerate}
-    $B$ accepts an infinite run iff at least one of its infinitely visited states is in $F$.
+    A BA accepts an infinite run iff at least one of its infinitely visited states is in $F$.
 \end{definition}
 
 \subsection{$\omega$-regular expressions}
 \begin{definition}[Regular expression]\label{def:regex}
     Let $a$ be a symbol in $\Sigma$, $A$ be a regular expression, and $\epsilon$ be the empty expression. We define regular expressions using the following grammar:
     \begin{align*}
-        A ::= \emptyset \mid \epsilon \mid a \mid AA \mid A + A \mid A^*
+        A = \emptyset \mid \epsilon \mid a \mid AA \mid A + A \mid A^*
     \end{align*}
 \end{definition}
 \begin{definition}[Semantics of regular expressions]
@@ -208,23 +208,23 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \begin{remark}
     For the purpose of our tool, we define $\Sigma$ as the set of propositional logic formulas:
     \[
-    a \in \Sigma ::= p \mid \top \mid \bot \mid \neg \phi \mid \phi \land \psi \mid \phi \lor \psi \mid \phi \limplies \psi
+    a \in \Sigma = p \mid \top \mid \bot \mid \neg \phi \mid \phi \land \psi \mid \phi \lor \psi \mid \phi \limplies \psi
     \]
 \end{remark}
 
-\begin{definition}[$\omega$-regular expression]\label{def:omega-regex}
-    Regular expression concerns only finite-length strings. However, since \ltl\ formulas reason about events that happen over an infinite-length timeline, we need to model it using infinite regular expressions (i.e., $\omega$-regular expression). $\omega$-regular expression is defined by the following grammar:
+\begin{definition}[$\omega$-regular expressions]\label{def:omega-regex}
+    Our definition \ref{def:regex} of regular expressions concerns only finite-length strings. However, since \ltl\ formulas reason about events that happen over an infinite-length timeline, we need to model them using infinite regular expressions (i.e., $\omega$-regular expressions), which we define via the following grammar:
     \begin{align*}
-        B ::= A^{\omega} \mid AB \mid B + B
+        B = A^{\omega} \mid AB \mid B + B
     \end{align*}
 \end{definition}
-\begin{definition}[Semantics of $\omega$-regular expression]\label{def:omega-semantics}
-    Let $\Sigma^{\omega}$ denote the set of infinite-length strings over fixed alphabet $\Sigma$. Let $L_{\omega}(B)$ denote the $\omega$-language accepted by $\omega$-regular expression $B$. Then $L_{\omega}(B)$ is inductively defined as
+\begin{definition}[Semantics of $\omega$-regular expressions]\label{def:omega-semantics}
+    Let $\Sigma^{\omega}$ denote the set of infinite-length strings over fixed alphabet $\Sigma$. Let $\L_{\omega}(B)$ denote the $\omega$-language accepted by $\omega$-regular expression $B$. Then $\L_{\omega}(B)$ is inductively defined as
     \begin{align*}
-        L_{\omega}(A^{\omega}) & = \{s_1s_2s_3\cdots \mid s_i \in L(A) \text{ and } i \ge 1\} \tag{$\epsilon
-         \not\in L(A)$} \\
-        L_{\omega}(AB) & = \{s_1s_2 \mid s_1 \in L(A) \text{ and } s_2 \in L_{\omega}(B)\} \\
-        L_{\omega}(B_1 + B_2) &= L_{\omega}(B_1) \cup L_{\omega}(B_2)
+        \L_{\omega}(A^{\omega}) & = \{s_1s_2s_3\cdots \mid s_i \in \L(A) \text{ and } i \ge 1\} \tag{$\epsilon
+         \not\in \L(A)$} \\
+        \L_{\omega}(AB) & = \{s_1s_2 \mid s_1 \in \L(A) \text{ and } s_2 \in \L_{\omega}(B)\} \\
+        \L_{\omega}(B_1 + B_2) &= \L_{\omega}(B_1) \cup \L_{\omega}(B_2)
     \end{align*}
 \end{definition}
 
@@ -710,7 +710,7 @@ Our tool uses Graphviz~\cite{Ellson2001GraphvizO} to achieve the timeline visual
 \[
     A_1A_2^{\omega} + A_3A_4^{\omega} + \cdots + A_{2n-1}A_{2n}^{\omega}
 \]
-where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsilon \not\in L(A_{2i})$. At a high level, for each of regular expression $A_i$, we visualize it as a set of accepted input. We view each union operator as parallel timelines, and each $A_{2i-1}$ is concatenated with $A_{2i}$ repeated infinitely many times, as represented in the grey box. \cref{fig:timeline} presents a generic timeline resulting from this form of construction.
+where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsilon \not\in \L(A_{2i})$. At a high level, for each of regular expression $A_i$, we visualize it as a set of accepted input. We view each union operator as parallel timelines, and each $A_{2i-1}$ is concatenated with $A_{2i}$ repeated infinitely many times, as represented in the grey box. \cref{fig:timeline} presents a generic timeline resulting from this form of construction.
 \begin{figure}[h!]
     \centering
     \begin{tikzpicture}
@@ -775,11 +775,11 @@ We prove the correctness of our translation pipeline. The correctness of the tra
     For any NFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{nfa2regex\_firstvisit}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$, visiting $f$ for the first time.
 \end{lemma}
 \begin{proof}
-    Let $G'$ be $G$ with all out-edge (including loops) from $f$ deleted. We claim that $L(G')$ is equal to the language $L'$ of all paths from $s$ reaching $f$ for the first time.
+    Let $G'$ be $G$ with all out-edge (including loops) from $f$ deleted. We claim that $\L(G')$ is equal to the language $\L'$ of all paths from $s$ reaching $f$ for the first time.
 
-    First we show $L(G') \subseteq L'$, i.e., every path accepted by $G'$ starts in $s$ and ends by reaching $f$ for the first time. Since $s$ and $f$ are the initial and final states of $G'$ respectively, clearly every path accepted by $G$ must start in $s$ and end in $f$. Further, as $f$ has no out-edges in $G$, any accepted path must end immediately once it reaches $f$. Thus it must end once it reaches $f$ for the first time.
+    First we show $\L(G') \subseteq \L'$, i.e., every path accepted by $G'$ starts in $s$ and ends by reaching $f$ for the first time. Since $s$ and $f$ are the initial and final states of $G'$ respectively, clearly every path accepted by $G$ must start in $s$ and end in $f$. Further, as $f$ has no out-edges in $G$, any accepted path must end immediately once it reaches $f$. Thus it must end once it reaches $f$ for the first time.
 
-    Also, we show $L' \subseteq L(G')$, i.e., every path starting in $s$ and ending by $f$ reaching $f$ for the first time is accepted by $G'$. If a path contains an out-edge of $f$, it cannot be in $L'$ as the trace continues beyond the first time step at $f$. Thus, every trace in $L'$ only uses edges in $G'$, and is thus accepted by $G$ iff it is accepted by $G'$.
+    Also, we show $\L' \subseteq \L(G')$, i.e., every path starting in $s$ and ending by $f$ reaching $f$ for the first time is accepted by $G'$. If a path contains an out-edge of $f$, it cannot be in $\L'$ as the trace continues beyond the first time step at $f$. Thus, every trace in $\L'$ only uses edges in $G'$, and is thus accepted by $G$ iff it is accepted by $G'$.
 \end{proof}
 
 \begin{theorem}
@@ -788,11 +788,11 @@ We prove the correctness of our translation pipeline. The correctness of the tra
 \begin{proof}
     We show that
     \[
-        L = \bigcup_{f\in F} \textbf{nfa2regex}(G, s, f) \verb|^| \left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega
+        \L = \bigcup_{f\in F} \textbf{nfa2regex}(G, s, f) \verb|^| \left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega
     \]
-    and the $\omega$-language accepted by $G$, $L_\omega(G)$ are identical.
+    and the $\omega$-language accepted by $G$, $\L_\omega(G)$ are identical.
 
-    First, $L\subseteq L_\omega(G)$ since for every infinite run in $L$, clearly by definition of $L$, there is some $f\in F$ such that passes through $f$ infinitely often. The converse is true as well: for every infinite run $q_0, q_1, \dots$ accepted by $G$, then $q_0 = s$ and by definition of the accepting language, there is some accepting state $f$, passed through infinitely often, thus the run is in $\textbf{nfa2regex}(G, s, f)$ \verb|^| $\left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega$
+    First, $\L\subseteq \L_\omega(G)$ since for every infinite run in $\L$, clearly by definition of $\L$, there is some $f\in F$ such that passes through $f$ infinitely often. The converse is true as well: for every infinite run $q_0, q_1, \dots$ accepted by $G$, then $q_0 = s$ and by definition of the accepting language, there is some accepting state $f$, passed through infinitely often, thus the run is in $\textbf{nfa2regex}(G, s, f)$ \verb|^| $\left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega$
 \end{proof}
 \subsection{Correctness of Rewrite Rules}
 \begin{lemma}
@@ -1414,13 +1414,13 @@ This work was partially supported by the National Science Foundation (NSF) under
 \section{Concrete Syntax of \tool} \label{sec:concrete-syntax}
 Recall from~\ref{ltl-defn} that we define an \ltl\ formula as
 \begin{align*}
-    \varphi ::= & p \mid \neg \varphi \mid \varphi \land \psi \mid \varphi \lor \psi \mid \varphi \limplies \psi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \psi \mid \varphi \weakrelease \psi
+    \varphi = & p \mid \neg \varphi \mid \varphi \land \psi \mid \varphi \lor \psi \mid \varphi \limplies \psi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \psi \mid \varphi \weakrelease \psi
 \end{align*}
 where $p \in \AP$ and $\varphi$ and $\psi$ are LTL formulas. In our tool \tool, we use the following concrete input syntax to represent \ltl\ formulas in ASCII text.
 \[
     \begin{array}{c r l l l@{\qquad} l}
          &      & \textit{abstract syntax}              & \textit{concrete syntax}                       & \textit{description} \\
-    \varphi & ::=  & p                                     & \texttt{p}                                     & \text{atomic prop.} \\
+    \varphi & =  & p                                     & \texttt{p}                                     & \text{atomic prop.} \\
          & \mid & \neg \varphi                             & \texttt{!} \varphi                                & \text{negation} \\
          & \mid & \varphi \land \psi                       & \varphi \texttt{ \& } \psi                        & \text{conjunction} \\
          & \mid & \varphi \lor \psi                        & \varphi \texttt{ | } \psi                         & \text{disjunction} \\
