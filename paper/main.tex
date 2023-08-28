@@ -836,19 +836,19 @@ Inductively, we show how to construct each form of regular and $\omega$-regular 
 \begingroup\renewcommand\thefootnote{\textsection}
 \footnotetext{William Shakespeare, \emph{King John}}
 \endgroup
-To demonstrate the result of our tool, we present three examples, one from a real-world model checking example from Zhao and Rozier~\cite{ZR14}, one from a randomly generated \ltl\ formula, and one specifically demonstrates the use of our tool in specification verification.
+To demonstrate using \tool, we present three examples, one from a real-world model checking exercise from Zhao and Rozier~\cite{ZR14}, one from a randomly generated \ltl\ formula, and one that specifically shows the applicability of \tool\ to specification validation.
 
 \begin{example} \label{example:air}
-    Zhao and Rozier~\cite{ZR14} presents a model verification specification says ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft'' which corresponds to \ltl\ formula
+    Zhao and Rozier~\cite{ZR14} presents a model verification specification, ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft,'' which corresponds to the \ltl\ formula
     \begin{align*}
-        \always & (\texttt{tsafe.TSAFE\_command1} \land  \\ & \texttt{controller.CTR\_control\_1} \\
+        \always & (\texttt{tsafe.TSAFE\_command1} \land  \\ & \texttt{controller.CTR\_control\_1}. \\
         \limplies & \nextt (\neg \texttt{controller.CTR\_control\_1}))
     \end{align*}
     For simplicity, we swap the concrete atomic proposition to $a,b$ and get
     \[
-        \always (a \land b \limplies \nextt (\neg b))
+        \always (a \land b \limplies \nextt (\neg b)).
     \]
-    For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex14}.
+    For this \ltl\ formula, \tool\ generates the timeline representation in \cref{fig:ex14}.
     \begin{figure*}[h!]
         \centering
         \resizebox{\textwidth}{!}{
@@ -1012,7 +1012,7 @@ To demonstrate the result of our tool, we present three examples, one from a rea
 \end{example}
 
 \begin{example}
-    Spot~\cite{SPOT-online} presents command-line tool for random \ltl\ formula generator \texttt{randltl}~\cite{duret.13.atva}. The following \ltl\ formula is generated from this tool.
+    SPOT~\cite{SPOT-online} includes a command-line tool for random \ltl\ formula generation called \texttt{randltl}~\cite{duret.13.atva}. We used it to generate the following \ltl\ formula.
     \[
     p_2 \land (\eventually \always p_0 \stronguntil \nextt(\always p_1 \land (((p_0 \limplies p_2) \land (p_2 \limplies p_0)) \stronguntil \eventually p_0)))
     \]
@@ -1165,16 +1165,16 @@ To demonstrate the result of our tool, we present three examples, one from a rea
     \end{figure*}
 \end{example}
 \begin{remark}
-    These two examples show that our tool can generate reasonably clear diagrams for both real-world formula and randomly generated formula.
+    These two examples show that our tool can generate reasonably intuitive diagrams for both real-world and randomly-generated formulas.
 \end{remark}
 
 \begin{example}
-  Suppose we have a specification ``$p$ oscillates every time step''. It is common to come up with the following two \ltl\ formulas to describe this specification.
+  Suppose we have the specification ``$p$ oscillates every time step.'' Human specifiers often write one of the following two \ltl\ formulas to describe this specification.
   \begin{itemize}
     \item $\always ((p \land \nextt (\lnot p)) \lor ((\lnot p) \land \nextt p))$
     \item $\always ((p \land \nextt (\lnot p)) \land ((\lnot p) \land \nextt p))$
   \end{itemize}
-  It may be hard, without rigorous analysis, to distinguish which one is correct for the specification. However, our tool can generate the following two timelines for these two formulas as shown in \cref{fig:oscillates1,fig:oscillates2}, which clearly show the first formula is correct and the second formula is equivalent to $\bot$.
+  It may be hard, without rigorous analysis, to distinguish which one faithfully represents the specification. However, \tool\ generates the two timelines for these two formulas shown in \cref{fig:oscillates1,fig:oscillates2}, which clearly show the first formula is correct and the second formula is equivalent to $\bot$.
 \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[>=latex',line join=bevel,scale=0.6, transform shape]
@@ -1279,7 +1279,7 @@ To demonstrate the result of our tool, we present three examples, one from a rea
 
 \section{Playing it out} \label{sec:playing}%KYR: may swap order with the next section on artifact availability?
 
-We quantify the usability and performance of \tool by compiling an extensive set of \ltl\ formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of real-life \ltl\ formulas over those metrics.
+We quantify the usability and performance of \tool\ by compiling an extensive set of \ltl\ formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of real-life \ltl\ formulas over those metrics.
 % We release the set of real-life \ltl\ formulas as a benchmark set for the research community.
 Our experimental evaluation conclusively demonstrates that \tool scales to provide helpful visualizations of \ltl\ formulas written by humans.
 
