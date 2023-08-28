@@ -780,7 +780,7 @@ We prove the correctness of our translation pipeline. The correctness of the tra
 
     First we show $\L(G') \subseteq \L'$, i.e., every path accepted by $G'$ starts in $s$ and ends by reaching $f$ for the first time. Since $s$ and $f$ are the initial and final states of $G'$ respectively, clearly every path accepted by $G$ must start in $s$ and end in $f$. Further, as $f$ has no out-edges in $G$, any accepted path must end immediately once it reaches $f$. Thus it must end once it reaches $f$ for the first time.
 
-    Also, we show $\L' \subseteq \L(G')$, i.e., every path starting in $s$ and ending by $f$ reaching $f$ for the first time %KYR: FIX!
+    Also, we show $\L' \subseteq \L(G')$, i.e., every path starting in $s$ and ending by reaching $f$ for the first time
     is accepted by $G'$. If a path contains an out-edge of $f$, it cannot be in $\L'$ as the trace continues beyond the first time step at $f$. Thus, every trace in $\L'$ only uses edges in $G'$, and is thus accepted by $G$ iff it is accepted by $G'$.
 \end{proof}
 
@@ -790,11 +790,11 @@ We prove the correctness of our translation pipeline. The correctness of the tra
 \begin{proof}
     We show that
     \[
-        \L = \bigcup_{f\in F} \textbf{nfa2regex}(G, s, f) \verb|^| \left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega
+        \L = \bigcup_{f\in F} \textbf{nfa2regex}(G, s, f)  \left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega
     \]
     and the $\omega$-language accepted by $G$, $\L_\omega(G)$ are identical.
 
-    First, $\L\subseteq \L_\omega(G)$ since for every infinite run in $\L$, by definition of $\L$, there is some $f\in F$ such that passes through $f$ infinitely often. The converse is true as well: for every infinite run $q_0, q_1, \dots$ accepted by $G$, then $q_0 = s$ and by definition of the accepting language, there is some accepting state $f$, passed through infinitely often; thus the run is in $\textbf{nfa2regex}(G, s, f)$ \verb|^| $\left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega$.
+    First, $\L\subseteq \L_\omega(G)$ since for every infinite run in $\L$, by definition of $\L$, there is some $f\in F$ such that passes through $f$ infinitely often. The converse is true as well: for every infinite run $q_0, q_1, \dots$ accepted by $G$, then $q_0 = s$ and by definition of the accepting language, there is some accepting state $f$, passed through infinitely often; thus the run is in $\textbf{nfa2regex}(G, s, f)$ $\left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega$.
 \end{proof}
 \subsection{Correctness of Rewrite Rules}
 \begin{lemma}
