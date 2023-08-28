@@ -129,27 +129,27 @@ There has been a recent boom in validation capabilities for the related, but arg
 The common and intuitive technique of validating LTL formulas via sets of positive and negative examples (i.e., demonstrating traces that both satisfy and violate a given LTL formula) is insufficient for understanding and explainability of LTL specification \cite{NR22}.
 Thus, a significant hurdle remains: how can we convincingly demonstrate to the humans in the loop, from system designers to certifiers, that the analyzed formulas truly represent the desired system requirements? % quote MLTL paper?
 
-We take a simple idiomatic approach to address this problem. Since Linear Temporal Logic formulas differentiate temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the \ltl\ formula, and thereby represent the specified behavior in a more natural, human-intelligible form.
+We take a simple idiomatic approach to address this problem. Since Linear Temporal Logic formulas differentiate temporal information, we devise a tool, \tool, which can draw timelines to depict the satisfying traces of the LTL formula, and thereby represent the specified behavior in a more natural, human-intelligible form.
 
-Our tool, \tool, uses a remarkably simple algorithm: transforming an input \ltl\ formula through a sequence of automata and regular expression-based intermediate representations. Yet, it is surprisingly effective at providing small representations for a range of \ltl\ formulas. It visualizes the above air traffic control requirement behavior with the timeline shown in \cref{example:air}.
+Our tool, \tool, uses a remarkably simple algorithm: transforming an input LTL formula through a sequence of automata and regular expression-based intermediate representations. Yet, it is surprisingly effective at providing small representations for a range of LTL formulas. It visualizes the above air traffic control requirement behavior with the timeline shown in \cref{example:air}.
 
 We make the following contributions in our paper:
 \begin{itemize}
-    \item We provide the tool, \tool, which takes \ltl\ formulas and synthesizes timeline visualizations for them.
-    \item We prove correctness in \cref{sec:analysis}. We show that for every \ltl\ formula, the timeline outputted indeed represents the set of satisfying traces.
+    \item We provide the tool, \tool, which takes LTL formulas and synthesizes timeline visualizations for them.
+    \item We prove correctness in \cref{sec:analysis}. We show that for every LTL formula, the timeline outputted indeed represents the set of satisfying traces.
     \item We showcase the results of our tool on a range of example formulas from real-life industrial verification efforts in \cref{sec:tool-showcase} and \cref{sec:playing}, including discussing the air traffic control example above.
 \end{itemize}
 
 \section{Setting the stage}
 
 We begin by setting up the prerequisite definitions involved in our work.
-First, we provide the definition and semantics for \ltl. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFA) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines.
+First, we provide the definition and semantics for LTL. In the following subsections, we define (state-based) \Buchi automata and $\omega$-regular expressions, which are generalizations of the well-known deterministic finite automata (DFA) and regular expressions, for the case of infinite words. Lastly, we describe the graphic visualizations we will use to depict timelines.
 
-\subsection{Linear Temporal Logic (\ltl)} \label{sec:ltl}
+\subsection{Linear Temporal Logic (LTL)} \label{sec:ltl}
 
-\begin{definition}[Linear Temporal Logic (\ltl)]
+\begin{definition}[Linear Temporal Logic (LTL)]
     % cite Kristin's survey paper
-    The syntax of an \ltl\ formula over a set of atomic propositions $\AP$, where $p\in\AP$ is a propositional variable, consists of the following grammar:
+    The syntax of an LTL formula over a set of atomic propositions $\AP$, where $p\in\AP$ is a propositional variable, consists of the following grammar:
     \begin{align*}
         \varphi = & p \mid \neg \varphi \mid \varphi \land \psi \mid \varphi \lor \psi \mid \varphi \limplies \psi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \psi \mid \varphi \weakrelease \psi
     \end{align*}\label{ltl-defn}
@@ -163,9 +163,9 @@ First, we provide the definition and semantics for \ltl. In the following subsec
     The \tool tool uses a concrete input syntax of ASCII symbols to represent those logical connectives, in order to simplify typesetting connectives such as $\always$ and $\eventually$. For reference, the concrete syntax appears in Appendix ~\ref{sec:concrete-syntax}.
 \end{remark}
 
-\begin{definition}[Semantics of \ltl\ ]
+\begin{definition}[Semantics of LTL ]
     Let $\pi : \omega \rightarrow 2^{\AP}$ be a \emph{computation} or trace that stores the truthhood and falsehood of every atomic proposition at every time step, where $\omega$ is the set of natural numbers that label the time step.
-    Then we say $\pi, i \models \varphi$, that is, computation $\pi$ starting from time $i \in \omega$ models LTL formula $\phi$ whenever the result of this evaluation satisfies $\phi$; see Rozier~\cite{Roz11} for the full LTL semantics. 
+    Then we say $\pi, i \models \varphi$, that is, computation $\pi$ starting from time $i \in \omega$ models LTL formula $\phi$ whenever the result of this evaluation satisfies $\phi$; see Rozier~\cite{Roz11} for the full LTL semantics.
 \end{definition}
 
 \subsection{State-based \Buchi automata (BA)}
@@ -213,7 +213,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
 \end{remark}
 
 \begin{definition}[$\omega$-regular expressions]\label{def:omega-regex}
-    Our definition \ref{def:regex} of regular expressions concerns only finite-length strings. However, since \ltl\ formulas reason about events that happen over an infinite-length timeline, we need to model them using infinite regular expressions (i.e., $\omega$-regular expressions), which we define via the following grammar:
+    Our definition \ref{def:regex} of regular expressions concerns only finite-length strings. However, since LTL formulas reason about events that happen over an infinite-length timeline, we need to model them using infinite regular expressions (i.e., $\omega$-regular expressions), which we define via the following grammar:
     \begin{align*}
         B = A^{\omega} \mid AB \mid B + B
     \end{align*}
@@ -243,7 +243,7 @@ We present timelines as graphic visualizations containing the following features
     \item Timelines can occur in parallel, signifying that any of the parallel timelines could happen.
 \end{itemize}
 
-The manifestation of timelines we use here is one of possibly many timeline representations that we devised for the purpose of visualizing \ltl\ formulas. We show how to construct such timelines from \ltl\ formulas in \cref{sec:correctness-timeline}.
+The manifestation of timelines we use here is one of possibly many timeline representations that we devised for the purpose of visualizing LTL formulas. We show how to construct such timelines from LTL formulas in \cref{sec:correctness-timeline}.
 
 \begin{example}
     In \cref{fig:ex2}, one can reason about two parallel timelines: the upper timeline starts with $p$ holding in the first time step, followed by entering the grey box with one step of $\lnot p$ and one step of $p$. Then at the end of the grey box, we reenter the box, with the next time step being $\lnot p$, and so on. The lower timeline starts with one step of $\lnot p$ and one step of $p$ outside the grey box, and then enters the infinite run of $\lnot p$ and $p$ repeating.
@@ -397,9 +397,9 @@ The manifestation of timelines we use here is one of possibly many timeline repr
 \begingroup\renewcommand\thefootnote{\textsection}
 \footnotetext{William Shakespeare, \emph{A Midsummer Night's Dream}}
 \endgroup
-On a high level, our algorithm for converting \ltl\ formulas into timeline visualizations (depicted in \Cref{fig:algo}) works as follows.
+On a high level, our algorithm for converting LTL formulas into timeline visualizations (depicted in \Cref{fig:algo}) works as follows.
 \begin{enumerate}
-    \item Convert the given \ltl\ formula to its corresponding \Buchi automaton. % (as detailed in \cref{ltl2aut})
+    \item Convert the given LTL formula to its corresponding \Buchi automaton. % (as detailed in \cref{ltl2aut})
     \item Derive the $\omega$-regular expression corresponding to the \Buchi automaton. % (in \cref{aut2regex})
     \item Simplify the derived $\omega$-regular expression. (Note that this step represents a stylistic choice balancing size, complexity, and clarity.) % (in \cref{regex-simplify})
     \item Visualize the $\omega$-regular expression as a timeline according to its structure. %(in \cref{regex2timeline})
@@ -412,7 +412,7 @@ On a high level, our algorithm for converting \ltl\ formulas into timeline visua
 \end{figure*}
 
 \subsection{LTL to BA} \label{ltl2aut}
-The automata-theoretic approach~\cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} to evaluating \ltl\ (e.g., via reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied \cite{DGV99,F03,RV10,RV11,Dur14}. Our tool \tool\ uses SPOT~\cite{Dur22}\footnote{We used SPOT version 2.11.} for this step, which provides a provably-correct implementation of the translation from \ltl\ formulas to minimally-sized \Buchi automata.
+The automata-theoretic approach~\cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} to evaluating LTL (e.g., via reducing LTL formulas to their corresponding \Buchi automata) has been well-studied \cite{DGV99,F03,RV10,RV11,Dur14}. Our tool \tool\ uses SPOT~\cite{Dur22}\footnote{We used SPOT version 2.11.} for this step, which provides a provably-correct implementation of the translation from LTL formulas to minimally-sized \Buchi automata.
 
 \subsection{BA to $\omega$-regex} \label{aut2regex}
 We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for satisfying runs $\left(\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega\right)$. Our visualization algorithm finds regular expressions for finite paths by iteratively deleting interior nodes in the digraph of the automaton.
@@ -479,7 +479,7 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 
 The $\omega$-regular expression generated in \cref{aut2regex} may not be the ``simplest'' for the purpose of visualizing the timeline. We have observed multiple patterns in the resulting $\omega$-regular expression that could be simplified. For example, an $\omega$-regular expression of the form of $r^*r^{\omega}$ represents the same timeline as $r^{\omega}$, but the latter is more intuitive and concise. For this purpose, we devised some simplification rules in our tool, based on our observation of common patterns in the generated $\omega$-regular expressions.
 
-There is no agreed-upon canonical form for regular expressions representing \ltl\ formulas, hence we do not hope to find the shortest possible regular expression for visualization. Regular expression simplification comes down to regular expression equivalence checking, which is computationally hard~\cite{MNS04}. For purpose of simplification, one could perform a search over equivalent regular expressions and decide which one is simpler to use. However, this strategy is expensive in terms of the running time, and for the purpose of visualization, we did not use this strategy in our tool. We consider simplification for the purpose of finding the most intuitive regular expression for a given \ltl\ formula to be an interesting direction for future work.
+There is no agreed-upon canonical form for regular expressions representing LTL formulas, hence we do not hope to find the shortest possible regular expression for visualization. Regular expression simplification comes down to regular expression equivalence checking, which is computationally hard~\cite{MNS04}. For purpose of simplification, one could perform a search over equivalent regular expressions and decide which one is simpler to use. However, this strategy is expensive in terms of the running time, and for the purpose of visualization, we did not use this strategy in our tool. We consider simplification for the purpose of finding the most intuitive regular expression for a given LTL formula to be an interesting direction for future work.
 
 \paragraph*{Rule-based simplification}
 Here we show a demonstrating subset of the simplification rules we encoded. In theory one could add more rules to the tool, so long as they are sound; here we only choose to encode the rules that represent common patterns we have observed in the generated $\omega$-regular expressions.
@@ -498,7 +498,7 @@ Here we show a demonstrating subset of the simplification rules we encoded. In t
 These simplification rules lead to more intuitive representations of timelines. Here we demonstrate their effects using an example.
 
 \begin{example}
-    Using our algorithm, the \ltl\ formula $\varphi = \always (a \limplies \eventually (\neg a))$ generates the un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and the simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which correspond to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}, respectively.
+    Using our algorithm, the LTL formula $\varphi = \always (a \limplies \eventually (\neg a))$ generates the un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and the simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which correspond to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}, respectively.
     \begin{figure*}[h!]
         \centering
                 \resizebox{\textwidth}{!}{
@@ -703,7 +703,7 @@ These simplification rules lead to more intuitive representations of timelines. 
 \end{example}
 
 \begin{remark}
-    Both simplified and un-simplified $\omega$-regular expressions could generate correct timeline representations that faithfully represent the set of satisfying traces of the original \ltl\ formula $\varphi$. Nonetheless, we, as human users, oftentimes find the simplified version more intuitive to reason about.
+    Both simplified and un-simplified $\omega$-regular expressions could generate correct timeline representations that faithfully represent the set of satisfying traces of the original LTL formula $\varphi$. Nonetheless, we, as human users, oftentimes find the simplified version more intuitive to reason about.
 \end{remark}
 
 \subsection{$\omega$-regex to timeline} \label{regex2timeline}
@@ -837,10 +837,10 @@ Inductively, we show how to faithfully capture each form of regular and $\omega$
 \begingroup\renewcommand\thefootnote{\textsection}
 \footnotetext{William Shakespeare, \emph{King John}}
 \endgroup
-To demonstrate using \tool, we present three examples, one from a real-world model checking exercise from Zhao and Rozier~\cite{ZR14}, one from a randomly generated \ltl\ formula, and one that specifically shows the applicability of \tool\ to specification validation.
+To demonstrate using \tool, we present three examples, one from a real-world model checking exercise from Zhao and Rozier~\cite{ZR14}, one from a randomly generated LTL formula, and one that specifically shows the applicability of \tool\ to specification validation.
 
 \begin{example} \label{example:air}
-    Zhao and Rozier~\cite{ZR14} presents a model verification specification, ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft,'' which corresponds to the \ltl\ formula
+    Zhao and Rozier~\cite{ZR14} presents a model verification specification, ``[i]f a TSAFE command is sent to an aircraft, controller/AutoResolver should then hand off the control of this aircraft,'' which corresponds to the LTL formula
     \begin{align*}
         \always & (\texttt{tsafe.TSAFE\_command1} \land  \\ & \texttt{controller.CTR\_control\_1}. \\
         \limplies & \nextt (\neg \texttt{controller.CTR\_control\_1}))
@@ -849,7 +849,7 @@ To demonstrate using \tool, we present three examples, one from a real-world mod
     \[
         \always (a \land b \limplies \nextt (\neg b)).
     \]
-    For this \ltl\ formula, \tool\ generates the timeline representation in \cref{fig:ex14}.
+    For this LTL formula, \tool\ generates the timeline representation in \cref{fig:ex14}.
     \begin{figure*}[h!]
         \centering
         \resizebox{\textwidth}{!}{
@@ -1013,11 +1013,11 @@ To demonstrate using \tool, we present three examples, one from a real-world mod
 \end{example}
 
 \begin{example}
-    SPOT~\cite{SPOT-online} includes a command-line tool for random \ltl\ formula generation called \texttt{randltl}~\cite{duret.13.atva}. We used it to generate the following \ltl\ formula.
+    SPOT~\cite{SPOT-online} includes a command-line tool for random LTL formula generation called \texttt{randltl}~\cite{duret.13.atva}. We used it to generate the following LTL formula.
     \[
     p_2 \land (\eventually \always p_0 \stronguntil \nextt(\always p_1 \land (((p_0 \limplies p_2) \land (p_2 \limplies p_0)) \stronguntil \eventually p_0)))
     \]
-    This formula is reasonably complicated, and hard for humans to reason about directly. For this \ltl\ formula, our tool generates the timeline representation in \cref{fig:ex13}.
+    This formula is reasonably complicated, and hard for humans to reason about directly. For this LTL formula, our tool generates the timeline representation in \cref{fig:ex13}.
     \begin{figure*}[h!]
         \centering
         \resizebox{\textwidth}{!}{
@@ -1170,7 +1170,7 @@ To demonstrate using \tool, we present three examples, one from a real-world mod
 \end{remark}
 
 \begin{example}
-  Suppose we have the specification ``$p$ oscillates every time step.'' Human specifiers often write one of the following two \ltl\ formulas to describe this specification.
+  Suppose we have the specification ``$p$ oscillates every time step.'' Human specifiers often write one of the following two LTL formulas to describe this specification.
   \begin{itemize}
     \item $\always ((p \land \nextt (\lnot p)) \lor ((\lnot p) \land \nextt p))$
     \item $\always ((p \land \nextt (\lnot p)) \land ((\lnot p) \land \nextt p))$
@@ -1280,9 +1280,9 @@ To demonstrate using \tool, we present three examples, one from a real-world mod
 
 \section{Playing it out} \label{sec:playing}%KYR: may swap order with the next section on artifact availability?
 
-We quantify the usability and performance of \tool\ by compiling an extensive set of \ltl\ formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of real-life \ltl\ formulas over those metrics.
-% We release the set of real-life \ltl\ formulas as a benchmark set for the research community.
-Our experimental evaluation conclusively demonstrates that \tool\ scales to provide helpful visualizations of \ltl\ formulas written by humans.
+We quantify the usability and performance of \tool\ by compiling an extensive set of LTL formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of real-life LTL formulas over those metrics.
+% We release the set of real-life LTL formulas as a benchmark set for the research community.
+Our experimental evaluation conclusively demonstrates that \tool\ scales to provide helpful visualizations of LTL formulas written by humans.
 
 
 \subsection{Timeline Metrics}
@@ -1313,7 +1313,7 @@ We use timeline length as a proxy for size of our timeline visualization graphs.
 \end{definition}
 
 \begin{definition}[Star height]
-    We define the star height of regular and $\omega$-regular expressions to be the star-nesting depth in the (unsimplified) expression. 
+    We define the star height of regular and $\omega$-regular expressions to be the star-nesting depth in the (unsimplified) expression.
     \begin{align*}
         h(\emptyset) = h(\epsilon) = h(a) &= 0\\
         h(A_1 A_2) = h(A_1 + A_2) &= \max(h(A_1), h(A_2))\\
@@ -1329,11 +1329,11 @@ We use timeline length as a proxy for size of our timeline visualization graphs.
 
 %KYR: Here we nicely show (with pictures as much as possible) all of the individual statistics and results we gathered (note aggregation occurs below).
 %\paragraph{Real-world datasets}
-We study the feasibility of our tool on a benchmark suite of \ltl\ formulas gathered from real world use cases.
+We study the feasibility of our tool on a benchmark suite of LTL formulas gathered from real world use cases.
 %
 We gather a test suite totalling 91 formulas from two real-world requirement specification applications. We take $6$ specifications from NASA's Automated Airspace Concept (AAC)~\cite{GCMTR16}. We also collect formulas from the Acacia suite of examples~\cite{RV10}. We reap $85$ formulas from the suite of $23$ examples, by generating separate visualizations for each line of specification. We choose to visualize each formula individually, rather than visualize a complete set of (conjuncted) specifications, as a complete specification set may describe a large, complex system, and we only target the use case of validating individual formulas. % We choose to visualize each formula specifically, rather than complete specifications, as
 
-We run \texttt{ltl2regex} on these $91$ examples, \tool\ completes execution (with a timeout of $20$s) on $87$ of the 91 input formulas. Within the $87$, two examples have regular expressions of star height $8$ and are intractable to generate graph visualizations of. We are able to generate tractable visualization on the remaining $85$, or over $93\%$ of benchmarks tested. The plots of visualization complexity on these formula are provided below in \cref{fig:real-world}.
+We run \texttt{ltl2regex} on these $91$ examples: $87$ of the $91$ input formulas complete execution within a timeout of $20$s. Within the $87$, two examples have regular expressions of star height $8$ and are intractable to generate graph visualizations of. We are able to generate tractable visualization on the remaining $85$, or over $93\%$ of benchmarks tested. The plots of visualization complexity on these formula are provided below in \cref{fig:real-world}.
 
 
 \begin{figure}[h!]
@@ -1346,9 +1346,9 @@ We run \texttt{ltl2regex} on these $91$ examples, \tool\ completes execution (wi
 \end{figure}
 
 %\paragraph{Scalability}
-{\bf Scalability.} 
+{\bf Scalability.}
 %KYR: FIX!!!
-We measure the scalability of our tool by running it against a set of scalable \ltl\ formulas. We define a scalable \ltl\ formula as one that describes an $n$-bit number using a binary counter, as generated by~\cite{RV10}. As $n$ gets larger, the \ltl\ formula required to encode the $n$-bit counter scales in size. \cref{fig:scalability} shows that the timeline length grows approximately exponentially with the number of bits in the counter, which matches the result in Rozier and Vardi~\cite{RV10}.
+We measure the scalability of our tool by running it against a set of scalable LTL formulas. We define a scalable LTL formula as one that describes an $n$-bit number using a binary counter, as generated by~\cite{RV10}. As $n$ gets larger, the LTL formula required to encode the $n$-bit counter scales in size. \cref{fig:scalability} shows that the timeline length grows approximately exponentially with the number of bits in the counter, which matches the result in Rozier and Vardi~\cite{RV10}.
 
 In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which point it hits the $30$ seconds timeout we set, as the timeline length grows exponentially fast.
 
@@ -1361,7 +1361,7 @@ In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which poin
     \label{fig:scalability}
 \end{figure}
 
-% KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter \ltl\ formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real \ltl\ formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from~\cite{RV10}.
+% KYR: Here we characterize the size of the timeline as a function of the number of bits of a binary counter for each of the four binary counter LTL formulas. The point is that these four are the only (unboundedly) scalable formulas that describe something real (i.e., they describe a binary counter for any number of bits) that have ever been published in the literature. These would throw off our metrics about the set of real LTL formulas if we included them in there. Thus, we analyze them separately, and can define the timeline size as a function of the number of bits for each of the four formulas. We can give an example or two here, such as two pictures of timelines for a 2-bit and a 3-bit counter from two different formulas, one with U's and one with X's; one with carry and one without (such as a 2-bit w/carry X formula and a 3-bit no carry U formula). The scalable counter formulas are from~\cite{RV10}.
 
 
 %\paragraph{Denouement}
@@ -1382,14 +1382,14 @@ The tool we present in this paper is available at
 \]
 which comes with two command-line tools, \texttt{ltl2regex} and \tool. The specific usage of the tool can be found  \href{https://github.com/EULIR/ltl-explainability#usage}{here}.
 
-The set of \ltl\ formulas we used to evaluate our tool in \cref{sec:playing} can be found \href{https://github.com/EULIR/ltl-explainability/tree/main/ltl-formulas}{here}.
+The set of LTL formulas we used to evaluate our tool in \cref{sec:playing} can be found \href{https://github.com/EULIR/ltl-explainability/tree/main/ltl-formulas}{here}.
 
 \section{Denouement}
 Based on our results, we propose the following questions for discussions and future work:
 \begin{itemize}
     \item Can there be more simplification methods as described in Section~\ref{regex-simplify}? The answer is definitely positive. For example, we can add more rule-based simplifications by finding more intuitive patterns in the generated $\omega$-regular expressions. Other simplifications are also possible; for example, if the generated $\omega$-regular expression is $r_1 + r_2$ where $r_1, r_2$ are not syntactically equivalent (or equivalent up to algebraic rules) $\omega$-regular expressions, but they accept the same set of infinite-length strings, then we can simplify this down to just $r_1$. This reduces the problem to equivalence testing on $\omega$-regular expressions, which is decidable. In a similar vein, many more simplifications may apply, but the question is how \emph{useful} are they? In the end, we have to balance the efficiency, simplicity, and understandabillity of each output visualization.
     %\item Our tool is effective at translating a wide range of LTL formulas. Even with LTL formulas with complex nesting structure are represented by relatively readable timeline visualizations.
-    \item Can we define timelines more formally so that one can do this process reversely (i.e., a tool that converts timeline representation to its corresponding \ltl\ formula)? That would be very useful in practice. However, a direct reverse of the algorithm we presented in this paper may not be viable.
+    \item Can we define timelines more formally so that one can do this process reversely (i.e., a tool that converts timeline representation to its corresponding LTL formula)? That would be very useful in practice. However, a direct reverse of the algorithm we presented in this paper may not be viable.
 \end{itemize}
 
 Going forward, it will become important to conduct a user survey to gather data from a representative audience of system engineers regarding what timeline visualizations help most with formula validation. Specifically, we list the following questions regarding the intuitive aesthetics of timelines.
@@ -1405,12 +1405,12 @@ Going forward, it will become important to conduct a user survey to gather data 
 
 
 \section{Epilogue}
-The Achilles heel of formal verification is specification; formal methods are only as effective at verification as their specifications are at describing the essential properties to verify. Yet, specification remains the biggest bottleneck to the use of formal methods~\cite{Roz16}. \ltl\ is one of the most popular specification logics for industrial-scale critical systems; in the space domain alone, it is currently encapsulating specifications for the development of the NASA Lunar Gateway~\cite{DBR21,DBR23}, the Air Force Research Laboratory/Collins Aerospace Spacecraft Collision Avoidance system~\cite{HDWF21}, Space Systems Finland's Attitude and Orbit Control Systems (AOCS)~\cite{ILLTV13}, and NASA/JPL's Europa Lander Mission Concept~\cite{CDRWRWL22} just to name a few.
+The Achilles heel of formal verification is specification; formal methods are only as effective at verification as their specifications are at describing the essential properties to verify. Yet, specification remains the biggest bottleneck to the use of formal methods~\cite{Roz16}. LTL is one of the most popular specification logics for industrial-scale critical systems; in the space domain alone, it is currently encapsulating specifications for the development of the NASA Lunar Gateway~\cite{DBR21,DBR23}, the Air Force Research Laboratory/Collins Aerospace Spacecraft Collision Avoidance system~\cite{HDWF21}, Space Systems Finland's Attitude and Orbit Control Systems (AOCS)~\cite{ILLTV13}, and NASA/JPL's Europa Lander Mission Concept~\cite{CDRWRWL22} just to name a few.
  %
-Yet the humans that need to use formal verification tools and deeply understand their results struggle to validate that \ltl\ formulas capture the specifications they are meant to capture. A major contributor to \ltl's popularity is the propensity of humans to think of requirements in terms of timelines. This inspired the creation of \ltl\ in the first place, as a logic that ``intuitively'' represents timelines. Our work serves to reinforce that connection, enabling visualization of most realistic \ltl\ formulas as timelines. By releasing \tool, we contribute to better validation capabilities for \ltl\ specifications and aid the effort to make formal verification more accessible and wide-spread.
-%We hope that this will assist system designers in formulating error-free specifications and thus improve the effectiveness of verification tools for \ltl.
+Yet the humans that need to use formal verification tools and deeply understand their results struggle to validate that LTL formulas capture the specifications they are meant to capture. A major contributor to LTL's popularity is the propensity of humans to think of requirements in terms of timelines. This inspired the creation of LTL in the first place, as a logic that ``intuitively'' represents timelines. Our work serves to reinforce that connection, enabling visualization of most realistic LTL formulas as timelines. By releasing \tool, we contribute to better validation capabilities for LTL specifications and aid the effort to make formal verification more accessible and wide-spread.
+%We hope that this will assist system designers in formulating error-free specifications and thus improve the effectiveness of verification tools for LTL.
 
-Future extensions of this work include optimizations to the algorithm and implementation to improve performance and scalability. While we have chosen visual elements that succinctly represent timelines, it would be informative to conduct a study on different possible visualizations and which of the many ways of representing different timeline elements humans find most intuitive. It is possible that factors of context, such as the type of requirement an \ltl\ formula describes, change its optimal timeline representation.
+Future extensions of this work include optimizations to the algorithm and implementation to improve performance and scalability. While we have chosen visual elements that succinctly represent timelines, it would be informative to conduct a study on different possible visualizations and which of the many ways of representing different timeline elements humans find most intuitive. It is possible that factors of context, such as the type of requirement an LTL formula describes, change its optimal timeline representation.
 
 \section*{Acknowledgements}
 
@@ -1418,11 +1418,11 @@ This work was partially supported by the National Science Foundation (NSF) under
 
 \appendix
 \section{Concrete Syntax of \tool} \label{sec:concrete-syntax}
-Recall from~\ref{ltl-defn} that we define an \ltl\ formula as
+Recall from~\ref{ltl-defn} that we define an LTL formula as
 \begin{align*}
     \varphi = & p \mid \neg \varphi \mid \varphi \land \psi \mid \varphi \lor \psi \mid \varphi \limplies \psi \mid \always \varphi \mid \eventually \varphi \mid \nextt \varphi \\ & \mid \varphi \stronguntil \psi \mid \varphi \weakrelease \psi
 \end{align*}
-where $p \in \AP$ and $\varphi$ and $\psi$ are LTL formulas. In our tool \tool, we use the following concrete input syntax to represent \ltl\ formulas in ASCII text.
+where $p \in \AP$ and $\varphi$ and $\psi$ are LTL formulas. In our tool \tool, we use the following concrete input syntax to represent LTL formulas in ASCII text.
 \[
     \begin{array}{c r l l l@{\qquad} l}
          &      & \textit{abstract syntax}              & \textit{concrete syntax}                       & \textit{description} \\
@@ -1448,9 +1448,9 @@ where $p \in \AP$ and $\varphi$ and $\psi$ are LTL formulas. In our tool \tool, 
 
 \subsection{Set of Real LTL Formulas}
 
-We collect the \ltl\ formulas from a covering set of publicly-available case studies that use \ltl\ in the analysis of real-life safety-critical systems. As some formulas are redundant (i.e., common properties occur in many different case studies), it is not necessary to include every paper that has ever used \ltl\ in a real setting; we instead opt for the largest and most unique formulas to cover the space of realistic use of \ltl.
+We collect the LTL formulas from a covering set of publicly-available case studies that use LTL in the analysis of real-life safety-critical systems. As some formulas are redundant (i.e., common properties occur in many different case studies), it is not necessary to include every paper that has ever used LTL in a real setting; we instead opt for the largest and most unique formulas to cover the space of realistic use of LTL.
 
-Given the tremendous popularity of \ltl\ as a specification language for industrial analysis, surprisingly few real-life system analysis case studies publicly release their \ltl\ formula specifications, largely to protect proprietary system information. We purposely avoid using the random or machine-generated formulas from published benchmarks because the purpose of \tool is helping humans understand and validate \ltl\ formulas. Thus, we gather an extensive, representative set of formulas humans have written or needed to understand. Our \ltl\ formula collection is as follows.
+Given the tremendous popularity of LTL as a specification language for industrial analysis, surprisingly few real-life system analysis case studies publicly release their LTL formula specifications, largely to protect proprietary system information. We purposely avoid using the random or machine-generated formulas from published benchmarks because the purpose of \tool is helping humans understand and validate LTL formulas. Thus, we gather an extensive, representative set of formulas humans have written or needed to understand. Our LTL formula collection is as follows.
 
 \noindent
 \begin{table}[h]
