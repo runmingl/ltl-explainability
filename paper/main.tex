@@ -1296,8 +1296,8 @@ We use timeline length as a proxy for size of our timeline visualization graphs.
 \begin{definition}[Timeline Length]
     We define the timeline length of a regular expression $\tllen(A)$ recursively as follows.
     \begin{align*}
-        \tllen(\emptyset)   &= -\infty\\  %KYR:FIX!!!
-        \tllen(\epsilon)        &= 0\\
+        \tllen(\emptyset)   & \quad \text{undefined} \\
+        \tllen(\epsilon)    &= 0\\
         \tllen(a)           &= 1\\
         \tllen(A_1 A_2)     &= \tllen(A_1) + \tllen(A_2)\\
         \tllen(A_1 + A_2)   &= \max(\tllen(A_1), \tllen(A_2))\\
