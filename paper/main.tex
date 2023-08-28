@@ -160,10 +160,10 @@ First, we provide the definition and semantics for LTL. In the following subsect
 \end{remark}
 
 \begin{remark}
-    The \tool tool uses a concrete input syntax of ASCII symbols to represent those logical connectives, in order to simplify typesetting connectives such as $\always$ and $\eventually$. For reference, the concrete syntax appears in Appendix ~\ref{sec:concrete-syntax}.
+    The \tool\ tool uses a concrete input syntax of ASCII symbols to represent those logical connectives, in order to simplify typesetting connectives such as $\always$ and $\eventually$. For reference, the concrete syntax appears in Appendix ~\ref{sec:concrete-syntax}.
 \end{remark}
 
-\begin{definition}[Semantics of LTL ]
+\begin{definition}[Semantics of LTL]
     Let $\pi : \omega \rightarrow 2^{\AP}$ be a \emph{computation} or trace that stores the truthhood and falsehood of every atomic proposition at every time step, where $\omega$ is the set of natural numbers that label the time step.
     Then we say $\pi, i \models \varphi$, that is, computation $\pi$ starting from time $i \in \omega$ models LTL formula $\phi$ whenever the result of this evaluation satisfies $\phi$; see Rozier~\cite{Roz11} for the full LTL semantics.
 \end{definition}
