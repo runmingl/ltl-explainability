@@ -1281,7 +1281,7 @@ To demonstrate using \tool, we present three examples, one from a real-world mod
 
 We quantify the usability and performance of \tool\ by compiling an extensive set of \ltl\ formulas used in the analysis of real-life systems, defining timeline metrics, and characterizing the result of visualizing the set of real-life \ltl\ formulas over those metrics.
 % We release the set of real-life \ltl\ formulas as a benchmark set for the research community.
-Our experimental evaluation conclusively demonstrates that \tool scales to provide helpful visualizations of \ltl\ formulas written by humans.
+Our experimental evaluation conclusively demonstrates that \tool\ scales to provide helpful visualizations of \ltl\ formulas written by humans.
 
 
 \subsection{Timeline Metrics}
@@ -1290,11 +1290,10 @@ Our experimental evaluation conclusively demonstrates that \tool scales to provi
 %KYR: Define size, length, height, complexity, etc. here.
 
 We use two measures of complexity for timeline visualizations: timeline length and star height.
-
-We use timeline length, defined below, to capture the length of our timeline visualization graphs. Since Kleene stars are the trickiest operator to depict in timelines, we also use star height, a well-studied measure for the structural complexity of regular expressions, to measure the complexity of our visualizations.
+We use timeline length as a proxy for size of our timeline visualization graphs. Since Kleene stars are the trickiest operator to depict in timelines, we also use star height, a well-studied measure for the structural complexity of regular expressions, to measure the complexity of our visualizations.
 
 \begin{definition}[Timeline Length]
-    We define the timeline length of a regular expression $\tllen(A)$ recursively as follows
+    We define the timeline length of a regular expression $\tllen(A)$ recursively as follows.
     \begin{align*}
         \tllen(\emptyset)   &= -\infty\\
         \tllen(\epsilon)        &= 0\\
@@ -1303,17 +1302,17 @@ We use timeline length, defined below, to capture the length of our timeline vis
         \tllen(A_1 + A_2)   &= \max(\tllen(A_1), \tllen(A_2))\\
         \tllen(A^*)         &= \tllen(A)
     \end{align*}
-    We also extend this definition to $\omega$-regular expressions as follows
+    We also extend this definition to $\omega$-regular expressions as follows.
     \begin{align*}
         \tllen(A^\omega)    &= \tllen(A)\\
         \tllen(AB)          &= \tllen(A) + \tllen(B)\\
         \tllen(B_1 + B_2)   &= \max(\tllen(B_1), \tllen(B_2))
     \end{align*}
-    This quantity $\tllen$ captures the length of the longest path in our timeline graph visualization.
+    Then $\tllen$ captures the length of the longest path in our timeline graph visualization.
 \end{definition}
 
 \begin{definition}[Star height]
-    We define the star height of regular and $\omega$-regular expressions to be the star-nesting depth in the (unsimplified) expression. Namely,
+    We define the star height of regular and $\omega$-regular expressions to be the star-nesting depth in the (unsimplified) expression. 
     \begin{align*}
         h(\emptyset) = h(\epsilon) = h(a) &= 0\\
         h(A_1 A_2) = h(A_1 + A_2) &= \max(h(A_1), h(A_2))\\
@@ -1328,11 +1327,12 @@ We use timeline length, defined below, to capture the length of our timeline vis
 \subsection{Experimental Analysis} %We could come up with a less-generic name for this, which would be nicer...
 
 %KYR: Here we nicely show (with pictures as much as possible) all of the individual statistics and results we gathered (note aggregation occurs below).
-\paragraph{Real-world datasets} We study the feasibility of our tool on a benchmark suite of \ltl\ formulas gathered from real world use cases.
+%\paragraph{Real-world datasets}
+We study the feasibility of our tool on a benchmark suite of \ltl\ formulas gathered from real world use cases.
+%
+We gather a test suite totalling 91 formulas from two real-world requirement specification applications. We take $6$ specifications from NASA's Automated Airspace Concept (AAC)~\cite{GCMTR16}. We also collect formulas from the Acacia suite of examples~\cite{RV10}. We reap $85$ formulas from the suite of $23$ examples, by generating separate visualizations for each line of specification. We choose to visualize each formula individually, rather than visualize a complete set of (conjuncted) specifications, as a complete specification set may describe a large, complex system, and we only target the use case of validating individual formulas. % We choose to visualize each formula specifically, rather than complete specifications, as
 
-We gather a test suite of 91 formulas used in real-world requirement specification. We take $6$ specifications from NASA's Automated Airspace Concept (AAC)~\cite{GCMTR16}. We also collect formulas from the Acacia suite of examples~\cite{RV10}. We reap $85$ formulas from the suite of $23$ examples, by generating separate visualizations for each line of specification. We choose to visualize each formula specifically, rather than complete specifications, as complete specifications may describe large complex systems, and we only intend the use case of validating individual specification formulas. % We choose to visualize each formula specifically, rather than complete specifications, as
-
-We run \texttt{ltl2regex} on these $91$ examples, the tool completes execution (within timeout of $20$s) on $87$. Within the $87$, two examples have regular expressions of star height $8$ and are intractable to generate graph visualizations of. We are able to generate tractable visualization on the remaining $85$, or over $93\%$ of benchmarks tested. The plots of visualization complexity on these formula are provided below in \cref{fig:real-world}.
+We run \texttt{ltl2regex} on these $91$ examples, \tool\ completes execution (with a timeout of $20$s) on $87$ of the 91 input formulas. Within the $87$, two examples have regular expressions of star height $8$ and are intractable to generate graph visualizations of. We are able to generate tractable visualization on the remaining $85$, or over $93\%$ of benchmarks tested. The plots of visualization complexity on these formula are provided below in \cref{fig:real-world}.
 
 
 \begin{figure}[h!]
@@ -1344,10 +1344,14 @@ We run \texttt{ltl2regex} on these $91$ examples, the tool completes execution (
     \label{fig:real-world}
 \end{figure}
 
-\paragraph{Scalability}
-We measure the scalability of our tool by running it against a set of scalable \ltl\ formulas. We define a scalable \ltl\ formula as one that describes an $n$-bit number using a binary counter~\cite{RV10}. As $n$ gets larger, the \ltl\ formula used to encode the $n$-bit counter scales in size, but it remains practical. The result is shown in \cref{fig:scalability}. In this analysis, the timeline length grows approximately exponentially with the number of bits in the counter, which matches the result in Rozier and Vardi~\cite{RV10}.
+%\paragraph{Scalability}
+{\bf Scalability.} 
+%KYR: FIX!!!
+We measure the scalability of our tool by running it against a set of scalable \ltl\ formulas. We define a scalable \ltl\ formula as one that describes an $n$-bit number using a binary counter, as generated by~\cite{RV10}. As $n$ gets larger, the \ltl\ formula required to encode the $n$-bit counter scales in size. \cref{fig:scalability} shows that the timeline length grows approximately exponentially with the number of bits in the counter, which matches the result in Rozier and Vardi~\cite{RV10}.
 
 In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which point it hits the $30$ seconds timeout we set, as the timeline length grows exponentially fast.
+
+%KYR: FIX: is timeout 20 seconds or 30 seconds?!?!?
 
 \begin{figure}[h!]
     \centering
