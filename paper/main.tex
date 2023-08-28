@@ -746,10 +746,10 @@ We prove the correctness of our translation pipeline. The correctness of the tra
 \subsection{Correctness of Regex Translation}
 \begin{lemma}
     % reduce_nfa does its input to output behaviour
-    For any NFA $G$ and any state $v$ in $G$ that is neither a start state or a final state, \textbf{reduce\_nfa}$(G, v)$ preserves the regular language accepted by $G$
+    For any NFA $G$ and any state $v$ in $G$ that is neither a start state or a final state, \textbf{reduce\_nfa}$(G, v)$ preserves the regular language accepted by $G$.
 \end{lemma}
 \begin{proof}
-    Let $G'$ be the graph of $G$ post reduction by the application of \textbf{reduce\_nfa}$(G, v)$. We show that the trace of every path accepted by $G$ is also accepted by $G'$. Suppose a path accepted by $G$ does not pass through $v$, clearly this is true. Else, suppose it passes through $v$, since $v$ is an interior node, $v$ cannot be the first or last in the path. Thus, for every pass through $v$, let $u\neq v$ be the last node passed before entering $v$, and likewise $w$ be the first node after exiting $v$. We show that the regular language of sub-traces from $u$ to $w$ in $G$ (shown in \cref{fig:uvw-dfa}) is identical to that in $G'$.
+    Let $G'$ be the graph of $G$ post reduction by the application of \textbf{reduce\_nfa}$(G, v)$. We show that the trace of every path accepted by $G$ is also accepted by $G'$. Suppose a path accepted by $G$ does not pass through $v$, clearly the lemma holds. Otherwise, suppose the path passes through $v$; since $v$ is an interior node, $v$ cannot be the first or last in the path. Thus, for every pass through $v$, let $u\neq v$ be the last node passed before entering $v$, and likewise $w$ be the first node after exiting $v$. We show that the regular language of sub-traces from $u$ to $w$ in $G$ (shown in \cref{fig:uvw-dfa}) is identical to that in $G'$.
     \begin{figure}[h!]
         \centering
         \begin{tikzpicture}
@@ -762,29 +762,30 @@ We prove the correctness of our translation pipeline. The correctness of the tra
         \caption{A path from $u$ to $w$ in $G$.}
         \label{fig:uvw-dfa}
     \end{figure}
-    Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_{uv}}v\xrightarrow{r_{vw}}w$, with the trace $r=r_{uv}r_{vw}$. If there is a loop edge $r_{vv}$, this edge can be traveled any number of times before exiting $v$, thus the regular expression is $r=r_{uv}r_{vv}^*r_{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
+    Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_{uv}}v\xrightarrow{r_{vw}}w$, with the trace $r=r_{uv}r_{vw}$. If there is a loop edge $r_{vv}$, this edge can be traveled any number of times before exiting $v$, thus the regular expression is $r=r_{uv}r_{vv}^*r_{vw}$. This edge $u\xrightarrow{r}w$ was added to $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
 \end{proof}
 
 \begin{lemma}
-    For any NFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{nfa2regex}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$ (i.e., the language accepted by $G$)
+    For any NFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{nfa2regex}$(G, s, f)$ outputs the regular expression capturing all paths from $s$ to $f$ (i.e., $\L(G)$, the language accepted by $G$).
 \end{lemma}
 \begin{proof}
-    The while loop clearly terminates since the number of interior nodes is strictly decreasing, and upon termination, $G$ is an NFA containing only the nodes $s$ and $f$. Now, every non-terminal visit from $s$ to $f$ and back to $s$, can be replaced by an edge $s\xrightarrow{r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs}} s$, instead of the edge $f\to s$. This NFA yields the regular language $(r_\mathrm{ss}|r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$, as outputted by the algorithm.
+    The {\bf while} loop clearly terminates since the number of interior nodes is strictly decreasing, and upon termination, $G$ is an NFA containing only the nodes $s$ and $f$. Now, every non-terminal visit from $s$ to $f$ and back to $s$, can be replaced by an edge $s\xrightarrow{r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs}} s$, instead of the edge $f\to s$. This NFA yields the regular language $(r_\mathrm{ss}|r_\mathrm{sf}r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$, as produced by the algorithm.
 \end{proof}
 
 \begin{lemma}
     For any NFA $G$ with start state $s$ and (exactly one) final state $f$, \textbf{nfa2regex\_firstvisit}$(G, s, f)$ outputs the regular expression of all paths from $s$ to $f$, visiting $f$ for the first time.
 \end{lemma}
 \begin{proof}
-    Let $G'$ be $G$ with all out-edge (including loops) from $f$ deleted. We claim that $\L(G')$ is equal to the language $\L'$ of all paths from $s$ reaching $f$ for the first time.
+    Let $G'$ be $G$ with all out-edges (including loops) from $f$ deleted. We claim that $\L(G')$ is equal to the language $\L'$ of all paths from $s$ reaching $f$ for the first time.
 
     First we show $\L(G') \subseteq \L'$, i.e., every path accepted by $G'$ starts in $s$ and ends by reaching $f$ for the first time. Since $s$ and $f$ are the initial and final states of $G'$ respectively, clearly every path accepted by $G$ must start in $s$ and end in $f$. Further, as $f$ has no out-edges in $G$, any accepted path must end immediately once it reaches $f$. Thus it must end once it reaches $f$ for the first time.
 
-    Also, we show $\L' \subseteq \L(G')$, i.e., every path starting in $s$ and ending by $f$ reaching $f$ for the first time is accepted by $G'$. If a path contains an out-edge of $f$, it cannot be in $\L'$ as the trace continues beyond the first time step at $f$. Thus, every trace in $\L'$ only uses edges in $G'$, and is thus accepted by $G$ iff it is accepted by $G'$.
+    Also, we show $\L' \subseteq \L(G')$, i.e., every path starting in $s$ and ending by $f$ reaching $f$ for the first time %KYR: FIX!
+    is accepted by $G'$. If a path contains an out-edge of $f$, it cannot be in $\L'$ as the trace continues beyond the first time step at $f$. Thus, every trace in $\L'$ only uses edges in $G'$, and is thus accepted by $G$ iff it is accepted by $G'$.
 \end{proof}
 
 \begin{theorem}
-    For any \Buchi automaton $G$ with start state $s$ and final states $F$, \textbf{ba2wregex}$(G)$ outputs the $\omega$-regular language accepted by $G$
+    For any \Buchi automaton $G$ with start state $s$ and final states $F$, \textbf{ba2wregex}$(G)$ outputs the $\omega$-regular language accepted by $G$.
 \end{theorem}
 \begin{proof}
     We show that
@@ -793,7 +794,7 @@ We prove the correctness of our translation pipeline. The correctness of the tra
     \]
     and the $\omega$-language accepted by $G$, $\L_\omega(G)$ are identical.
 
-    First, $\L\subseteq \L_\omega(G)$ since for every infinite run in $\L$, clearly by definition of $\L$, there is some $f\in F$ such that passes through $f$ infinitely often. The converse is true as well: for every infinite run $q_0, q_1, \dots$ accepted by $G$, then $q_0 = s$ and by definition of the accepting language, there is some accepting state $f$, passed through infinitely often, thus the run is in $\textbf{nfa2regex}(G, s, f)$ \verb|^| $\left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega$
+    First, $\L\subseteq \L_\omega(G)$ since for every infinite run in $\L$, by definition of $\L$, there is some $f\in F$ such that passes through $f$ infinitely often. The converse is true as well: for every infinite run $q_0, q_1, \dots$ accepted by $G$, then $q_0 = s$ and by definition of the accepting language, there is some accepting state $f$, passed through infinitely often; thus the run is in $\textbf{nfa2regex}(G, s, f)$ \verb|^| $\left(\textbf{nfa2regex\_firstvisit}(G, f, f)\right)^\omega$.
 \end{proof}
 \subsection{Correctness of Rewrite Rules}
 \begin{lemma}
@@ -810,24 +811,24 @@ We prove the correctness of our translation pipeline. The correctness of the tra
     \end{alignat}
 \end{lemma}
 
-The soundness of each of these translations can be proven by reasoning about the  semantics detailed in \cref{def:omega-semantics}. A full proof is not provided here.
+The soundness of each of these translations follows directly from the semantics detailed in \cref{def:omega-semantics}. %A full proof is not provided here.
 
-\subsection{Correctness of Timeline Visualization}\label{sec:correctness-timeline}
-Inductively, we show how to construct each form of regular and $\omega$-regular expression into a timeline representation.
-\paragraph{Regular expression}
+\subsection{Correctness of Timeline Visualizations}\label{sec:correctness-timeline}
+Inductively, we show how to faithfully capture each form of regular and $\omega$-regular expressions as timeline representations.
+\paragraph{Regular expressions}
 \begin{enumerate}
   \item $A = \emptyset$. Visualized as no timeline. An empty regular expression signifies nothing is true at any time.
   \item $A = \epsilon$. Omitted in the visualization.
-  \item $A = a$. Visualized as a single timeline node with $a$. A regular expression of an propositional logic formula signifies that the atomic proposition is true at the current time step.
+  \item $A = a$. Visualized as a single timeline node with $a$. A regular expression of a propositional logic formula signifies that the atomic proposition is true at the current time step.
   \item $A = A_1A_2$. Visualized as the timeline of $A_1$ followed by the timeline of $A_2$. A concatenation of two regular expressions signifies that the first regular expression must be true before the second regular expression can be true in the time step.
-  \item $A = A_1 + A_2$. Visualized as the timelines of $A_1$ and $A_2$ in parallel. A union of two regular expressions signifies that either of the regular expressions can be true, which is represented by the parallel timelines.
-  \item $A = A_1^*$. If $A_1$ is a propositional logic formula, then it is visualized as an egg shape node with caption ``repeats 0 - $\infty$''. If $A_1$ is a regular expression involving concatenation, star, etc, then it is visualized as the timeline of $A_1$ followed by a node with label ``$\cdots$'', and that timeline pattern again. A Kleene star of a regular expression signifies that the regular expression can be repeated any number of times, including 0 times, which matches the meaning of our representation of egg shape node and ``$\cdots$''  node as described in \cref{sec:timeline}.
+  \item $A = A_1 + A_2$. Visualized as the timelines of $A_1$ and $A_2$ in parallel. A union of two regular expressions signifies that either of the regular expressions can be true, which \tool\ represents by parallel timelines.
+  \item $A = A_1^*$. If $A_1$ is a propositional logic formula, then its visualization is an egg-shaped node with the caption ``repeats 0 - $\infty$.'' If $A_1$ is a regular expression involving concatenation or a star ($*$) then its visualization is the timeline of $A_1$ followed by a node with label ``$\cdots$,'' and that timeline pattern again. A Kleene star of a regular expression signifies that the regular expression can be repeated any number of times, including 0 times, which matches the meaning of our representation of an egg-shaped node and a ``$\cdots$''  node as described in \cref{sec:timeline}.
 \end{enumerate}
-\paragraph{$\omega$-regular repression}
+\paragraph{$\omega$-regular repressions}
 \begin{enumerate}
-  \item $B = A^\omega$. Visualized as a grey box enclosed with the timeline of $A$. An $\omega$ of a regular expression signifies that the regular expression is to be repeated infinitely many times, which matches the meaning of our representation of grey box, because every time it reach the end of the grey box, it must reenter the same grey box again, hence infinite repeat.
+  \item $B = A^\omega$. Visualized as a grey box enclosing the timeline of $A$. An $\omega$ in a regular (sub-)expression signifies that the regular expression repeats infinitely many times, which matches the meaning of our grey box representation, because every time a timeline traversal reaches the end of the grey box, it must reenter the same grey box again, hence designating an infinite repeat.
   \item $B = AB$. Visualized as the timeline of $A$ followed by the timeline of $B$. A concatenation of a regular expression and an $\omega$-regular expression signifies that the first must be true before the second $\omega$-regular expression can be true in the following time steps.
-  \item $B = B + B$. Visualized as the timelines of $B$ and $B$ in parallel. A union of two $\omega$-regular expressions signifies that either of the $\omega$-regular expressions can be true, which is represented by the parallel timelines.
+  \item $B = B_1 + B_2$. Visualized as the timelines of $B_1$ and $B_2$ in parallel. A union of two $\omega$-regular expressions signifies that either of the $\omega$-regular expressions can be true, which we represent by  parallel timelines.
 \end{enumerate}
 
 %\section{Tool showcase}
