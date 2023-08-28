@@ -219,7 +219,7 @@ First, we provide the definition and semantics for \ltl. In the following subsec
     \end{align*}
 \end{definition}
 \begin{definition}[Semantics of $\omega$-regular expressions]\label{def:omega-semantics}
-    Let $\Sigma^{\omega}$ denote the set of infinite-length strings over fixed alphabet $\Sigma$. Let $\L_{\omega}(B)$ denote the $\omega$-language accepted by $\omega$-regular expression $B$. Then $\L_{\omega}(B)$ is inductively defined as
+    Let $\Sigma^{\omega}$ denote the set of infinite-length strings over fixed alphabet $\Sigma$. Let $\L_{\omega}(B)$ denote the $\omega$-language accepted by $\omega$-regular expression $B$. Then we define $\L_{\omega}(B)$ inductively as:
     \begin{align*}
         \L_{\omega}(A^{\omega}) & = \{s_1s_2s_3\cdots \mid s_i \in \L(A) \text{ and } i \ge 1\} \tag{$\epsilon
          \not\in \L(A)$} \\
@@ -232,21 +232,21 @@ First, we provide the definition and semantics for \ltl. In the following subsec
   \Cref{def:regex,def:omega-regex} are the standard definitions of regular expressions and $\omega$-regular expressions, respectively.  We include them here for completeness. For the remainder of the paper, we denote arbitrary regular expressions using $A$ and $\omega$-regular expressions by $B$.
 \end{remark}
 
-\subsection{Timeline}\label{sec:timeline}
-We present timelines as graphic visualizations. It contains the following features:
+\subsection{Timelines}\label{sec:timeline}
+We present timelines as graphic visualizations containing the following features:
 \begin{itemize}
-    \item Every timeline starts with a node named ``start''.
+    \item Every timeline starts with a node named ``start.''
     \item Every node represents one time step, and each node has a propositional logic formula $\psi$, which specifies the behavior of atomic propositions at that time step. The formula $\psi$ must be true at that time step. If $\psi = 1$, that means all atomic propositions can behave arbitrarily.
-    \item A node in egg shape with a caption ``repeats $0$ - $\infty$'' means to repeat the (one time step) current node for arbitrarily finitely many times.
+    \item An egg-shaped node with a caption ``repeats $0$ - $\infty$'' means to repeat the (one time step) current node for arbitrarily finitely many times.
     \item A node with label ``$\cdots$'' means to repeat the pattern prior to it and after it arbitrarily finitely many times.
     \item The grey box means repeat infinitely. Once we reach the end of a timeline in the grey box, we must reenter the same grey box from any of its (left) starting points.
-    \item Timelines can be in parallel, signifying that either of the parallel timeline could happen.
+    \item Timelines can occur in parallel, signifying that any of the parallel timelines could happen.
 \end{itemize}
 
-The definition of timeline we use here are specifically what we devised for the purpose of visualizing \ltl\ formulas. We show how to construct such timelines from \ltl\ formulas in \cref{sec:correctness-timeline}.
+The manifestation of timelines we use here is one of possibly many timeline representations that we devised for the purpose of visualizing \ltl\ formulas. We show how to construct such timelines from \ltl\ formulas in \cref{sec:correctness-timeline}.
 
 \begin{example}
-    In \cref{fig:ex2}, one can reason about two parallel timelines: the upper timeline starts with $p$ at the first time step, followed by entering the grey box with one step of $\lnot p$ and one step of $p$. Then at the end of the grey box, we reenter the box, with the next time step being $\lnot p$, and so on. The lower timeline starts with one step of $\lnot p$ and one step of $p$ outside the grey box, and then enter the infinite run of $\lnot p$ and $p$ repeating.
+    In \cref{fig:ex2}, one can reason about two parallel timelines: the upper timeline starts with $p$ holding in the first time step, followed by entering the grey box with one step of $\lnot p$ and one step of $p$. Then at the end of the grey box, we reenter the box, with the next time step being $\lnot p$, and so on. The lower timeline starts with one step of $\lnot p$ and one step of $p$ outside the grey box, and then enters the infinite run of $\lnot p$ and $p$ repeating.
     \begin{figure}[!h]
         \centering
         \begin{tikzpicture}[>=latex',line join=bevel,scale=0.6, transform shape]
@@ -326,13 +326,13 @@ The definition of timeline we use here are specifically what we devised for the 
         %
         \end{tikzpicture}
    %     \includegraphics[scale=0.4]{examples/ex2/ex2.png}
-        \caption{Example timeline for specification ``$p$ oscillates every time step''}
+        \caption{Example of one possible timeline for the specification ``$p$ oscillates every time step''}
         \label{fig:ex2}
     \end{figure}
 \end{example}
 
 \begin{example}
-    In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by the second node (could also be zero time step); followed by one node with $a$ which substantiates the specification of ``$a$ eventually true''; once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $\top$ (true) in the grey box.
+    In \cref{fig:ex15}, one can reason about one timeline: the atomic proposition $a$ is false for finitely many time steps as signified by the second node (note that this could be zero time steps); followed by one node with $a$ that substantiates the specification of ``$a$ is eventually true.'' Once $a$ is true at some point, the later time steps can behave arbitrarily as signified by the infinite run of $\top$ (true) in the grey box.
     \begin{figure}[!h]
         \centering
         \begin{tikzpicture}[>=latex',line join=bevel,scale=0.6, transform shape]
@@ -388,35 +388,36 @@ The definition of timeline we use here are specifically what we devised for the 
         %
         \end{tikzpicture}
     %    \includegraphics[scale=0.4]{examples/ex15/ex15.png}
-        \caption{Example timeline for specification ``$a$ is eventually true''}
+        \caption{Example of a timeline for the specification ``$a$ is eventually true''}
         \label{fig:ex15}
     \end{figure}
 \end{example}
 
-\section{Algorithm: ``Though she be but little, she is fierce$^*$''}
+\section{Algorithm: ``Though she be but little, she is fierce\textsuperscript{\textsection}''}
 \begingroup\renewcommand\thefootnote{\textsection}
 \footnotetext{William Shakespeare, \emph{A Midsummer Night's Dream}}
 \endgroup
-On a high level, our algorithm of converting \ltl\ formulas into timeline visualizations (depicted in \Cref{fig:algo}) works as follows:
+On a high level, our algorithm for converting \ltl\ formulas into timeline visualizations (depicted in \Cref{fig:algo}) works as follows.
 \begin{enumerate}
     \item Convert the given \ltl\ formula to its corresponding \Buchi automaton. % (as detailed in \cref{ltl2aut})
     \item Derive the $\omega$-regular expression corresponding to the \Buchi automaton. % (in \cref{aut2regex})
-    \item Simplify the derived $\omega$-regular expression. % (in \cref{regex-simplify})
-    \item Visualize the $\omega$-regular expression according to its structure. %(in \cref{regex2timeline})
+    \item Simplify the derived $\omega$-regular expression. (Note that this step represents a stylistic choice balancing size, complexity, and clarity.) % (in \cref{regex-simplify})
+    \item Visualize the $\omega$-regular expression as a timeline according to its structure. %(in \cref{regex2timeline})
 \end{enumerate}
 \begin{figure*}[!t]
     \centering
     \includegraphics[width=\textwidth, scale=0.3]{img/algorithm_outline.pdf}
-    \caption{Algorithm outline}
+    \caption{\tool \ algorithm outline}
     \label{fig:algo}
 \end{figure*}
 
 \subsection{LTL to BA} \label{ltl2aut}
-The automata-theoretic approach~\cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} of studying \ltl\ (i.e., reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied. Many algorithms and optimizations have been studied such as~\cite{DGV99, F03}. Our tool \tool uses SPOT~\cite{Dur22}\footnote{For our tool, we use SPOT version 2.11.} for this step, which provides an implementation of the translation from \ltl\ formulas to \Buchi automata.
+The automata-theoretic approach~\cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b} to evaluating \ltl\ (e.g., via reducing \ltl\ formulas to their corresponding \Buchi automata) has been well-studied \cite{DGV99,F03,RV10,RV11,Dur14}. Our tool \tool\ uses SPOT~\cite{Dur22}\footnote{We used SPOT version 2.11.} for this step, which provides a provably-correct implementation of the translation from \ltl\ formulas to minimally-sized \Buchi automata.
 
 \subsection{BA to $\omega$-regex} \label{aut2regex}
-We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for valid runs ($\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega$). The regular expressions for finite paths are in turn found by iteratively deleting interior nodes in the digraph of the automaton.
+We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for satisfying runs $\left(\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega\right)$. Our visualization algorithm finds regular expressions for finite paths by iteratively deleting interior nodes in the digraph of the automaton.
 
+%KYR: FIX THIS!
 The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 
 \begin{algorithm}[h!]
@@ -735,7 +736,7 @@ where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsil
 \end{figure}
 
 %\section{Theoretical Analyses} \label{sec:analysis}
-\section{``If we are true to ourselves, we can not be false to anyone$^*$''}
+\section{``If we are true to ourselves, we can not be false to anyone\textsuperscript{\textsection}''}
 \label{sec:analysis}
 \begingroup\renewcommand\thefootnote{\textsection}
 \footnotetext{William Shakespeare, \emph{Hamlet}}
@@ -830,7 +831,7 @@ Inductively, we show how to construct each form of regular and $\omega$-regular 
 \end{enumerate}
 
 %\section{Tool showcase}
-\section{``Be great in act, as you have been in thought$^*$''}
+\section{``Be great in act, as you have been in thought\textsuperscript{\textsection}''}
 \label{sec:tool-showcase}
 \begingroup\renewcommand\thefootnote{\textsection}
 \footnotetext{William Shakespeare, \emph{King John}}
@@ -1366,7 +1367,7 @@ In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which poin
 
 
 
-\section{Thought is free$^*$: Artifact availability}
+\section{Thought is free\textsuperscript{\textsection}: Artifact availability}
 \begingroup\renewcommand\thefootnote{\textsection}
 \footnotetext{William Shakespeare, \emph{The Tempest}}
 \endgroup
