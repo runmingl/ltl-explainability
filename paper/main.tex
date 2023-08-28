@@ -326,7 +326,7 @@ The manifestation of timelines we use here is one of possibly many timeline repr
         %
         \end{tikzpicture}
    %     \includegraphics[scale=0.4]{examples/ex2/ex2.png}
-        \caption{Example of one possible timeline for the specification ``$p$ oscillates every time step''}
+        \caption{Example of one possible timeline for the specification ``$p$ oscillates every time step.''}
         \label{fig:ex2}
     \end{figure}
 \end{example}
@@ -388,7 +388,7 @@ The manifestation of timelines we use here is one of possibly many timeline repr
         %
         \end{tikzpicture}
     %    \includegraphics[scale=0.4]{examples/ex15/ex15.png}
-        \caption{Example of a timeline for the specification ``$a$ is eventually true''}
+        \caption{Example of a timeline for the specification ``$a$ is eventually true.''}
         \label{fig:ex15}
     \end{figure}
 \end{example}
@@ -423,8 +423,8 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 \begin{algorithm}[h!]
     \caption{reduce\_nfa}
     \begin{algorithmic}
-        \Require ($G, v$), an NFA with state $v$ that is not initial or final
-        \Ensure Deletes state $v$ from $G$ while ensuring the same language is recognized
+        \Require ($G, v$): NFA $G$ with state $v$ that is not initial or final
+        \Ensure Deletes state $v$ from $G$ while ensuring $\L(G)$ remains unchanged
         \For{ every $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ }
             \If {$v$ has a self-edge  $v\xrightarrow{r_\mathrm{loop}}v$}
                 \State replace edges $u\xrightarrow{r_\mathrm{in}} v, v \xrightarrow{r_\mathrm{out}} w$ with $u \xrightarrow{r_\mathrm{in} r_\mathrm{loop}* r_\mathrm{out}} w$
@@ -440,12 +440,12 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 \begin{algorithm}[h!]
     \caption{nfa2regex}
     \begin{algorithmic}
-        \Require ($G, s, f$), an NFA with initial state $s$ and final state $f$
+        \Require ($G, s, f$): NFA $G$ with initial state $s$ and final state $f$
         \Ensure The regular expression corresponding to all paths from $s$ to $f$
         % WHile there exists any edge except r_sf
         \While{ there exists an interior vertex $v$ }
             \State reduce\_nfa($G, v$)
-            \State combine multi-edges, i.e., $r1 : u \to w, r2 : u \to w$  to $r1 | r2 : u \to w$
+            \State combine multi-edges, i.e., convert $r1 : u \to w, r2 : u \to w$  to $r1 | r2 : u \to w$
         \EndWhile
         \State \Return $(r_\mathrm{ss}| r_\mathrm{sf} r_\mathrm{ff}^* r_\mathrm{fs})^* r_\mathrm{sf} r_\mathrm{ff}$
         % if called by first visit, this is r_\mathrm{ss}* r_\mathrm{sf}
@@ -458,7 +458,7 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 \begin{algorithm}[h!]
     \caption{nfa2regex\_firstvisit}
     \begin{algorithmic}
-        \Require ($G, s, f$), an NFA with initial state $s$ and final state $f$
+        \Require ($G, s, f$):  NFA $G$ with initial state $s$ and final state $f$
         \Ensure The regular expression of all paths from $s$ reaching $f$ for the first time
         \State delete all out edges from $f$ in $G$
         \State \Return nfa2regex($G, s, f$)
@@ -477,9 +477,9 @@ The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 
 \subsection{$\omega$-regex simplification} \label{regex-simplify}
 
-The $\omega$-regular expression generated in \cref{aut2regex} may not be the ``simplest'' for the purpose of visualizing the timeline. We have observed multiple patterns in the resulting $\omega$-regular expression that could be simplified. For example, an $\omega$-regular expression in the form of $r^*r^{\omega}$ represents the same timeline as $r^{\omega}$, but the latter is more intuitive and concise. For this purpose, we devised some simplification rules in our tool, based on our observation of common patterns in the generated $\omega$-regular expression.
+The $\omega$-regular expression generated in \cref{aut2regex} may not be the ``simplest'' for the purpose of visualizing the timeline. We have observed multiple patterns in the resulting $\omega$-regular expression that could be simplified. For example, an $\omega$-regular expression of the form of $r^*r^{\omega}$ represents the same timeline as $r^{\omega}$, but the latter is more intuitive and concise. For this purpose, we devised some simplification rules in our tool, based on our observation of common patterns in the generated $\omega$-regular expressions.
 
-There is no agreed upon canonical form for regular expression, hence we do not hope to find the simplest regular expression for visualization. Regular expression simplification comes down to regular expression equivalence checking, which is computationally hard~\cite{MNS04}. For purpose of simplification, one could perform a search over equivalent regular expressions and decide which one is simpler to use. However, this strategy is expensive in terms of the running time, and for the purpose of visualization, we did not use this strategy in our tool. We consider this approach as future work.
+There is no agreed-upon canonical form for regular expressions representing \ltl\ formulas, hence we do not hope to find the shortest possible regular expression for visualization. Regular expression simplification comes down to regular expression equivalence checking, which is computationally hard~\cite{MNS04}. For purpose of simplification, one could perform a search over equivalent regular expressions and decide which one is simpler to use. However, this strategy is expensive in terms of the running time, and for the purpose of visualization, we did not use this strategy in our tool. We consider simplification for the purpose of finding the most intuitive regular expression for a given \ltl\ formula to be an interesting direction for future work.
 
 \paragraph*{Rule-based simplification}
 Here we show a demonstrating subset of the simplification rules we encoded. In theory one could add more rules to the tool, so long as they are sound; here we only choose to encode the rules that represent common patterns we have observed in the generated $\omega$-regular expressions.
@@ -495,10 +495,10 @@ Here we show a demonstrating subset of the simplification rules we encoded. In t
 \end{alignat*}
 
 \paragraph*{Result of simplification}
-These simplification rules lead to more intuitive representation of timelines. Here we demonstrate their effects using an example.
+These simplification rules lead to more intuitive representations of timelines. Here we demonstrate their effects using an example.
 
 \begin{example}
-    Using our algorithm, the \ltl\ formula $\varphi = \always (a \limplies \eventually (\neg a))$ generates the un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and the simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which correspond to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}.
+    Using our algorithm, the \ltl\ formula $\varphi = \always (a \limplies \eventually (\neg a))$ generates the un-simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$, and the simplified version $((\lnot a) | (aa^*(\lnot a)))^{\omega}$, which correspond to the two timelines in \cref{fig:unsimplified} and \cref{fig:simplified}, respectively.
     \begin{figure*}[h!]
         \centering
                 \resizebox{\textwidth}{!}{
@@ -617,7 +617,7 @@ These simplification rules lead to more intuitive representation of timelines. H
                       \end{tikzpicture}}
 %        \includegraphics[scale=0.3]{examples/ex9/ex9-unsimplified.png}
         \caption{Timeline visualization for %un-simplified
-        $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$}
+        $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))((\lnot a) | (aa^*(\lnot a)))^{\omega}$.}
         \label{fig:unsimplified}
     \end{figure*}
     \begin{figure*}[h!]
@@ -697,13 +697,13 @@ These simplification rules lead to more intuitive representation of timelines. H
               %
               \end{tikzpicture}}
   %      \includegraphics[scale=0.3]{examples/ex9/ex9.png}
-        \caption{Timeline visualization for simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))^{\omega}$}
+        \caption{Timeline visualization for simplified $\omega$-regular expression $((\lnot a) | (aa^*(\lnot a)))^{\omega}$.}
         \label{fig:simplified}
     \end{figure*}
 \end{example}
 
 \begin{remark}
-    Both simplified and un-simplified $\omega$-regular expressions would generate correct timeline representations. Correct as they faithfully represent the set of satisfying traces of the original \ltl\ formula $\varphi$. Nonetheless, we, as human users, oftentimes find the simplified version more intuitive to reason about.
+    Both simplified and un-simplified $\omega$-regular expressions could generate correct timeline representations that faithfully represent the set of satisfying traces of the original \ltl\ formula $\varphi$. Nonetheless, we, as human users, oftentimes find the simplified version more intuitive to reason about.
 \end{remark}
 
 \subsection{$\omega$-regex to timeline} \label{regex2timeline}
@@ -711,7 +711,7 @@ Our tool uses Graphviz~\cite{Ellson2001GraphvizO} to achieve the timeline visual
 \[
     A_1A_2^{\omega} + A_3A_4^{\omega} + \cdots + A_{2n-1}A_{2n}^{\omega}
 \]
-where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsilon \not\in \L(A_{2i})$. At a high level, for each of regular expression $A_i$, we visualize it as a set of accepted input. We view each union operator as parallel timelines, and each $A_{2i-1}$ is concatenated with $A_{2i}$ repeated infinitely many times, as represented in the grey box. \cref{fig:timeline} presents a generic timeline resulting from this form of construction.
+where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsilon \not\in \L(A_{2i})$. At a high level, we visualize each regular expression $A_i$ as a set of accepted inputs. We view each union operator as a set of parallel timelines. We denote that each $A_{2i-1}$ gets concatenated with $A_{2i}$, which then repeats infinitely many times by surrounding these repeating final nodes with grey boxes. \cref{fig:timeline} presents a generic timeline resulting from this construction pattern.
 \begin{figure}[h!]
     \centering
     \begin{tikzpicture}
@@ -731,7 +731,7 @@ where $A_i$ are regular expressions, $A_{2i-1}$ could be $\epsilon$, and $\epsil
     \draw[thick] (a1) edge[-latex] (a2) (a3) edge[-latex] (a4) (a7) edge[-latex] (a8);
     \end{tikzpicture}
 %    \includegraphics[scale=0.5]{img/timeline.png}
-    \caption{Generic timeline construction from $A_1A_2^{\omega} + A_3A_4^{\omega} + \cdots + A_{2n-1}A_{2n}^{\omega}$}
+    \caption{Generic timeline construction created from $A_1A_2^{\omega} + A_3A_4^{\omega} + \cdots + A_{2n-1}A_{2n}^{\omega}$.}
     \label{fig:timeline}
 \end{figure}
 
@@ -759,7 +759,7 @@ We prove the correctness of our translation pipeline. The correctness of the tra
 	\draw[thick] (u) edge["$r_{uv}$",-latex] (v) (v) edge["$r_{vv}$",-latex,loop above] (v) (v) edge["$r_{vw}$",-latex] (w);
         \end{tikzpicture}
  %       \includegraphics[scale=0.75]{img/uvw_dfa.pdf}
-        \caption{A path from $u$ to $w$ in $G$}
+        \caption{A path from $u$ to $w$ in $G$.}
         \label{fig:uvw-dfa}
     \end{figure}
     Suppose there is no loop at $v$, the path from $u$ to $w$ must simply be $u\xrightarrow{r_{uv}}v\xrightarrow{r_{vw}}w$, with the trace $r=r_{uv}r_{vw}$. If there is a loop edge $r_{vv}$, this edge can be traveled any number of times before exiting $v$, thus the regular expression is $r=r_{uv}r_{vv}^*r_{vw}$. This edge $u\xrightarrow{r}w$ is added in $G'$. Thus, for every path accepted by $G$, for every subpath entering and exiting $v$ from some $u$ to $w$, there exists a corresponding subpath from $u$ to $w$ in $G'$, and thus a corresponding path accepted by $G'$.
@@ -1006,7 +1006,7 @@ To demonstrate the result of our tool, we present three examples, one from a rea
               \end{tikzpicture}}
 
      %   \includegraphics[scale=0.3]{examples/ex14/ex14.png}
-        \caption{Timeline for $\always (a \land b \limplies \nextt (\neg b))$}
+        \caption{Timeline for $\always (a \land b \limplies \nextt (\neg b))$.}
         \label{fig:ex14}
     \end{figure*}
 \end{example}
@@ -1160,7 +1160,7 @@ To demonstrate the result of our tool, we present three examples, one from a rea
               \end{tikzpicture}}
 
    %     \includegraphics[scale=0.3]{examples/ex13/ex13.png}
-        \caption{Timeline for $p_2 \land (\eventually \always p_0 \stronguntil \nextt(\always p_1 \land (((p_0 \limplies p_2) \land (p_2 \limplies p_0)) \stronguntil \eventually p_0)))$}
+        \caption{Timeline for $p_2 \land (\eventually \always p_0 \stronguntil \nextt(\always p_1 \land (((p_0 \limplies p_2) \land (p_2 \limplies p_0)) \stronguntil \eventually p_0)))$.}
         \label{fig:ex13}
     \end{figure*}
 \end{example}
@@ -1254,7 +1254,7 @@ To demonstrate the result of our tool, we present three examples, one from a rea
   %
   \end{tikzpicture}
 %     \includegraphics[scale=0.4]{examples/ex2/ex2.png}
-  \caption{Timeline for $\always ((p \land \nextt (\lnot p)) \lor ((\lnot p) \land \nextt p))$}
+  \caption{Timeline for $\always ((p \land \nextt (\lnot p)) \lor ((\lnot p) \land \nextt p))$.}
   \label{fig:oscillates1}
 \end{figure}
 \begin{figure}[!h]
@@ -1272,7 +1272,7 @@ To demonstrate the result of our tool, we present three examples, one from a rea
   \end{scope}
   %
   \end{tikzpicture}
-  \caption{Timeline for $\always ((p \land \nextt (\lnot p)) \land ((\lnot p) \land \nextt p))$ (a single ``start'' means every time step is $\bot$)}
+  \caption{Timeline for $\always ((p \land \nextt (\lnot p)) \land ((\lnot p) \land \nextt p))$ (a single ``start'' means every time step is $\bot$).}
   \label{fig:oscillates2}
 \end{figure}
 \end{example}
@@ -1340,7 +1340,7 @@ We run \texttt{ltl2regex} on these $91$ examples, the tool completes execution (
     \subfloat{{\includegraphics[width=0.49\textwidth]{img/tllens-graph.png} }}%
     \quad % [\centering label 1]
     \subfloat{{\includegraphics[width=0.49\textwidth]{img/star-height-graph.png}}}
-    \caption{Visualization complexity metrics for formulas collected from Acacia~\cite{RV10} and NASA's  AAC~\cite{GCMTR16}}
+    \caption{Visualization complexity metrics for formulas collected from Acacia~\cite{RV10} and NASA's  AAC~\cite{GCMTR16}.}
     \label{fig:real-world}
 \end{figure}
 
@@ -1352,7 +1352,7 @@ In \cref{fig:scalability}, the $x$-axis ranges from $1$ to $6$, after which poin
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.49\textwidth]{img/binary.png}
-    \caption{Scalability measured with binary counter examples from Rozier and Vardi~\cite{RV10}}
+    \caption{Scalability measured with binary counter examples from Rozier and Vardi~\cite{RV10}.}
     \label{fig:scalability}
 \end{figure}
 
