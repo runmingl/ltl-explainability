@@ -418,7 +418,7 @@ The automata-theoretic approach~\cite{ORBi-a8d60ab6-1101-4434-9511-c01ea4e5a15b}
 We translate \Buchi automata to $\omega$-regular expressions by first finding the regular expressions for paths from the start state to some final state (say $r_\mathrm{sf}$), and for those for paths looping from the final state back to itself (say $r_\mathrm{ff}$), and finally combining those to form the $\omega$-expression for satisfying runs $\left(\bigplus_{f\in F} r_\mathrm{sf}r_\mathrm{ff}^\omega\right)$. Our visualization algorithm finds regular expressions for finite paths by iteratively deleting interior nodes in the digraph of the automaton.
 
 %KYR: FIX THIS! We need to make it clear the relationship between Algorithms 1..4 and the figure displaying the high-level algorithm.
-The algorithm is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
+The algorithm to convert \Buchi automata to $\omega$-regular expressions \texttt{ba2wregex} is outlined below (see Algorithms 1 - 4). %\cref{alg:ba2wregex}
 
 \begin{algorithm}[h!]
     \caption{reduce\_nfa}
